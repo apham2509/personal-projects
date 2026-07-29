@@ -4,7 +4,7 @@ Which airports, ports and other critical infrastructure are most exposed to acti
 
 This project combines NASA FIRMS satellite fire detections with public infrastructure locations to quantify wildfire exposure per asset and assign a transparent operational-risk score. It works for any geography (named regions or any bounding box), covers the historical record (2018-2025 by default), and includes both a local interactive dashboard and a daily-refreshed live page published via GitHub Actions + GitHub Pages.
 
-Live dashboard: https://apham2509.github.io/personal-projects/
+Live dashboard: https://apham2509.github.io/personal-projects/wildfire-infrastructure-risk/
 
 ## Data sources
 
