@@ -33,7 +33,7 @@ jobs:
 
       - name: Render dashboard from latest FIRMS data
         working-directory: wildfire-infrastructure-risk
-        run: python render_static.py --region iberia --days 5 --out ../site/wildfire-infrastructure-risk/index.html
+        run: python render_static.py --regions iberia --out ../site/wildfire-infrastructure-risk/index.html
 
       - name: Add landing page
         run: cp pages/index.html site/index.html

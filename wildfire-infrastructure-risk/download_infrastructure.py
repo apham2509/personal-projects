@@ -55,13 +55,13 @@ PORT_FILTERS = [
 ]
 
 
-def build_port_query(region: regions.Region) -> str:
+def build_port_query(region: regions.Region, country: str | None) -> str:
+    """One query per country (results get tagged with it) or one bbox query."""
     west, south, east, north = region.bounds
-    if region.countries:
-        # Query country areas so coastal features of neighbouring countries
-        # inside the bbox are excluded.
-        iso = "|".join(region.countries)
-        scope = f'area["ISO3166-1"~"^({iso})$"][admin_level=2]->.a;\n'
+    if country:
+        # Query the country area so coastal features of neighbouring
+        # countries inside the bbox are excluded.
+        scope = f'area["ISO3166-1"="{country}"][admin_level=2]->.a;\n'
         suffix = "(area.a)"
     else:
         scope = ""
@@ -86,6 +86,7 @@ def fetch_airports(region: regions.Region) -> pd.DataFrame:
         {
             "name": df["name"],
             "kind": "airport",
+            "country": df["iso_country"],
             "latitude": df["latitude_deg"],
             "longitude": df["longitude_deg"],
             "source": "ourairports:" + df["ident"].astype(str),
@@ -120,9 +121,18 @@ def fetch_ports(region: regions.Region) -> pd.DataFrame:
         print(f"Region '{region.slug}' is too large for an OSM port query - "
               "including airports only. Use a smaller region for ports.")
         return pd.DataFrame()
+    frames = [fetch_ports_one(region, c) for c in (region.countries or [None])]
+    df = pd.concat(frames, ignore_index=True)
+    if df.empty:
+        return df
+    # The same harbour often appears as both a node and an area polygon.
+    return df.drop_duplicates(subset=["name"]).reset_index(drop=True)
+
+
+def fetch_ports_one(region: regions.Region, country: str | None) -> pd.DataFrame:
     west, south, east, north = region.bounds
     rows = []
-    for element in overpass(build_port_query(region)).get("elements", []):
+    for element in overpass(build_port_query(region, country)).get("elements", []):
         tags = element.get("tags", {})
         name = tags.get("name") or tags.get("seamark:name")
         if not name:
@@ -142,17 +152,14 @@ def fetch_ports(region: regions.Region) -> pd.DataFrame:
             {
                 "name": name,
                 "kind": "port",
+                "country": country or "",
                 "latitude": lat,
                 "longitude": lon,
                 "source": f"osm:{element['type']}/{element['id']}",
             }
         )
-    df = pd.DataFrame(rows)
-    if df.empty:
-        return df
-    # The same harbour often appears as both a node and an area polygon.
-    df = df.drop_duplicates(subset=["name"]).reset_index(drop=True)
-    return df
+    return pd.DataFrame(
+        rows, columns=["name", "kind", "country", "latitude", "longitude", "source"])
 
 
 def main() -> int:

@@ -42,11 +42,14 @@ python3 -m venv .venv
 # 3. Compute exposure metrics and risk scores
 .venv/bin/python risk_analysis.py --region iberia
 
-# 4a. Interactive dashboard (local) -> http://127.0.0.1:8050
+# 4. Aggregate the archive into daily data for the web dashboard (commit the JSON)
+.venv/bin/python prepare_history.py --region iberia
+
+# 5a. Interactive dashboard (local Dash app) -> http://127.0.0.1:8050
 .venv/bin/python dashboard.py --region iberia
 
-# 4b. Static live page (last 5 days of NRT data) -> site/index.html
-.venv/bin/python render_static.py --region iberia
+# 5b. Static web dashboard (archive + live NRT, date-range picker) -> site/
+.venv/bin/python render_static.py --regions iberia
 ```
 
 To study another geography, repeat steps 1-4 with a different `--region` (e.g. `--region greece`, or `--region "20.0,35.0,30.0,42.0"`).

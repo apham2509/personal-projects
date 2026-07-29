@@ -1,14 +1,17 @@
-"""Precompute aggregated history for the static dashboard.
+"""Precompute daily-resolution aggregates for the static dashboard.
 
-The static page cannot ship 160k+ raw detections, and CI does not have the
-raw fire archive (data/fires/ is not committed). This script aggregates the
-historical record into a compact JSON that IS committed
-(results/history_<region>.json) and that render_static.py embeds:
+The dashboard lets viewers pick any from-to date range, so the data must be
+daily. Raw detections are too big to ship (and CI has no raw archive), so
+this script reduces the archive to three compact structures, committed as
+results/history_<region>.json:
 
-  - per window (each year + "all"): a gridded heatmap (0.05 degree cells),
-    monthly detection counts, KPIs, and per-asset exposure metrics.
+  - cells:    detections per (day, ~5 km grid cell) - drives the heatmap
+  - daily:    detections and max FRP per day - drives KPIs and the trend chart
+  - exposure: per asset, the days on which fire was detected within 25 km,
+              with counts / FRP / min distance - drives markers and the table
 
-Re-run it (then commit the JSON) whenever the raw archive changes.
+Days are stored as integer offsets from EPOCH (2018-01-01).
+Re-run (then commit the JSON) whenever the raw archive changes.
 
 Usage:
     python prepare_history.py --region iberia
@@ -27,66 +30,90 @@ import pandas as pd
 import regions
 from risk_analysis import haversine_km
 
-GRID = 0.05  # degrees, ~5.5 km cells - matches the 10 km exposure radius
+GRID = 0.05          # degrees, ~5.5 km cells - matches the 10 km exposure radius
+EPOCH = pd.Timestamp("2018-01-01")
 
 
-def asset_metrics(assets: pd.DataFrame, fires: pd.DataFrame) -> dict:
+def day_index(dates: pd.Series) -> pd.Series:
+    return (dates - EPOCH).dt.days
+
+
+def aggregate_cells(fires: pd.DataFrame) -> dict:
+    """Detections per (day, grid cell) as compact integer arrays."""
+    grouped = (
+        fires.assign(
+            d=day_index(fires["acq_date"]),
+            la=(fires["latitude"] / GRID).round().astype(int),
+            lo=(fires["longitude"] / GRID).round().astype(int),
+        )
+        .groupby(["d", "la", "lo"])
+        .size()
+        .reset_index(name="n")
+        .sort_values("d")
+    )
+    return {c: grouped[c].tolist() for c in ["d", "la", "lo", "n"]}
+
+
+def daily_totals(fires: pd.DataFrame) -> dict:
+    """Detections and max FRP per day."""
+    grouped = (
+        fires.assign(d=day_index(fires["acq_date"]))
+        .groupby("d")
+        .agg(n=("frp", "size"), fm=("frp", "max"))
+        .reset_index()
+        .sort_values("d")
+    )
+    return {
+        "d": grouped["d"].tolist(),
+        "n": grouped["n"].tolist(),
+        "fm": [round(float(v), 1) for v in grouped["fm"].fillna(0)],
+    }
+
+
+def exposure_events(assets: pd.DataFrame, fires: pd.DataFrame) -> dict:
+    """Per asset: the days with fire within 25 km, and what happened that day."""
     out = {}
     fire_lat = fires["latitude"].to_numpy()
     fire_lon = fires["longitude"].to_numpy()
     frp = fires["frp"].fillna(0).to_numpy()
-    dates = fires["acq_date"].dt.date.to_numpy()
+    days = day_index(fires["acq_date"]).to_numpy()
     for asset in assets.itertuples(index=False):
         dist = haversine_km(asset.latitude, asset.longitude, fire_lat, fire_lon)
-        within10, within25 = dist <= 10, dist <= 25
-        status = "exposed" if within10.any() else "nearby" if within25.any() else "clear"
+        near = dist <= 25
+        if not near.any():
+            continue
+        frame = pd.DataFrame({
+            "d": days[near], "dist": dist[near], "frp": frp[near],
+        })
+        frame["in10"] = frame["dist"] <= 10
+        grouped = frame.groupby("d").agg(
+            n25=("dist", "size"),
+            n10=("in10", "sum"),
+            f10=("frp", lambda s: 0.0),  # replaced below
+            dm=("dist", "min"),
+        )
+        f10 = frame[frame["in10"]].groupby("d")["frp"].sum()
+        grouped["f10"] = f10.reindex(grouped.index).fillna(0)
+        grouped = grouped.reset_index().sort_values("d")
         out[str(asset.asset_id)] = {
-            "det10": int(within10.sum()),
-            "frp10": round(float(frp[within10].sum()), 1),
-            "days10": int(len(set(dates[within10]))),
-            "nearest": round(float(dist.min()), 1) if len(dist) else None,
-            "status": status,
+            "d": grouped["d"].astype(int).tolist(),
+            "n10": grouped["n10"].astype(int).tolist(),
+            "n25": grouped["n25"].astype(int).tolist(),
+            "f10": [round(float(v), 1) for v in grouped["f10"]],
+            "dm": [round(float(v), 1) for v in grouped["dm"]],
         }
     return out
 
 
-def window_payload(fires: pd.DataFrame, assets: pd.DataFrame, label: str,
-                   freq: str = "M") -> dict:
-    cells = (
-        fires.assign(
-            glat=(fires["latitude"] / GRID).round() * GRID,
-            glon=(fires["longitude"] / GRID).round() * GRID,
-        )
-        .groupby(["glat", "glon"])
-        .size()
-        .reset_index(name="n")
-    )
-    monthly = fires.groupby(
-        fires["acq_date"].dt.date if freq == "D" else fires["acq_date"].dt.to_period("M")
-    ).size()
-    metrics = asset_metrics(assets, fires)
-    exposed = sum(1 for m in metrics.values() if m["status"] == "exposed")
-    nearby = sum(1 for m in metrics.values() if m["status"] == "nearby")
-    return {
-        "label": label,
-        "heat": {
-            "lat": [round(v, 3) for v in cells["glat"]],
-            "lon": [round(v, 3) for v in cells["glon"]],
-            "z": cells["n"].tolist(),
-        },
-        "trend": {
-            "x": [str(p) for p in monthly.index],
-            "y": monthly.values.tolist(),
-        },
-        "kpis": {
-            "detections": int(len(fires)),
-            "exposed": exposed,
-            "nearby": nearby,
-            "max_frp": round(float(fires["frp"].max()), 1) if len(fires) else 0,
-            "window": label,
-        },
-        "assets": metrics,
-    }
+def load_archive(region: regions.Region) -> pd.DataFrame:
+    files = sorted(glob.glob(f"data/fires/{region.slug}/*.csv.gz"))
+    if not files:
+        raise SystemExit(f"No fire archive for {region.slug}. Run download_fires.py first.")
+    fires = pd.concat((pd.read_csv(f) for f in files), ignore_index=True)
+    if "type" in fires.columns:
+        fires = fires[fires["type"] == 0]
+    fires["acq_date"] = pd.to_datetime(fires["acq_date"])
+    return fires
 
 
 def main() -> None:
@@ -96,29 +123,28 @@ def main() -> None:
     args = parser.parse_args()
     region = regions.resolve(args.region)
 
-    files = sorted(glob.glob(f"data/fires/{region.slug}/*.csv.gz"))
-    if not files:
-        raise SystemExit(f"No fire archive for {region.slug}. Run download_fires.py first.")
-    fires = pd.concat((pd.read_csv(f) for f in files), ignore_index=True)
-    if "type" in fires.columns:
-        fires = fires[fires["type"] == 0]
-    fires["acq_date"] = pd.to_datetime(fires["acq_date"])
+    fires = load_archive(region)
     assets = pd.read_csv(f"data/infrastructure/{region.slug}/assets.csv")
-    print(f"{len(fires):,} vegetation-fire detections, {len(assets)} assets")
+    print(f"{len(fires):,} vegetation-fire detections "
+          f"({fires['acq_date'].min():%Y-%m-%d} to {fires['acq_date'].max():%Y-%m-%d}), "
+          f"{len(assets)} assets")
 
-    windows = {}
-    for year, group in fires.groupby(fires["acq_date"].dt.year):
-        windows[str(year)] = window_payload(group, assets, str(year))
-        print(f"  {year}: {len(group):,} detections")
-    years = sorted(fires["acq_date"].dt.year.unique())
-    windows["all"] = window_payload(fires, assets, f"All years {years[0]}-{years[-1]}")
-
+    payload = {
+        "region": region.slug,
+        "grid": GRID,
+        "epoch": str(EPOCH.date()),
+        "archive_end": str(fires["acq_date"].max().date()),
+        "cells": aggregate_cells(fires),
+        "daily": daily_totals(fires),
+        "exposure": exposure_events(assets, fires),
+    }
     out = Path(f"results/history_{region.slug}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w") as f:
-        json.dump({"region": region.slug, "grid_degrees": GRID, "windows": windows},
-                  f, separators=(",", ":"))
-    print(f"Wrote {out} ({out.stat().st_size / 1e6:.1f} MB)")
+        json.dump(payload, f, separators=(",", ":"))
+    print(f"Wrote {out} ({out.stat().st_size / 1e6:.1f} MB, "
+          f"{len(payload['cells']['d']):,} cell-days, "
+          f"{len(payload['exposure'])} assets with exposure days)")
 
 
 if __name__ == "__main__":

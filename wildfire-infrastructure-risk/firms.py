@@ -89,7 +89,15 @@ def area_fires(
     path = f"/api/area/csv/{map_key()}/{source}/{bbox}/{days}"
     if date:
         path += f"/{date}"
-    response = requests.get(f"{API_BASE}{path}", timeout=300)
+    # Large (e.g. world-scale) responses cost many transactions, so the
+    # rolling quota can empty mid-run: wait for the window to clear and retry.
+    for _ in range(40):
+        response = requests.get(f"{API_BASE}{path}", timeout=300)
+        if response.status_code == 400 and "transaction limit" in response.text.lower():
+            print("Transaction quota exhausted, waiting 60s...")
+            time.sleep(60)
+            continue
+        break
     response.raise_for_status()
     text = response.text
     if text.startswith("Invalid"):
