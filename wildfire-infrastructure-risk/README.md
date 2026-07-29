@@ -26,10 +26,7 @@ Each FIRMS record includes latitude/longitude, acquisition date and UTC time, de
 
 ```bash
 pip install -r requirements.txt
-echo YOUR_MAP_KEY > map_key.txt
 ```
-
-Get a free MAP_KEY at https://firms.modaps.eosdis.nasa.gov/api/map_key (limit: 5,000 requests / 10 min). `map_key.txt` is gitignored - never commit it.
 
 ## Pipeline
 
@@ -44,7 +41,6 @@ python download_infrastructure.py
 python risk_analysis.py
 ```
 
-Outputs land in `data/` (gitignored, large) and `results/asset_risk.csv` (committed).
 
 ## Metrics and risk score
 
