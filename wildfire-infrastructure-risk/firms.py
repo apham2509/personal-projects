@@ -29,6 +29,19 @@ class FirmsError(RuntimeError):
     """Raised when the FIRMS API rejects a request."""
 
 
+def _get(url: str, tries: int = 4, **kwargs) -> requests.Response:
+    """GET with retry on transient network failures (CI runners hiccup)."""
+    for attempt in range(tries):
+        try:
+            return requests.get(url, **kwargs)
+        except (requests.ConnectionError, requests.Timeout) as error:
+            if attempt == tries - 1:
+                raise
+            wait = 20 * (attempt + 1)
+            print(f"Network error ({error.__class__.__name__}), retrying in {wait}s...")
+            time.sleep(wait)
+
+
 def map_key() -> str:
     key = os.environ.get("FIRMS_MAP_KEY", "").strip()
     if key:
@@ -92,7 +105,7 @@ def area_fires(
     # Large (e.g. world-scale) responses cost many transactions, so the
     # rolling quota can empty mid-run: wait for the window to clear and retry.
     for _ in range(40):
-        response = requests.get(f"{API_BASE}{path}", timeout=300)
+        response = _get(f"{API_BASE}{path}", timeout=300)
         if response.status_code == 400 and "transaction limit" in response.text.lower():
             print("Transaction quota exhausted, waiting 60s...")
             time.sleep(60)
@@ -114,8 +127,6 @@ def area_fires(
 
 def data_availability() -> pd.DataFrame:
     """Available date range per dataset."""
-    response = requests.get(
-        f"{API_BASE}/api/data_availability/csv/{map_key()}/ALL", timeout=60
-    )
+    response = _get(f"{API_BASE}/api/data_availability/csv/{map_key()}/ALL", timeout=60)
     response.raise_for_status()
     return pd.read_csv(io.StringIO(response.text))
