@@ -6,4 +6,4 @@ Side projects and experiments. Each project lives in its own folder with a short
 
 | Project | Description | Tech |
 |---------|-------------|------|
-| _coming soon_ | | |
+| [wildfire-tracker](./wildfire-tracker) | Pull and map near-real-time satellite fire detections from the NASA FIRMS API | Python, pandas, matplotlib |
