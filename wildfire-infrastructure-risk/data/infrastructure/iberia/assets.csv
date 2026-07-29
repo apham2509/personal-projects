@@ -1,0 +1,199 @@
+asset_id,name,kind,latitude,longitude,source
+1,Folgueroles Airfield,airport,41.9527,2.3072,ourairports:ES-0109
+2,Albacete Airport / Los Llanos Air Base,airport,38.948502,-1.86352,ourairports:LEAB
+3,Alicante-Elche Miguel Hernández Airport,airport,38.2822,-0.558156,ourairports:LEAL
+4,Almería Airport,airport,36.843899,-2.3701,ourairports:LEAM
+5,Asturias Airport,airport,43.563599,-6.03462,ourairports:LEAS
+6,Córdoba Airport,airport,37.841999,-4.84888,ourairports:LEBA
+7,Bilbao Airport,airport,43.301102,-2.91061,ourairports:LEBB
+8,Burgos Airport,airport,42.357601,-3.62076,ourairports:LEBG
+9,Josep Tarradellas Barcelona-El Prat Airport,airport,41.2971,2.07846,ourairports:LEBL
+10,Badajoz Airport,airport,38.8913,-6.82133,ourairports:LEBZ
+11,Castellón-Costa Azahar Airport,airport,40.213889,0.073333,ourairports:LECH
+12,A Coruña Airport,airport,43.302101,-8.37726,ourairports:LECO
+13,Madrid-Cuatro Vientos Airport,airport,40.370701,-3.78514,ourairports:LECU
+14,Lleida-Alguaire Airport,airport,41.728185,0.535023,ourairports:LEDA
+15,Armilla Air Base,airport,37.133202,-3.63569,ourairports:LEGA
+16,Girona-Costa Brava Airport,airport,41.904639,2.761774,ourairports:LEGE
+17,F.G.L. Airport Granada-Jaén Airport,airport,37.188702,-3.77736,ourairports:LEGR
+18,Getafe Air Base,airport,40.294102,-3.72383,ourairports:LEGT
+19,Ibiza Airport,airport,38.872898,1.37312,ourairports:LEIB
+20,Jerez Airport,airport,36.744598,-6.06011,ourairports:LEJR
+21,San Javier Airport,airport,37.775002,-0.812389,ourairports:LELC
+22,León Airport,airport,42.590709,-5.653406,ourairports:LELN
+23,Logroño-Agoncillo Airport,airport,42.460953,-2.322235,ourairports:LELO
+24,Adolfo Suárez Madrid–Barajas Airport,airport,40.493407,-3.572249,ourairports:LEMD
+25,Málaga-Costa del Sol Airport,airport,36.6749,-4.49911,ourairports:LEMG
+26,Menorca Airport,airport,39.862598,4.21865,ourairports:LEMH
+27,Region of Murcia International Airport,airport,37.802852,-1.124884,ourairports:LEMI
+28,Moron Air Base,airport,37.17490005493164,-5.615940093994141,ourairports:LEMO
+29,Palma de Mallorca Airport,airport,39.551701,2.73881,ourairports:LEPA
+30,Pamplona Airport,airport,42.77,-1.64633,ourairports:LEPP
+31,Alcantarilla Air Base,airport,37.951099,-1.23032,ourairports:LERI
+32,Ciudad Real International Airport,airport,38.856479,-3.969944,ourairports:LERL
+33,Reus Airport,airport,41.147509,1.168354,ourairports:LERS
+34,Rota Naval Station Airport,airport,36.645198822,-6.34946012497,ourairports:LERT
+35,Salamanca Airport,airport,40.952099,-5.50199,ourairports:LESA
+36,San Sebastián Airport,airport,43.356499,-1.79061,ourairports:LESO
+37,Santiago-Rosalía de Castro Airport,airport,42.896301,-8.41514,ourairports:LEST
+38,Pirineus - la Seu d'Urgel Airport,airport,42.3386,1.40917,ourairports:LESU
+39,Teruel Airport,airport,40.410269,-1.217366,ourairports:LETL
+40,Madrid–Torrejón Airport / Torrejón Air Base,airport,40.487875,-3.456808,ourairports:LETO
+41,Valencia Airport,airport,39.489162,-0.480961,ourairports:LEVC
+42,Valladolid Airport,airport,41.7061,-4.85194,ourairports:LEVD
+43,Vitoria Airport,airport,42.882801,-2.72447,ourairports:LEVT
+44,Vigo Airport,airport,42.2318,-8.62677,ourairports:LEVX
+45,Seve Ballesteros-Santander Airport,airport,43.427101,-3.82001,ourairports:LEXJ
+46,Zaragoza Airport,airport,41.666199,-1.04155,ourairports:LEZG
+47,Seville Airport,airport,37.417999,-5.89311,ourairports:LEZL
+48,Alverca Air Base,airport,38.883301,-9.0301,ourairports:LPAR
+49,Bragança Airport,airport,41.8578,-6.70713,ourairports:LPBG
+50,Beja Airport / Airbase,airport,38.078899,-7.9324,ourairports:LPBJ
+51,Braga Municipal Aerodrome,airport,41.587,-8.445189,ourairports:LPBR
+52,Aerodromo de Castelo Branco,airport,39.844528,-7.439875,ourairports:LPCB
+53,Aerodromo Municipal de Coimbra,airport,40.158758,-8.470815,ourairports:LPCO
+54,Cascais Airport,airport,38.724998,-9.35523,ourairports:LPCS
+55,Évora Airfield,airport,38.533501,-7.88964,ourairports:LPEV
+56,Faro - Gago Coutinho International Airport,airport,37.015909,-7.970939,ourairports:LPFR
+57,Monte Real Air Base,airport,39.828335,-8.8875,ourairports:LPMR
+58,Montijo Air Base,airport,38.70929,-9.03368,ourairports:LPMT
+59,Ovar Air Base,airport,40.915901,-8.64592,ourairports:LPOV
+60,Portimão Airport,airport,37.1493,-8.58396,ourairports:LPPM
+61,Francisco de Sá Carneiro Airport,airport,41.2481002808,-8.68138980865,ourairports:LPPR
+62,Lisbon Humberto Delgado Airport,airport,38.7813,-9.13592,ourairports:LPPT
+63,Aeródromo Municipal de Ponte de Sor,airport,39.211545,-8.057787,ourairports:LPSO
+64,Sintra Air Base,airport,38.8311,-9.33955,ourairports:LPST
+65,Tancos Airbase,airport,39.475101,-8.36458,ourairports:LPTN
+66,Vilar de Luz Airfield,airport,41.27729,-8.516209,ourairports:LPVL
+67,Vila Real Airport,airport,41.2743,-7.72047,ourairports:LPVR
+68,Aerodromo Goncalves Lobato (Viseu Airport),airport,40.725498,-7.88899,ourairports:LPVZ
+69,Puerto del Musel,port,43.5628673,-5.6875251,osm:node/762092362
+70,Puerto de Gijón/Xixón,port,43.5567185,-5.6726486,osm:node/762092377
+71,Port industrial d'Alcanar,port,40.5720766,0.5513185,osm:node/860935275
+72,Puerto de Escombreras,port,37.569926,-0.9715942,osm:node/982362519
+73,Puerto de Cartagena,port,37.5927246,-0.9808162,osm:node/982362690
+74,Muelle de las Cabezuelas,port,36.5232831,-6.2573815,osm:node/1064269532
+75,Puerto Pesquero de Lo Pagán,port,37.8158808,-0.7837339,osm:node/1393666789
+76,Puerto Pesquero de Almería,port,36.8356431,-2.4816416,osm:node/2066498492
+77,Hondarribiako Kaiberria,port,43.3861834,-1.7906265,osm:node/3819020952
+78,Denia,port,38.8436179,0.1125226,osm:node/4246223790
+79,Dénia,port,38.8434433,0.1151613,osm:node/4246223791
+80,Javea,port,38.7939915,0.1866984,osm:node/4246230871
+81,Sevilla,port,37.3543494,-5.9943348,osm:node/4326421347
+82,Berlengas Grande,port,39.4141486,-9.5066578,osm:node/4766182238
+83,Porto de Pasaxes Moaña-Vigo,port,42.2754797,-8.7353872,osm:node/5369755736
+84,Porto Comercial de Sines,port,37.9448052,-8.869441,osm:node/5433206326
+85,Puerto Pesquero,port,36.4154268,-5.1551253,osm:node/7313111367
+86,Muelle Sur,port,37.150247,-6.8710822,osm:node/8901886334
+87,Muelle Juan Gonzalo,port,37.1878863,-6.9301361,osm:node/8901886335
+88,Azenha do Mar,port,37.4643137,-8.7974017,osm:node/10673394757
+89,Marina Ibiza,port,38.9135751,1.4438985,osm:node/13588264004
+90,Doca Pesca,port,37.105655,-8.6712986,osm:way/24789656
+91,Puerto de Sevilla,port,37.355885,-5.9911445,osm:way/74536680
+92,Porto de Corme,port,43.2621122,-8.9647509,osm:way/93542359
+93,Terminal de Contentores de Portimão,port,37.126385,-8.5302177,osm:way/104291169
+94,Bilbao Port,port,43.3466906,-3.0526609,osm:way/110020916
+95,Porto de Peniche,port,39.354626,-9.3708623,osm:way/138926673
+96,Port de Tortosa,port,40.8079495,0.5173633,osm:way/146865736
+97,Terminal Sul Multiusos,port,40.6375836,-8.6820563,osm:way/152213909
+98,Porto Exterior da Coruña,port,43.3449263,-8.5109791,osm:way/161234047
+99,Estação de Assistência Naval do Porto de Lisboa,port,38.6762347,-9.2111718,osm:way/223560239
+100,Puerto Pesquero de Conil,port,36.2949611,-6.1368761,osm:way/240902363
+101,Liscont,port,38.7007482,-9.1732727,osm:way/247938458
+102,APM Terminal Algeciras,port,36.1409894,-5.4383146,osm:way/274800035
+103,CLH,port,41.3551491,2.1625207,osm:way/278024072
+104,Terminal de Contentores Sul - TCS,port,41.1924061,-8.6848455,osm:way/286184916
+105,Terminal de Contentores Norte - TCN,port,41.1855638,-8.7017875,osm:way/286184918
+106,Porto Comercial da Sardoura,port,41.0762748,-8.287118,osm:way/322956738
+107,Cala d'Aiguafreda,port,41.9645213,3.2272444,osm:way/356731940
+108,Varadero,port,43.4530298,-3.8185809,osm:way/361343539
+109,Terminal BEST (Barcelona Europe South Terminal),port,41.3112054,2.14541,osm:way/385316853
+110,Astilleros Placeres,port,42.4050553,-8.6852615,osm:way/406668582
+111,Port d'Alacant,port,38.3288027,-0.4923146,osm:way/418972897
+112,Puerto de Motril-Granada,port,36.7186349,-3.5226123,osm:way/428011880
+113,Estaleiro da Rocha do Conde de Óbidos,port,38.7036507,-9.159327,osm:way/437650390
+114,Porto de Lisboa - Terminal de Contentores de Alcântara,port,38.7000898,-9.1676027,osm:way/437795195
+115,Porto de Lisboa - Terminal de Passageiros da Rocha do Conde de Óbidos,port,38.7016366,-9.1599236,osm:way/437800863
+116,Dársena de Santiago,port,37.59695,-0.9746702,osm:way/467456983
+117,APM Terminals,port,39.4526189,-0.3173326,osm:way/505250936
+118,MSC Terminal,port,39.4404517,-0.3245813,osm:way/505250943
+119,Porto de Santa Luzia,port,37.1011852,-7.6573247,osm:way/526309468
+120,Porto da Coruña,port,43.3613585,-8.3956754,osm:way/585760610
+121,Terminal de Granéis Líquidos,port,40.6546893,-8.7141867,osm:way/613149265
+122,Port de Barcelona,port,41.3299051,2.1387733,osm:way/618240331
+123,Terminals de Passatgers,port,41.3566527,2.1773551,osm:way/618306608
+124,Terminal Transmediterranea (Acciona) - Ferry de Barcelona,port,41.3681459,2.1771882,osm:way/618634979
+125,Terminal F1 Balearia,port,41.3467934,2.1730105,osm:way/618634980
+126,Manipuladora de Mercancías SL,port,41.34325,2.1497035,osm:way/618634981
+127,Terminal F3 Grimaldi,port,41.3636839,2.1756468,osm:way/618739591
+128,Portcemen,port,41.3603792,2.1742869,osm:way/618755730
+129,Cargill SLU,port,41.3467937,2.1584881,osm:way/618798107
+130,"Terminal de Cafè i Cacau BIT , SA",port,41.3486987,2.1572444,osm:way/618798108
+131,TERCAT - Dipòsit Contenidors Buits,port,41.3503156,2.1530174,osm:way/618798110
+132,Bunge Ibérica SA,port,41.3599396,2.1689026,osm:way/618798111
+133,"Autoterminal, SA",port,41.32772,2.1460887,osm:way/619514181
+134,"SETRAM, SA",port,41.3333592,2.143744,osm:way/619514183
+135,Decal,port,41.3274548,2.1510345,osm:way/619523285
+136,Transportes ferroviariarios especiales,port,41.3321287,2.159623,osm:way/620358626
+137,Meroil,port,41.3336041,2.1575889,osm:way/620358628
+138,Meroil Tank (Lukoil),port,41.3339834,2.1603999,osm:way/620358629
+139,Relisa,port,41.3358561,2.155282,osm:way/620358644
+140,Tepsa,port,41.3334363,2.1538943,osm:way/620358645
+141,Terquimsa,port,41.3309704,2.1526794,osm:way/620358646
+142,"Koalagás , SA",port,41.3266136,2.1525294,osm:way/620358647
+143,Petromiralles,port,41.3285017,2.1575105,osm:way/620392277
+144,Mare Combinato,port,41.3291622,2.1581544,osm:way/620392283
+145,Grup Sarbus TCC,port,41.3303852,2.1580289,osm:way/620392287
+146,TMA,port,41.3287809,2.1585876,osm:way/620392293
+147,Mosca Marítim,port,41.32946,2.1592858,osm:way/620392298
+148,SENSE US - SOLAR,port,41.3302053,2.1587987,osm:way/620392303
+149,Transportes Martín,port,41.3302376,2.159612,osm:way/620392310
+150,Quimidroga,port,41.3300892,2.1559595,osm:way/620485764
+151,Portinho do Canal,port,37.7370816,-8.7994538,osm:way/654300755
+152,Plataforma Logística de Elvas,port,38.8962336,-7.1421864,osm:way/694151543
+153,Porto de Pesca,port,41.182865,-8.6982912,osm:way/699952409
+154,Instalaciones Portuarias de Campamento,port,36.1698736,-5.3770741,osm:way/702562146
+155,Porto da Figueira da Foz - Porto de Pesca,port,40.1392725,-8.8581716,osm:way/769199695
+156,Porto da Figueira da Foz - Zona Industrial,port,40.1403467,-8.8486867,osm:way/769199697
+157,Porto da Figueira da Foz - Terminal Multiusos,port,40.1471883,-8.8459078,osm:way/769199707
+158,Terminal de Cruceros de Málaga,port,36.7069119,-4.4145279,osm:way/808763390
+159,Peirao de Mugardos,port,43.4642481,-8.2569319,osm:way/884835486
+160,Terminal Petroquímico,port,37.9509393,-8.8806559,osm:way/952717301
+161,Terminal Multipurpose de Sines,port,37.9403323,-8.853268,osm:way/952717305
+162,Terminal XXI,port,37.9341123,-8.8410052,osm:way/952717306
+163,Terminal Ro-Ro,port,41.1781957,-8.6995399,osm:way/972374323
+164,Depósitos Liquidos,port,41.1802131,-8.6963301,osm:way/972374327
+165,Terminal Cimenteiro,port,41.1848614,-8.6979563,osm:way/972374340
+166,Terminal Multiusos,port,41.1802406,-8.6980296,osm:way/972553005
+167,Terminal Sul TCGL,port,41.1817015,-8.6955729,osm:way/972553006
+168,Terminal Polivalente - Granéis Sólidos,port,41.1894392,-8.6891544,osm:way/972553016
+169,Parque de Espera de Contentores,port,41.1894091,-8.6838125,osm:way/972553052
+170,Terminal Polivalente,port,41.1870953,-8.695249,osm:way/972623256
+171,Terminal Cerealífero,port,41.1947445,-8.6858353,osm:way/972862867
+172,Estação de Passageiros,port,41.1873727,-8.6987166,osm:way/972881767
+173,Depósito de Produtos Petrolíferos,port,41.1793002,-8.7099267,osm:way/973079078
+174,Alcaidesa Varadero,port,36.1592806,-5.3575878,osm:way/1254615022
+175,Kofradiako kaia,port,43.3054251,-2.2022637,osm:way/1294720127
+176,Kirol kaia,port,43.3041972,-2.2010331,osm:way/1298204415
+177,Medway Terminals - Sines Raquete,port,37.9766309,-8.7752564,osm:way/1318934000
+178,Terminal de Granéis Sólidos Agroalimentares,port,40.6534373,-8.7122584,osm:way/1319033106
+179,Terminal de Granéis Sólidos Não Alimentar,port,40.6546975,-8.7168333,osm:way/1319033107
+180,Terminal Norte Multiusos,port,40.6456069,-8.7280396,osm:way/1319033108
+181,Terminal de Contentores,port,40.6449697,-8.7215418,osm:way/1319033109
+182,Puerto de Coralmar,port,38.9445182,1.2334829,osm:way/1320074030
+183,Port de Vedella,port,38.9144488,1.2235723,osm:way/1355353730
+184,Port Es Boldado,port,38.8906831,1.2222809,osm:way/1355353731
+185,Port Es Canaret,port,39.1026791,1.4851364,osm:way/1366542304
+186,Port Mastella,port,39.0244292,1.596705,osm:way/1366571677
+187,Zumaiako kaia,port,43.2967869,-2.2522144,osm:way/1381818979
+188,Porto da Lapa das Pombas,port,37.6363558,-8.8082915,osm:way/1450124631
+189,Porto de Pesca de Olhão,port,37.0261193,-7.8335898,osm:way/1453191942
+190,Puerto de Málaga,port,36.70912,-4.4213069,osm:relation/3881070
+191,Port de Tarragona,port,41.0951125,1.222517,osm:relation/7331271
+192,"Enagás ,SA",port,41.3393013,2.1592988,osm:relation/8603118
+193,Port de Castelló,port,39.9629332,0.0174603,osm:relation/9646829
+194,Porto de Celeiro,port,43.6754314,-7.598365,osm:relation/10844220
+195,Puerto de Santander,port,43.4474824,-3.8209504,osm:relation/11750099
+196,CSP Iberian Valencia Terminal,port,39.4325257,-0.3217545,osm:relation/15864349
+197,Ipar kaia,port,43.3054468,-2.1988171,osm:relation/17746778
+198,Terminal de Gás Natural,port,37.939311,-8.8452799,osm:relation/18000496

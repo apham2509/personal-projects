@@ -1,6 +1,7 @@
 .env
-map_key.txt
-data/
+map_key.txt.example
+data/fires/
+site/
 __pycache__/
 *.pyc
 .venv/

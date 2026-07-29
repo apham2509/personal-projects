@@ -1,18 +1,28 @@
-"""Download infrastructure asset locations for Spain and Portugal.
+"""Download infrastructure asset locations for a study region.
 
 Two public sources:
-  - Airports: OurAirports open dataset (large + medium airports).
+  - Airports: OurAirports open dataset (large + medium airports, global).
   - Ports: OpenStreetMap via the Overpass API (harbour / port features).
 
-Writes a combined data/infrastructure/assets.csv with one row per asset:
+Writes data/infrastructure/<region>/assets.csv with one row per asset:
 asset_id, name, kind, latitude, longitude, source.
 
-Major roads are on the roadmap (they need line geometries and a proper
-geospatial buffer join - see README).
+Notes:
+  - Regions defined with country codes (e.g. iberia = ES+PT) filter assets
+    to those countries; plain bounding-box regions take everything inside.
+  - For very large regions (continents, world) the Overpass port query is
+    skipped - it would time out - and only airports are included.
+  - Major roads are on the roadmap (they need line geometries and a proper
+    geospatial buffer join - see README).
+
+Usage:
+    python download_infrastructure.py                    # iberia
+    python download_infrastructure.py --region greece
 """
 
 from __future__ import annotations
 
+import argparse
 import io
 import sys
 import time
@@ -21,46 +31,57 @@ from pathlib import Path
 import pandas as pd
 import requests
 
+import regions
+
 OURAIRPORTS_URL = "https://davidmegginson.github.io/ourairports-data/airports.csv"
 OVERPASS_URLS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
 ]
 
-# Same mainland bounding box as the fire download (west,south,east,north).
-# Applied after download to drop the Canary, Madeira and Azores islands.
-WEST, SOUTH, EAST, NORTH = -10.0, 35.9, 4.5, 44.0
-
-# Query within the ES/PT country areas (not the raw bbox) so coastal
-# features in France, Algeria or Morocco are excluded.
-OVERPASS_QUERY = """
-[out:json][timeout:180];
-area["ISO3166-1"~"^(ES|PT)$"][admin_level=2]->.a;
-(
-  node["seamark:type"="harbour"](area.a);
-  way["seamark:type"="harbour"](area.a);
-  node["harbour"="yes"](area.a);
-  way["harbour"="yes"](area.a);
-  way["industrial"="port"](area.a);
-  relation["industrial"="port"](area.a);
-);
-out center tags;
-"""
+# Overpass cannot answer harbour queries over continent-scale boxes.
+MAX_PORT_QUERY_SQ_DEGREES = 2500
 
 # Leisure marinas are not logistics infrastructure.
 MARINA_CATEGORIES = {"marina", "marina_no_facilities", "yacht_harbour"}
 
+PORT_FILTERS = [
+    'node["seamark:type"="harbour"]',
+    'way["seamark:type"="harbour"]',
+    'node["harbour"="yes"]',
+    'way["harbour"="yes"]',
+    'way["industrial"="port"]',
+    'relation["industrial"="port"]',
+]
 
-def fetch_airports() -> pd.DataFrame:
+
+def build_port_query(region: regions.Region) -> str:
+    west, south, east, north = region.bounds
+    if region.countries:
+        # Query country areas so coastal features of neighbouring countries
+        # inside the bbox are excluded.
+        iso = "|".join(region.countries)
+        scope = f'area["ISO3166-1"~"^({iso})$"][admin_level=2]->.a;\n'
+        suffix = "(area.a)"
+    else:
+        scope = ""
+        suffix = f"({south},{west},{north},{east})"
+    body = "\n".join(f"  {f}{suffix};" for f in PORT_FILTERS)
+    return f"[out:json][timeout:180];\n{scope}(\n{body}\n);\nout center tags;\n"
+
+
+def fetch_airports(region: regions.Region) -> pd.DataFrame:
+    west, south, east, north = region.bounds
     response = requests.get(OURAIRPORTS_URL, timeout=120)
     response.raise_for_status()
     df = pd.read_csv(io.StringIO(response.text))
     df = df[
-        df["iso_country"].isin(["ES", "PT"])
-        & df["type"].isin(["large_airport", "medium_airport"])
-        & df["latitude_deg"].between(SOUTH, NORTH)
-        & df["longitude_deg"].between(WEST, EAST)
+        df["type"].isin(["large_airport", "medium_airport"])
+        & df["latitude_deg"].between(south, north)
+        & df["longitude_deg"].between(west, east)
     ]
+    if region.countries:
+        df = df[df["iso_country"].isin(region.countries)]
     return pd.DataFrame(
         {
             "name": df["name"],
@@ -94,9 +115,14 @@ def overpass(query: str, attempts_per_url: int = 2) -> dict:
     raise last_error
 
 
-def fetch_ports() -> pd.DataFrame:
+def fetch_ports(region: regions.Region) -> pd.DataFrame:
+    if regions.area_sq_degrees(region) > MAX_PORT_QUERY_SQ_DEGREES:
+        print(f"Region '{region.slug}' is too large for an OSM port query - "
+              "including airports only. Use a smaller region for ports.")
+        return pd.DataFrame()
+    west, south, east, north = region.bounds
     rows = []
-    for element in overpass(OVERPASS_QUERY).get("elements", []):
+    for element in overpass(build_port_query(region)).get("elements", []):
         tags = element.get("tags", {})
         name = tags.get("name") or tags.get("seamark:name")
         if not name:
@@ -110,8 +136,8 @@ def fetch_ports() -> pd.DataFrame:
         lon = element.get("lon") or element.get("center", {}).get("lon")
         if lat is None or lon is None:
             continue
-        if not (SOUTH <= lat <= NORTH and WEST <= lon <= EAST):
-            continue  # islands outside the mainland study area
+        if not (south <= lat <= north and west <= lon <= east):
+            continue  # e.g. overseas islands of a matched country
         rows.append(
             {
                 "name": name,
@@ -130,15 +156,23 @@ def fetch_ports() -> pd.DataFrame:
 
 
 def main() -> int:
-    outdir = Path("data/infrastructure")
+    parser = argparse.ArgumentParser(description="Download infrastructure assets.")
+    parser.add_argument("--region", default="iberia",
+                        help=f"{', '.join(regions.REGIONS)} or 'west,south,east,north'")
+    args = parser.parse_args()
+    region = regions.resolve(args.region)
+
+    outdir = Path("data/infrastructure") / region.slug
     outdir.mkdir(parents=True, exist_ok=True)
 
-    airports = fetch_airports()
-    print(f"Airports (large + medium, ES/PT mainland): {len(airports)}")
-    ports = fetch_ports()
+    airports = fetch_airports(region)
+    print(f"Airports (large + medium) in {region.slug}: {len(airports)}")
+    ports = fetch_ports(region)
     print(f"Named ports/harbours from OSM: {len(ports)}")
 
     assets = pd.concat([airports, ports], ignore_index=True)
+    if assets.empty:
+        raise SystemExit("No assets found for this region.")
     assets.insert(0, "asset_id", range(1, len(assets) + 1))
     out_file = outdir / "assets.csv"
     assets.to_csv(out_file, index=False)

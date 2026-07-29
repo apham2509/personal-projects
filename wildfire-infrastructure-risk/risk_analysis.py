@@ -35,6 +35,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+import regions
+
 EARTH_RADIUS_KM = 6371.0
 
 
@@ -123,25 +125,32 @@ def analyze(fires: pd.DataFrame, assets: pd.DataFrame, radii: list[int]) -> pd.D
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Wildfire exposure per infrastructure asset.")
-    parser.add_argument("--fires-dir", default="data/fires")
-    parser.add_argument("--assets", default="data/infrastructure/assets.csv")
+    parser.add_argument("--region", default="iberia",
+                        help=f"{', '.join(regions.REGIONS)} or 'west,south,east,north'")
+    parser.add_argument("--fires-dir", default=None, help="Default: data/fires/<region>")
+    parser.add_argument("--assets", default=None, help="Default: data/infrastructure/<region>/assets.csv")
     parser.add_argument("--radii", default="5,10,25", help="Comma-separated radii in km")
-    parser.add_argument("--out", default="results/asset_risk.csv")
+    parser.add_argument("--out", default=None, help="Default: results/asset_risk_<region>.csv")
     parser.add_argument("--high-confidence-only", action="store_true")
     parser.add_argument("--include-all-types", action="store_true",
                         help="Keep static/industrial and offshore detections (types 1-3)")
     args = parser.parse_args()
 
+    region = regions.resolve(args.region)
+    fires_dir = args.fires_dir or f"data/fires/{region.slug}"
+    assets_path = args.assets or f"data/infrastructure/{region.slug}/assets.csv"
+    out_path = args.out or f"results/asset_risk_{region.slug}.csv"
+
     radii = [int(r) for r in args.radii.split(",")]
-    fires = load_fires(args.fires_dir, args.high_confidence_only, args.include_all_types)
-    assets = pd.read_csv(args.assets)
+    fires = load_fires(fires_dir, args.high_confidence_only, args.include_all_types)
+    assets = pd.read_csv(assets_path)
     print(f"Assets: {len(assets)} ({assets['kind'].value_counts().to_dict()})")
 
     result = analyze(fires, assets, radii)
 
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    result.to_csv(args.out, index=False)
-    print(f"\nWrote {len(result)} asset rows to {args.out}")
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    result.to_csv(out_path, index=False)
+    print(f"\nWrote {len(result)} asset rows to {out_path}")
     print(f"Risk levels: {result['risk_level'].value_counts().to_dict()}")
 
     print("\nMost exposed assets:")
