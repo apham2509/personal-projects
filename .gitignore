@@ -1,4 +1,6 @@
 .env
+map_key.txt
+data/
 __pycache__/
 *.pyc
 .venv/

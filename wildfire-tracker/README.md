@@ -1,4 +1,4 @@
-# Wildfire Tracker 🔥🛰️
+# Wildfire Tracker
 
 Pull near-real-time satellite fire detections from the [NASA FIRMS API](https://firms.modaps.eosdis.nasa.gov/api/) — as a pandas DataFrame, a CSV export, or a quick map.
 
