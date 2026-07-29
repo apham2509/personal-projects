@@ -1,6 +1,6 @@
 .env
 map_key.txt.example
-data/fires/
+**/data/fires/
 site/
 __pycache__/
 *.pyc
