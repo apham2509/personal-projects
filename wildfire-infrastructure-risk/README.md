@@ -133,6 +133,7 @@ wildfire-infrastructure-risk/
   prepare_history.py          regional daily aggregates -> results/history_<region>.json
   prepare_world.py            world aggregates + baseline -> results/history_world.json
   render_static.py            NRT stitch + dashboard build -> site/
+  bin/                        retired code kept for reference (original local Dash app)
   results/                    committed aggregates and risk baselines (CI inputs)
   data/infrastructure/        committed asset lists
   data/fires/                 raw archives - local only, gitignored (world: 2.8 GB)
