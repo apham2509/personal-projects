@@ -6,4 +6,4 @@ Side projects and experiments. Each project lives in its own folder with a short
 
 | Project | Description | Tech |
 |---------|-------------|------|
-| [wildfire-infrastructure-risk](./wildfire-infrastructure-risk) | Wildfire exposure and risk scores for airports and ports in Spain/Portugal, from NASA FIRMS satellite data (2018-2025) | Python, pandas, NumPy, OSM |
+| [wildfire-infrastructure-risk](./wildfire-infrastructure-risk) | Global wildfire exposure monitor: 150M+ NASA FIRMS detections (2018-now) against 1,300 airports and ports, with a live daily-updated dashboard | Python, pandas, NumPy, Plotly, GitHub Actions |

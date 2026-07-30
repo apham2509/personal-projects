@@ -128,6 +128,9 @@ def baseline_from_exposure(assets: pd.DataFrame, exposure: dict) -> pd.DataFrame
     proximity = pd.cut(df["nearest_km"], bins=[-1, 5, 10, 25, np.inf],
                        labels=[1.0, 0.6, 0.3, 0.0]).astype(float).fillna(0.0)
     df["risk_score"] = (0.5 * days_pct + 0.35 * frp_pct + 0.15 * proximity).round(3)
+    # Tied ranks give zero-exposure assets the tie-block's average percentile;
+    # an asset with no exposure at all should score zero outright.
+    df.loc[df["days_exposed_10km"].eq(0) & df["total_frp_10km"].eq(0), "risk_score"] = 0.0
     df["risk_level"] = pd.cut(df["risk_score"], bins=[-1, 0.40, 0.70, 2],
                               labels=["low", "medium", "high"])
     return df.sort_values("risk_score", ascending=False)

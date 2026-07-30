@@ -20,10 +20,6 @@ import requests
 
 API_BASE = "https://firms.modaps.eosdis.nasa.gov"
 
-# Mainland Spain + Portugal (west,south,east,north). Excludes the Canary,
-# Madeira and Azores islands so fire and infrastructure extents match.
-IBERIA_BBOX = "-10.0,35.9,4.5,44.0"
-
 
 class FirmsError(RuntimeError):
     """Raised when the FIRMS API rejects a request."""
@@ -81,7 +77,7 @@ def wait_for_quota(threshold: int = 4500, poll_seconds: int = 60) -> None:
 
 def area_fires(
     source: str,
-    bbox: str = IBERIA_BBOX,
+    bbox: str = "world",
     days: int = 5,
     date: str | None = None,
 ) -> pd.DataFrame:

@@ -117,6 +117,10 @@ def analyze(fires: pd.DataFrame, assets: pd.DataFrame, radii: list[int]) -> pd.D
         result["nearest_km"], bins=[-1, 5, 10, 25, np.inf], labels=[1.0, 0.6, 0.3, 0.0]
     ).astype(float)
     result["risk_score"] = (0.5 * days_pct + 0.35 * frp_pct + 0.15 * proximity).round(3)
+    # Tied ranks give zero-exposure assets the tie-block's average percentile;
+    # an asset with no exposure at all should score zero outright.
+    result.loc[result["days_exposed_10km"].eq(0) & result["total_frp_10km"].eq(0),
+               "risk_score"] = 0.0
     result["risk_level"] = pd.cut(
         result["risk_score"], bins=[-1, 0.40, 0.70, 2], labels=["low", "medium", "high"]
     )

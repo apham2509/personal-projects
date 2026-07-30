@@ -31,12 +31,10 @@ from pathlib import Path
 import pandas as pd
 
 import firms
-import regions
 import world_regions
 from prepare_history import EPOCH, aggregate_cells, day_index, exposure_events
 from prepare_world import assign_region
 
-WORLD = regions.REGIONS["world"]
 WORLD_VIEW = {"center": {"lat": 15, "lon": 10}, "zoom": 1.3}
 
 

@@ -1,92 +1,163 @@
 # Wildfire Infrastructure Risk Monitor
 
-Which airports, ports and other critical infrastructure are most exposed to active wildfires?
+> **Summary:** Critical transport infrastructure has no systematic early view of wildfire exposure: operators typically learn of nearby fires from the news, hours to days after a satellite has already seen them. This project reduces 153 million NASA FIRMS/VIIRS active-fire detections (2018 to present, gapless to yesterday) into a percentile-based chronic-exposure risk index over 1,302 airports and ports worldwide, served as a fully client-interactive dashboard that rebuilds itself daily on GitHub Actions with zero hosting infrastructure.
 
-This project combines NASA FIRMS satellite fire detections with public infrastructure locations to quantify wildfire exposure per asset and assign a transparent operational-risk score. It works for any geography (named regions or any bounding box), covers the historical record (2018-2025 by default), and includes both a local interactive dashboard and a daily-refreshed live page published via GitHub Actions + GitHub Pages.
+[Interactive Dashboard](https://apham2509.github.io/personal-projects/wildfire-infrastructure-risk/) | [Automated Daily Pipeline](https://github.com/apham2509/personal-projects/actions/workflows/update-dashboard.yml)
 
-Live dashboard: https://apham2509.github.io/personal-projects/wildfire-infrastructure-risk/
+---
 
-## Data sources
+## Output Preview & Key Metrics
 
-| Source | What | Why |
-|--------|------|-----|
-| [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/api/) `VIIRS_SNPP_SP` | Satellite fire/thermal-anomaly detections at ~375 m resolution, from 2012 onward | Standard-processing archive is consistently calibrated, which NASA recommends over the NRT feed for analysis |
-| [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/api/) `VIIRS_SNPP_NRT` | Same instrument, near-real-time (last ~2 months) | Powers the daily live dashboard |
-| [OurAirports](https://ourairports.com/data/) | Airport locations and classifications (public domain, global) | Large + medium airports |
-| OpenStreetMap (Overpass API) | Named harbours and port areas | Port locations (leisure marinas excluded) |
+![Dashboard Screenshot](./assets/dashboard_preview.png)
 
-Each FIRMS record includes latitude/longitude, acquisition date and UTC time, detection confidence (l/n/h), fire radiative power (FRP, in MW - a proxy for fire intensity), brightness temperatures, satellite, day/night flag, and a detection type (vegetation fire vs. static land source).
+- **153,160,339** vegetation-fire detections processed (2018-01-01 to present; 165M raw rows, 2.8 GB) and reduced **140:1** to a 20 MB client payload with day-accurate exposure metrics.
+- **1,302 assets monitored** (1,172 large airports worldwide + 130 commercial ports); **414 airports (35%)** classify as high chronic-exposure risk over the 8.5-year record; in a typical peak-season 30-day window, **~500 assets** have active fire within 10 km.
+- **End-to-end latency:** detections appear on the dashboard within ~3 hours of satellite overpass (NRT feed) via a daily automated rebuild; any date-range/region/country query recomputes client-side in under 100 ms across ~800k aggregated cells.
 
-## Geography
+---
 
-Analyses run per region. Built-in regions: `world`, `iberia`, `greece`, `mediterranean`, `europe`, `california`, `north-america`, `south-america`, `africa`, `australia`, `southeast-asia`, `vietnam`, `india`, `siberia` - or pass any bounding box as `"west,south,east,north"`. Regions defined with country codes (iberia, greece, australia, vietnam, india) filter infrastructure to those countries; ports are skipped for continent-scale regions (the Overpass query would time out) while airports work globally.
+## Problem Statement & Context
 
-Outputs are stored per region: `data/fires/<region>/`, `data/infrastructure/<region>/assets.csv`, `results/asset_risk_<region>.csv`.
+**Background & Motivation.** Wildfires disrupt transport networks: airport closures, port terminal evacuations, road and rail outages. The underlying observation data exists - NASA's VIIRS instruments detect active fire at 375 m resolution, twice daily, globally - but it arrives as tens of thousands of raw thermal-anomaly points per day with no notion of *what is at risk*. The operational failure mode this project addresses is the gap between "a satellite saw fire" and "a decision-maker knows which assets are affected, how intensely, and whether this is chronic or exceptional."
 
-The web dashboard is one unified world dataset: the full 2018-2026 global archive (~165M detections, 2.8 GB raw) reduced to monthly 1-degree heat cells, per-geographic-region daily totals, and day-accurate exposure for ~1,200 large airports worldwide plus the commercial ports of Spain and Portugal (port coverage grows region by region - OSM cannot answer world-scale port queries). The Region dropdown offers 11 geographic divisions (Europe, South Asia, ...) defined in `world_regions.py`; the Country dropdown cascades from the selected region. Regional fire counts attribute detections by bounding box, so region borders are approximate. Gapless to yesterday via the near-real-time feed.
+**Target Stakeholders.** Network and logistics operations teams (which nodes face disruption this week), risk engineers and business-continuity planners (which assets need mitigation investment, based on 8+ years of history), and insurers/analysts pricing location-specific wildfire exposure.
 
-## How to run the whole thing
+**Baseline Limitations.** Naive approaches fail in specific ways:
+
+- *News- or report-based monitoring* lags satellite observation by hours to days and has uneven geographic coverage.
+- *Raw-feed alerting* ("any detection within X km") is dominated by false positives: persistent industrial heat sources (steelworks, refineries, flares) look identical to fires in a single observation. In validation, the port of Gijon showed 180 apparent exposure days that were entirely the neighbouring steelworks.
+- *Snapshot views* cannot distinguish an asset's single bad week from chronic seasonal exposure - the quantity that should drive infrastructure investment.
+- *Serving the raw data* is infeasible in a browser: 60k+ detections/day globally, ~20M rows/year.
+
+---
+
+## Mathematical Framing & Methodological Design
+
+### 1. Mathematical Formulation
+
+**Data.** Each detection $i$ is a tuple $(\mathbf{x}_i, t_i, p_i, \tau_i)$: location (lat/lon), acquisition date, fire radiative power $p_i$ (MW), and detection type $\tau_i$. The archive keeps only presumed vegetation fires, $\tau_i = 0$, which removes static industrial heat sources.
+
+**Distance.** Asset-to-detection distance uses the haversine great-circle metric with Earth radius $R = 6371$ km:
+
+$$d(\mathbf{a}, \mathbf{x}) = 2R \arcsin \sqrt{\sin^2\tfrac{\Delta\phi}{2} + \cos\phi_a \cos\phi_x \sin^2\tfrac{\Delta\lambda}{2}}$$
+
+**Exposure.** For asset $a$, radius $r \in \{10, 25\}$ km and day $t$, the exposure set is $E_a^r(t) = \{\, i : d(\mathbf{a}, \mathbf{x}_i) \le r,\ t_i = t \,\}$. From it, per selected date window $W$:
+
+$$N_a^r = \sum_{t \in W} |E_a^r(t)|, \qquad F_a = \sum_{t \in W} \sum_{i \in E_a^{10}(t)} p_i, \qquad D_a = |\{\, t \in W : E_a^{10}(t) \neq \emptyset \,\}|, \qquad d_a^{\min} = \min_{i} d(\mathbf{a}, \mathbf{x}_i)$$
+
+i.e. detection counts, cumulative FRP within 10 km, distinct exposure days, and nearest-approach distance. An asset is *exposed* in $W$ if $D_a > 0$ and *near fire* if only the 25 km set is non-empty.
+
+**Risk index.** Over the full record, each asset receives a chronic-exposure score built from empirical CDFs (percentile ranks $\hat{F}$) across the asset population:
+
+$$R_a = 0.5\,\hat{F}_D(D_a) + 0.35\,\hat{F}_F(F_a) + 0.15\,\pi(d_a^{\min}), \qquad \pi(d) = \begin{cases} 1.0 & d < 5 \text{ km} \\ 0.6 & 5 \le d < 10 \\ 0.3 & 10 \le d < 25 \\ 0 & \text{otherwise} \end{cases}$$
+
+with classification $R_a \ge 0.70 \Rightarrow$ high, $R_a \ge 0.40 \Rightarrow$ medium, else low, and an explicit override $R_a = 0$ when $D_a = F_a = 0$ (tied percentile ranks would otherwise assign zero-exposure assets the tie-block's average rank). Weights encode the design position that *chronic* exposure (days) matters more than cumulative intensity, which matters more than a one-off close approach.
+
+**Spatial reduction.** The heatmap quantizes detections to grid cells $g(\mathbf{x}) = (\lfloor \phi/\delta \rceil, \lfloor \lambda/\delta \rceil)$ with $\delta = 1°$ per calendar month at world scale (0.05° per day for regional studies), storing counts per (cell, period). Exposure metrics are never quantized - they are computed from exact distances and stored per (asset, day) - so KPIs and the asset table stay day-accurate while the map trades resolution for shippability.
+
+### 2. System Architecture & Pipeline Logic
+
+```
+NASA FIRMS area API ->  download_fires.py      per-year csv.gz archive (2.8 GB, local only)
+OurAirports + OSM   ->  download_infrastructure.py   assets.csv per scope
+                        risk_analysis.py       exposure metrics + risk baseline (regional)
+                        prepare_world.py        world aggregates: monthly 1-degree cells,
+                                                per-geographic-region daily series,
+                                                per-asset exposure days, risk baseline
+                        prepare_history.py      regional daily aggregates (feeds ports)
+                        render_static.py        stitches near-real-time feed (archive end -> yesterday),
+                                                emits index.html + data_world.json (20 MB)
+GitHub Actions (05:30 UTC daily) -> GitHub Pages   static, CDN-served, zero infrastructure
+```
+
+Key mechanisms:
+
+- **Ingestion** works in 5-day windows (the API maximum), with quota-aware retry: world-scale responses cost ~200 of the 5,000-per-10-min transaction budget each, so the client blocks and resumes rather than failing. Transient network errors retry with backoff. Chunks are date-disjoint by construction and deduplicated defensively, and each daily build re-derives the NRT window from scratch, so reruns are idempotent.
+- **Gapless record.** The calibrated standard-processing archive ends where the near-real-time feed begins (currently 2026-04-27/28); the renderer verifies the boundary against the API's availability endpoint at every build.
+- **Asset exposure at scale** uses a sorted-latitude window search: detections are sorted by latitude once, each asset reads its $\pm 0.3°$ band via binary search, filters longitude, and only then computes exact haversine distances - $O(\log n + k)$ per asset instead of $O(n)$, which keeps 1,302 assets x 20M rows/year tractable on a laptop.
+- **Client-side analytics.** All interactivity (region -> cascading country filter, arbitrary from-to date ranges, sorting) is plain JavaScript over precomputed integer arrays; there is no query backend to operate, secure, or pay for.
+
+**Method Rationale.** Percentile-rank scoring was chosen over a supervised disruption model because no labeled outcome data (closures, delays) is joined yet - an unsupervised, population-relative index is honest about that, fully explainable to non-technical stakeholders, and robust to the heavy right skew of fire-exposure distributions (a Zambian airport with 1,000 exposure days would destroy any linear scale). Bounding-box region attribution was chosen over point-in-polygon tests as an $O(1)$ operation with a bounded, documented approximation error, appropriate because regional fire totals are contextual, while asset-level results use exact country codes and exact distances. Static pre-aggregation was chosen over a server because the data changes exactly once per day - a 20 MB versioned artifact on a CDN beats a database for this access pattern.
+
+### 3. Theoretical & Literature Grounding
+
+1. Schroeder, W., Oliva, P., Giglio, L., Csiszar, I. (2014). *The New VIIRS 375 m active fire detection data product: Algorithm description and initial assessment.* Remote Sensing of Environment 143, 85-96. - The detection product this system consumes, including its performance characteristics and known false-positive classes.
+2. Wooster, M. J., Roberts, G., Perry, G. L. W., Kaufman, Y. J. (2005). *Retrieval of biomass combustion rates and totals from fire radiative power observations.* Journal of Geophysical Research 110, D24311. - Establishes FRP as a physically grounded proxy for fire intensity and combustion rate, justifying its use as the intensity term in the risk index.
+3. Giglio, L., Schroeder, W., Justice, C. O. (2016). *The Collection 6 MODIS active fire detection algorithm and fire products.* Remote Sensing of Environment 178, 31-41. - The type-classification lineage (vegetation fire vs. static land source vs. offshore) on which the industrial-source filter relies.
+
+---
+
+## Experimental Results & Performance Analysis
+
+**Correctness validation.** Core math is verified against known ground truth: haversine distances within 0.2% on reference city pairs, including antimeridian crossings; day-index round-trips; streak detection; cell aggregation; and an end-to-end toy scenario through the scoring pipeline. Serialization is guarded by a strict browser-grade JSON parse at build time (`allow_nan=False` plus a Node `JSON.parse` check) after a production incident in which two Namibian airports - ISO code `NA`, silently parsed as NaN by pandas - shipped invalid JSON.
+
+**Face validity of rankings.** The Iberian regional study ranks Reus Airport and the Port of Tarragona highest, consistent with the documented 2022 Catalonia fire season; Seville, the Huelva/Algeciras port cluster and northern-Portugal airfields follow, matching the 2022 and record 2025 Iberian seasons (49k regional detections in 2025 vs. a 10-24k normal range). Global seasonality reproduces the expected pattern, dominated by the twin African burning seasons.
+
+**Industrial false-positive audit.** The type-0 filter removed 5,635 static-source detections from the 2022 Iberian data alone; without it, the port of Gijon ranked as the most exposed asset in Iberia (180 phantom exposure days from the adjacent steelworks). This is the single most consequential data-quality decision in the pipeline. Known residual: the NRT feed carries no type classification, so the most recent weeks can include industrial sources; they age out as the archive catches up.
+
+**Performance.** One-off world archive download: ~5.5 h (quota-bound, resumable per year). Full aggregation of 153M rows: ~10-35 min (I/O-cache dependent). Daily CI rebuild: 15-20 min, dominated by the ~3-month world NRT pull. Client: initial 20 MB payload (~4-5 MB gzip over the wire), then <100 ms per interaction over 800k cell-months and 1,302 exposure series.
+
+**Trade-offs and edge cases surfaced.**
+
+- World heatmap resolution is monthly x ~110 km (day-accurate KPIs/table compensate); regional studies keep daily x ~5 km.
+- Bounding-box region attribution bleeds at land borders (e.g. northern Mexico into Northern America); asset-level figures are unaffected.
+- Cloud cover hides fire from the sensor: absence of detections is not evidence of absence (per Schroeder et al. 2014).
+- A mid-July 2026 SNPP data gap is visible in the daily series - the pipeline reflects source outages honestly rather than interpolating.
+
+---
+
+## Product & Strategic Recommendations
+
+**Operational Action Items.**
+
+1. **Integrate the high-risk tier into continuity planning.** 414 airports worldwide sit in the high chronic-exposure class; their operators (and dependent logistics networks) should hold explicit wildfire playbooks and review them before their region's burning season, using the per-asset seasonality visible in the dashboard.
+2. **Use the daily exposed-asset list as an alerting trigger.** An asset entering "exposed" status (fire within 10 km) is a concrete, low-noise signal for same-day operational review - roughly 500 assets in a peak-season month, a reviewable volume.
+3. **Expand port coverage region by region.** Ports are currently Iberia-only (OSM cannot answer world-scale port queries); Mediterranean and Southeast Asian ports are the highest-value next additions given fire climatology and shipping density.
+
+**Production Deployment Considerations.** The system deliberately has no runtime infrastructure - static artifacts on GitHub Pages behind a CDN - so "deployment" reduces to the daily build. What requires monitoring: the NASA feed itself (the availability endpoint is checked every build; source outages and the SP/NRT boundary move), API quota consumption (world NRT pulls use ~75% of one 10-minute window), and payload growth (20 MB scales linearly with archive length; per-region sharding or a binary columnar format are the prepared mitigations). The FIRMS map key is a free, rate-limited credential; rotation is a one-line change.
+
+**Quantifiable ROI / Impact.** Replaces manual multi-source fire monitoring with a single daily artifact (estimated hours per week per operations analyst, at zero marginal hosting cost); brings disruption awareness from news-cycle latency (hours-days) to satellite latency (~3 h); and converts 8.5 years of open science data into an asset-ranked capital-allocation input that previously required a commercial risk-data subscription.
+
+---
+
+## Repository Structure & Quickstart
+
+```
+wildfire-infrastructure-risk/
+  firms.py                    NASA FIRMS API client (quota-aware, retrying)
+  regions.py                  named study regions (bounding boxes + country filters)
+  world_regions.py            geographic divisions: country->region map + attribution boxes
+  download_fires.py           archive ingestion, per year, resumable
+  download_infrastructure.py  airports (OurAirports) + ports (OSM Overpass)
+  risk_analysis.py            exposure metrics + risk scoring (regional studies)
+  prepare_history.py          regional daily aggregates -> results/history_<region>.json
+  prepare_world.py            world aggregates + baseline -> results/history_world.json
+  render_static.py            NRT stitch + dashboard build -> site/
+  results/                    committed aggregates and risk baselines (CI inputs)
+  data/infrastructure/        committed asset lists
+  data/fires/                 raw archives - local only, gitignored (world: 2.8 GB)
+  map_key.txt                 FIRMS API key (free; get yours at firms.modaps.eosdis.nasa.gov/api/map_key)
+```
 
 ```bash
-# 0. Setup (once)
-cd wildfire-infrastructure-risk
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-# the FIRMS MAP_KEY is read from map_key.txt (get your own free key at
-# https://firms.modaps.eosdis.nasa.gov/api/map_key - limit 5,000 requests / 10 min)
+git clone https://github.com/apham2509/personal-projects.git
+cd personal-projects/wildfire-infrastructure-risk
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
-# 1. Download historical fire detections (resumable; ~600 API calls, ~20 min)
-.venv/bin/python download_fires.py --region iberia --start 2018 --end 2025
-
-# 2. Download infrastructure assets (airports + ports)
-.venv/bin/python download_infrastructure.py --region iberia
-
-# 3. Compute exposure metrics and risk scores
-.venv/bin/python risk_analysis.py --region iberia
-
-# 4. Aggregate the archive into daily data for the web dashboard (commit the JSON)
-.venv/bin/python prepare_history.py --region iberia
-#    (for the global dataset: download_fires.py --region world, then prepare_world.py)
-
-# 5a. Interactive dashboard (local Dash app) -> http://127.0.0.1:8050
-.venv/bin/python dashboard.py --region iberia
-
-# 5b. Static web dashboard (archive + live NRT, date-range picker) -> site/
+# Rebuild the dashboard from the committed aggregates (pulls ~3 months of NRT data, ~5 min)
 .venv/bin/python render_static.py
+open site/index.html  # serve the site/ folder for the data fetch: python3 -m http.server -d site
+
+# Full reproduction from raw data (world archive: ~5.5 h download, quota-bound)
+.venv/bin/python download_fires.py --region world --start 2018 --end 2026
+.venv/bin/python download_infrastructure.py --region world
+.venv/bin/python prepare_world.py
+
+# Or a fast regional study (any bbox or named region, ~25 min end to end)
+.venv/bin/python download_fires.py --region iberia
+.venv/bin/python download_infrastructure.py --region iberia
+.venv/bin/python risk_analysis.py --region iberia
+.venv/bin/python prepare_history.py --region iberia
 ```
 
-To study another geography, repeat steps 1-4 with a different `--region` (e.g. `--region greece`, or `--region "20.0,35.0,30.0,42.0"`).
-
-## Daily automation
-
-`.github/workflows/update-dashboard.yml` runs every morning (05:30 UTC) on GitHub Actions: it pulls the last 5 days of near-real-time detections, recomputes which assets are currently exposed (against the committed historical baseline in `results/`), renders the static dashboard and deploys it to GitHub Pages. It can also be triggered manually from the Actions tab.
-
-## Metrics and risk score
-
-Per asset and radius (default 5/10/25 km): detection counts, high-confidence counts, total and maximum FRP, distance to the nearest detection, distinct exposure days within 10 km, the longest streak of consecutive exposure days, and the most recent exposure date.
-
-The risk score is deliberately simple and explainable:
-
-```
-score = 0.5  * percentile(days_exposed_10km)     # chronic exposure
-      + 0.35 * percentile(total_frp_10km)        # cumulative intensity
-      + 0.15 * proximity_factor(nearest_km)      # 1.0 (<5km) / 0.6 (<10km) / 0.3 (<25km) / 0
-```
-
-with `high >= 0.70`, `medium >= 0.40`, `low` otherwise. Percentiles are computed across the asset set, so the score ranks assets against their regional peers.
-
-## Key results (Iberia, 2018-2025)
-
-161,129 vegetation-fire detections analysed against 198 assets (68 airports, 130 ports): 71 assets score high-risk. The most exposed are Reus Airport and the Port of Tarragona (Catalonia), the Huelva and Algeciras port clusters, Seville Airport, and northern-Portugal airfields - consistent with the major Iberian fire seasons of 2022 and 2025.
-
-## Caveats
-
-- A FIRMS detection is a satellite pixel flagged as a thermal anomaly. The analysis keeps only `type = 0` (presumed vegetation fire) by default, which removes persistent industrial heat sources - in the 2022 data, the port of Gijón showed 180 "exposure days" that were actually the neighbouring steelworks, all tagged `type = 2` and correctly dropped by the filter. Use `--include-all-types` to keep everything, and `--high-confidence-only` to tighten further.
-- Proximity is measured to asset point coordinates, not asset polygons.
-- Cloud cover can hide fires from the satellite; absence of detections is not proof of absence of fire.
-
-## Roadmap
-
-- Major roads via Geofabrik OSM extracts and buffered line geometries (geopandas)
-- NASA GPM IMERG precipitation to test whether recent rainfall is associated with lower fire activity
-- SQL modelling of the pipeline outputs (staging -> marts)
+Data: NASA FIRMS (VIIRS 375 m active fire, LANCE/ESDIS), OurAirports (public domain), OpenStreetMap contributors (ODbL). The dashboard refreshes daily at 05:30 UTC via GitHub Actions.
