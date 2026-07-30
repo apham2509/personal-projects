@@ -59,7 +59,11 @@ def pull_recent(region: regions.Region, start: dt.date, source: str) -> pd.DataF
 
 def merged_data(region: regions.Region, source: str) -> dict:
     history = json.loads(Path(f"results/history_{region.slug}.json").read_text())
-    assets = pd.read_csv(f"data/infrastructure/{region.slug}/assets.csv")
+    # keep_default_na: Namibia's ISO code is the string "NA", not a missing value
+    assets = pd.read_csv(f"data/infrastructure/{region.slug}/assets.csv",
+                         keep_default_na=False, na_values=[])
+    for col in ["latitude", "longitude"]:
+        assets[col] = pd.to_numeric(assets[col])
     if "country" not in assets.columns:
         assets["country"] = ""
 
@@ -620,7 +624,9 @@ def render(region_names: list, source: str, out: Path) -> None:
         region = regions.resolve(name)
         data = merged_data(region, source)
         data_path = out.parent / f"data_{region.slug}.json"
-        data_path.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
+        # allow_nan=False: a stray NaN must fail the build, not ship invalid JSON
+        data_path.write_text(json.dumps(data, separators=(",", ":"), allow_nan=False),
+                             encoding="utf-8")
         manifest.append({"slug": region.slug,
                          "label": REGION_LABELS.get(region.slug, region.slug),
                          "file": data_path.name, "available": True})

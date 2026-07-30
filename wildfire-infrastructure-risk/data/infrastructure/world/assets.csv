@@ -219,8 +219,8 @@ asset_id,name,kind,country,latitude,longitude,source
 218,Chileka International Airport,airport,MW,-15.677189,34.972319,ourairports:FWCL
 219,Kamuzu International Airport,airport,MW,-13.7894,33.780998,ourairports:FWKI
 220,Moshoeshoe I International Airport,airport,LS,-29.456277,27.554456,ourairports:FXMM
-221,Walvis Bay International Airport,airport,,-22.979332,14.647102,ourairports:FYWB
-222,Hosea Kutako International Airport,airport,,-22.4799,17.4709,ourairports:FYWH
+221,Walvis Bay International Airport,airport,NA,-22.979332,14.647102,ourairports:FYWB
+222,Hosea Kutako International Airport,airport,NA,-22.4799,17.4709,ourairports:FYWH
 223,Ndjili International Airport,airport,CD,-4.38575,15.4446,ourairports:FZAA
 224,Bangoka International Airport,airport,CD,0.481639,25.337999,ourairports:FZIC
 225,Goma International Airport,airport,CD,-1.666758,29.238037,ourairports:FZNA

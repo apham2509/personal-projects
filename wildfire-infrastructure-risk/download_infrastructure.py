@@ -74,7 +74,11 @@ def fetch_airports(region: regions.Region) -> pd.DataFrame:
     west, south, east, north = region.bounds
     response = requests.get(OURAIRPORTS_URL, timeout=120)
     response.raise_for_status()
-    df = pd.read_csv(io.StringIO(response.text))
+    # keep_default_na: Namibia's ISO code is the string "NA", not a missing value
+    df = pd.read_csv(io.StringIO(response.text), keep_default_na=False, na_values=[])
+    for col in ["latitude_deg", "longitude_deg"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    df = df.dropna(subset=["latitude_deg", "longitude_deg"])
     # World scope keeps the dataset shippable by tracking large airports only.
     types = ["large_airport"] if region.slug == "world" else ["large_airport", "medium_airport"]
     df = df[
