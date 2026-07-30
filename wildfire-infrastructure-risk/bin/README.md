@@ -8,3 +8,5 @@ Kept for reference; nothing in the live pipeline imports from here
   `pip install dash plotly`, download a regional fire archive
   (e.g. `python download_fires.py --region iberia`), then
   `python bin/dashboard.py --region iberia` from the project root.
+- `map_key.txt.example` - key-file template from before the key was
+  committed directly.

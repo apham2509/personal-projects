@@ -181,8 +181,14 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
   h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
   .badge { font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 999px;
            background: #e8f0fb; color: #1c5cab; }
+  .credit { font-size: 12.5px; color: var(--ink-2); margin-top: 6px; }
+  .credit a { color: var(--accent); text-decoration: none; }
+  .credit a:hover { text-decoration: underline; }
   .subtitle { color: var(--ink-2); font-size: 14px; line-height: 1.6;
-              margin: 10px 0 24px; max-width: 880px; }
+              margin: 14px 0 24px; max-width: 880px; }
+  /* Terms in the intro sit near the top of the page: open their definition
+     popups downward so they are not clipped by the viewport edge. */
+  .subtitle .term:hover::after { bottom: auto; top: 135%; }
 
   .card { background: var(--card); border: 1px solid var(--border);
           border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 24px; }
@@ -231,15 +237,35 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
 
   .term { border-bottom: 1px dotted var(--ink-2); cursor: help; position: relative; }
   .term:hover::after { content: attr(data-tip); position: absolute; left: 0; bottom: 135%;
-    z-index: 30; width: 300px; background: #262622; color: #fbfbfa; font-size: 12px;
+    z-index: 30; width: min(300px, 78vw); background: #262622; color: #fbfbfa; font-size: 12px;
     font-weight: 400; line-height: 1.5; padding: 10px 12px; border-radius: 8px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.28); white-space: normal; }
+  #table-holder { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .empty { color: var(--ink-2); font-size: 13.5px; padding: 14px 6px; }
   .loading { color: var(--ink-2); padding: 60px 0; text-align: center; }
   footer { color: var(--ink-2); font-size: 12.5px; line-height: 1.75; margin-top: 8px;
            border-top: 1px solid var(--border); padding-top: 16px; }
   footer a { color: var(--accent); }
-  @media (max-width: 760px) { h1 { font-size: 23px; } }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 20px 14px 36px; }
+    h1 { font-size: 22px; }
+    .subtitle { font-size: 13px; margin-bottom: 18px; }
+    .controls { gap: 10px; padding: 12px 14px; }
+    .control { flex-wrap: wrap; }
+    .control:has(select) { width: 100%; }
+    select { flex: 1; max-width: none; }
+    .spacer { display: none; }
+    .tiles { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .tile { padding: 11px 13px; }
+    .tile-value { font-size: 19px; }
+    .card { margin-bottom: 16px; }
+    .card-strip { padding: 10px 14px; }
+    .card-body { padding: 8px; }
+    #map { height: 420px !important; }
+    #trend { height: 210px !important; }
+    th, td { padding: 6px 8px; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -249,6 +275,9 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
     <h1>Wildfire Infrastructure Risk Monitor</h1>
     <span class="badge" id="region-badge">All regions</span>
   </div>
+  <div class="credit">by <a href="https://github.com/apham2509">Anh Pham</a>
+    &middot; <a href="https://www.linkedin.com/in/minhanh2509/">LinkedIn</a>
+    &middot; <a href="https://github.com/apham2509/personal-projects/tree/main/wildfire-infrastructure-risk">source</a></div>
   <div class="subtitle">
     Daily satellite
     <span class="term" data-tip="A 'detection' is one ~375 m satellite pixel flagged as a thermal anomaly by the VIIRS instrument. In the historical archive, static industrial heat sources are filtered out; what remains is presumed vegetation fire.">fire detections</span>
