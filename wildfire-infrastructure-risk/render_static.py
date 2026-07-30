@@ -1,20 +1,24 @@
 """Render the wildfire dashboard as a static, client-interactive HTML page.
 
-Build-time work, per region:
-  - loads the committed daily aggregates (results/history_<region>.json,
-    2018 -> archive end, built by prepare_history.py)
-  - pulls near-real-time detections from the day after the archive ends up
-    to today, so the daily record is gapless from 2018-01-01 to now
-  - writes site/: index.html (page + logic) and data_<region>.json
+One unified world dataset. Build-time work:
+  - loads the committed world aggregates (results/history_world.json:
+    monthly 1-degree heat cells, per-region daily totals, per-asset
+    exposure days for all large airports; built by prepare_world.py)
+  - folds in the Iberian ports from the detailed regional study
+    (results/history_iberia.json), so the asset set is airports + ports
+  - pulls world near-real-time detections from the day after the archive
+    ends up to today, so the record is gapless from 2018-01-01 to now
+  - writes site/: index.html and data_world.json
 
-Viewer-side, everything is client-interactive: region and country dropdowns,
-a from-to date range picker (default: the 30 days up to yesterday), hoverable
-definitions, a heatmap with colorbar, KPI tiles, trend chart and a sortable
-exposure table. Deploys to GitHub Pages as-is.
+Viewer-side: cascading Region -> Country dropdowns (region = geographic
+division: Europe, South Asia, ... - country options follow the region),
+a from-to date range picker defaulting to the 30 days up to yesterday,
+hoverable definitions, a heatmap with colorbar, KPI tiles, trend chart
+and a sortable exposure table. Deploys to GitHub Pages as-is.
 
 Usage:
-    python render_static.py                        # iberia -> site/
-    python render_static.py --regions iberia,world --out ../site/wildfire-infrastructure-risk/index.html
+    python render_static.py
+    python render_static.py --out ../site/wildfire-infrastructure-risk/index.html
 """
 
 from __future__ import annotations
@@ -28,24 +32,22 @@ import pandas as pd
 
 import firms
 import regions
-from prepare_history import EPOCH, aggregate_cells, daily_totals, exposure_events
+import world_regions
+from prepare_history import EPOCH, aggregate_cells, day_index, exposure_events
+from prepare_world import assign_region
 
-REGION_LABELS = {
-    "iberia": "Iberia (Spain & Portugal)",
-    "world": "All regions (world)",
-}
-REGION_VIEWS = {"world": ({"lat": 15, "lon": 10}, 1.3)}
-WORLD_PLACEHOLDER_NOTE = "world archive downloading - available soon"
+WORLD = regions.REGIONS["world"]
+WORLD_VIEW = {"center": {"lat": 15, "lon": 10}, "zoom": 1.3}
 
 
-def pull_recent(region: regions.Region, start: dt.date, source: str) -> pd.DataFrame:
-    """Fetch NRT detections from `start` through today in 5-day chunks."""
+def pull_recent(start: dt.date, source: str) -> pd.DataFrame:
+    """Fetch world NRT detections from `start` through today in 5-day chunks."""
     frames = []
     today = dt.date.today()
     cursor = start
     while cursor <= today:
         days = min(5, (today - cursor).days + 1)
-        chunk = firms.area_fires(source=source, bbox=region.bbox, days=days,
+        chunk = firms.area_fires(source=source, bbox="world", days=days,
                                  date=cursor.isoformat())
         if not chunk.empty:
             frames.append(chunk)
@@ -57,64 +59,100 @@ def pull_recent(region: regions.Region, start: dt.date, source: str) -> pd.DataF
     return fires
 
 
-def merged_data(region: regions.Region, source: str) -> dict:
-    history = json.loads(Path(f"results/history_{region.slug}.json").read_text())
+def read_assets(region_slug: str) -> pd.DataFrame:
     # keep_default_na: Namibia's ISO code is the string "NA", not a missing value
-    assets = pd.read_csv(f"data/infrastructure/{region.slug}/assets.csv",
+    assets = pd.read_csv(f"data/infrastructure/{region_slug}/assets.csv",
                          keep_default_na=False, na_values=[])
     for col in ["latitude", "longitude"]:
         assets[col] = pd.to_numeric(assets[col])
-    if "country" not in assets.columns:
-        assets["country"] = ""
+    return assets
+
+
+def read_baseline(region_slug: str) -> dict:
+    path = Path(f"results/asset_risk_{region_slug}.csv")
+    if not path.is_file():
+        return {}
+    b = pd.read_csv(path)
+    return dict(zip(b["asset_id"].astype(str), b["risk_level"].astype(str)))
+
+
+def build_world_data(source: str) -> dict:
+    history = json.loads(Path("results/history_world.json").read_text())
+
+    airports = read_assets("world")
+    airports["uid"] = airports["asset_id"].astype(str)
+    airport_baseline = read_baseline("world")
+
+    # Fold in the ports from the detailed Iberia study: same epoch, same
+    # exposure schema - only the ids need a prefix to avoid collisions.
+    iberia_assets = read_assets("iberia")
+    ports = iberia_assets[iberia_assets["kind"] == "port"].copy()
+    ports["uid"] = "p" + ports["asset_id"].astype(str)
+    iberia_history = json.loads(Path("results/history_iberia.json").read_text())
+    port_baseline = read_baseline("iberia")
+    for port in ports.itertuples(index=False):
+        events = iberia_history["exposure"].get(str(port.asset_id))
+        if events:
+            history["exposure"]["p" + str(port.asset_id)] = events
+
+    combined = pd.concat([airports, ports], ignore_index=True)
 
     archive_end = dt.date.fromisoformat(history["archive_end"])
     availability = firms.data_availability()
     nrt_min = dt.date.fromisoformat(
         availability.loc[availability["data_id"] == source, "min_date"].iloc[0])
     nrt_start = max(archive_end + dt.timedelta(days=1), nrt_min)
-    recent = pull_recent(region, nrt_start, source)
-    print(f"{region.slug}: archive to {archive_end}, "
-          f"NRT {nrt_start} -> today: {len(recent):,} detections")
+    recent = pull_recent(nrt_start, source)
+    print(f"world archive to {archive_end}, NRT {nrt_start} -> today: "
+          f"{len(recent):,} detections")
 
-    grid = history.get("grid", 0.05)
-    period = history.get("cell_period", "day")
     if len(recent):
-        for key, part in (("cells", aggregate_cells(recent, grid=grid, period=period)),
-                          ("daily", daily_totals(recent))):
-            for column, values in part.items():
-                history[key][column].extend(values)
-        for asset_id, events in exposure_events(assets, recent).items():
+        cells = aggregate_cells(recent, grid=history["grid"], period=history["cell_period"])
+        for column, values in cells.items():
+            history["cells"][column].extend(values)
+
+        with_region = recent.assign(
+            d=day_index(recent["acq_date"]),
+            r=assign_region(recent["latitude"].to_numpy(),
+                            recent["longitude"].to_numpy()),
+        )
+        per_region = (with_region.groupby(["r", "d"])
+                      .agg(n=("frp", "size"), fm=("frp", "max")).reset_index())
+        daily_all = (per_region.groupby("d", as_index=False)
+                     .agg(n=("n", "sum"), fm=("fm", "max")).sort_values("d"))
+        extensions = {"all": daily_all}
+        for key, subset in per_region.groupby("r"):
+            extensions[str(key)] = subset.sort_values("d")
+        for key, frame in extensions.items():
+            series = history["daily"].setdefault(key, {"d": [], "n": [], "fm": []})
+            series["d"].extend(int(v) for v in frame["d"])
+            series["n"].extend(int(v) for v in frame["n"])
+            series["fm"].extend(round(float(v), 1) for v in frame["fm"].fillna(0))
+
+        # exposure: combined asset list against the recent world detections
+        exposure_assets = combined.rename(columns={"uid": "exposure_id"})
+        recent_events = exposure_events(
+            exposure_assets.assign(asset_id=exposure_assets["exposure_id"]), recent)
+        for uid, events in recent_events.items():
             target = history["exposure"].setdefault(
-                asset_id, {"d": [], "n10": [], "n25": [], "f10": [], "dm": []})
+                uid, {"d": [], "n10": [], "n25": [], "f10": [], "dm": []})
             for column, values in events.items():
                 target[column].extend(values)
 
-    baseline_path = Path(f"results/asset_risk_{region.slug}.csv")
-    baseline = {}
-    if baseline_path.is_file():
-        b = pd.read_csv(baseline_path)
-        baseline = dict(zip(b["asset_id"].astype(str), b["risk_level"]))
-
     history["assets"] = [
-        {"id": str(a.asset_id), "name": a.name, "kind": a.kind,
+        {"id": a.uid, "name": a.name, "kind": a.kind,
          "country": a.country or "", "lat": round(a.latitude, 4),
          "lon": round(a.longitude, 4),
-         "baseline": baseline.get(str(a.asset_id), "n/a")}
-        for a in assets.itertuples(index=False)
+         "baseline": (port_baseline if a.kind == "port" else airport_baseline)
+                     .get(str(a.asset_id), "n/a")}
+        for a in combined.itertuples(index=False)
     ]
-    center, zoom = REGION_VIEWS.get(
-        region.slug,
-        ({"lat": assets["latitude"].mean(), "lon": assets["longitude"].mean()}, 5.0),
-    )
     yesterday = dt.date.today() - dt.timedelta(days=1)
     history["meta"] = {
-        "region": region.slug,
-        "region_label": REGION_LABELS.get(region.slug, region.slug),
         "epoch": history["epoch"],
         "max_day": (yesterday - EPOCH.date()).days,
         "archive_end": history["archive_end"],
-        "center": center,
-        "zoom": zoom,
+        "view": WORLD_VIEW,
     }
     return history
 
@@ -164,7 +202,7 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
   .control label { font-size: 12.5px; color: var(--ink-2); font-weight: 500; }
   select, input[type="date"] { font: inherit; font-size: 13px; padding: 7px 10px;
     border-radius: 8px; border: 1px solid var(--border); background: var(--card);
-    color: var(--ink); max-width: 210px; }
+    color: var(--ink); max-width: 230px; }
   .chips { display: flex; gap: 8px; flex-wrap: wrap; }
   .chip { font: inherit; font-size: 12.5px; font-weight: 500; padding: 6px 13px;
           border-radius: 999px; border: 1px solid var(--border); background: var(--card);
@@ -173,12 +211,13 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
   .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
   .spacer { flex: 1; }
 
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
            gap: 16px; margin-bottom: 24px; }
-  .tile { background: var(--card); border: 1px solid var(--border);
+  .tile { background: var(--card); border: 1px solid var(--border); min-width: 0;
           border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; }
   .tile-label { font-size: 12px; color: var(--ink-2); margin-bottom: 4px; }
-  .tile-value { font-size: 24px; font-weight: 650; letter-spacing: -0.01em; }
+  .tile-value { font-size: 23px; font-weight: 650; letter-spacing: -0.01em;
+                font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
   .tile-note { font-size: 11.5px; color: var(--ink-2); margin-top: 3px; }
 
   table { border-collapse: collapse; width: 100%; font-size: 13px; }
@@ -210,17 +249,17 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
   <div class="eyebrow">NASA FIRMS &middot; VIIRS 375 m active fire</div>
   <div class="titlebar">
     <h1>Wildfire Infrastructure Risk Monitor</h1>
-    <span class="badge" id="region-badge"></span>
+    <span class="badge" id="region-badge">All regions</span>
   </div>
   <div class="subtitle">
     Daily satellite
     <span class="term" data-tip="A 'detection' is one ~375 m satellite pixel flagged as a thermal anomaly by the VIIRS instrument. In the historical archive, static industrial heat sources are filtered out; what remains is presumed vegetation fire.">fire detections</span>
-    versus airports and ports, gapless from January 2018 to yesterday
+    versus airports and ports worldwide, gapless from January 2018 to yesterday
     (<span class="term" data-tip="2018 to April 2026 comes from the standard-processing archive (consistently calibrated); the most recent weeks come from the near-real-time feed, available within ~3 hours of the satellite overpass.">archive + near-real-time</span>).
     Pick a region, a country and any date range. Updated __GENERATED__, refreshed daily.
   </div>
 
-  <div id="app" class="loading">Loading data&hellip;</div>
+  <div id="app" class="loading">Loading data (a few MB on first visit)&hellip;</div>
 </div>
 
 <template id="app-template">
@@ -239,7 +278,7 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
 
   <div class="card">
     <div class="card-strip">
-      <span class="card-title term" data-tip="Orange cells aggregate all fire detections inside the selected date range (~5 km grid). Markers are the monitored assets, colored by whether fire came within 10 km (red) or 25 km (yellow) of them during the range. Hover any marker for details; scroll to zoom.">Fire detections &amp; infrastructure exposure</span>
+      <span class="card-title term" data-tip="Orange cells aggregate all fire detections inside the selected date range and region. Markers are the monitored assets, colored by whether fire came within 10 km (red) or 25 km (yellow) of them during the range. Hover any marker for details; scroll to zoom.">Fire detections &amp; infrastructure exposure</span>
       <span class="card-context" id="map-context"></span>
     </div>
     <div class="card-body"><div id="map" style="height:560px"></div></div>
@@ -266,9 +305,13 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
     <span class="term" data-tip="Fire Radiative Power, in megawatts: the radiant heat output of the fire in that pixel at overpass time. Higher FRP = more intense burning.">FRP</span>
     is the intensity measure; an asset counts as
     <span class="term" data-tip="At least one detection within 10 km of the asset on at least one day of the selected range.">exposed</span>
-    when a detection falls within 10 km, and "nearby" within 25 km. The country filter
-    applies to assets; fire counts always cover the whole region. Historical risk is a
-    percentile score over the 2018-2026 record - method in the
+    when a detection falls within 10 km, and "nearby" within 25 km.
+    Assets are the world's large airports plus, so far, the commercial ports of Spain
+    and Portugal (port coverage grows region by region). Regional fire counts attribute
+    detections by bounding box, so region borders are approximate. The heatmap is
+    aggregated to ~110 km cells per calendar month; KPIs, the trend and asset exposure
+    are day-accurate. Historical risk is a percentile score over the 2018-2026 record -
+    method in the
     <a href="https://github.com/apham2509/personal-projects/tree/main/wildfire-infrastructure-risk">repository</a>.
     Recent weeks come from the near-real-time feed, which cannot yet filter out
     static industrial heat sources; the satellite also cannot see through clouds,
@@ -281,11 +324,11 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
 </template>
 
 <script>
-const MANIFEST = __MANIFEST__;
+const GEO = __GEO__;
 const STATUS = {
-  exposed: {label: "Exposed - fire within 10 km", color: "#d03b3b", size: 13},
-  nearby:  {label: "Fire within 25 km",           color: "#fab219", size: 10},
-  clear:   {label: "No fire nearby",              color: "#8a8983", size: 6},
+  exposed: {label: "Exposed - fire within 10 km", color: "#d03b3b", size: 12},
+  nearby:  {label: "Fire within 25 km",           color: "#fab219", size: 9},
+  clear:   {label: "No fire nearby",              color: "#8a8983", size: 5},
 };
 const HEAT_SCALE = [[0,"rgba(255,245,235,0)"],[0.2,"#fdd0a2"],[0.4,"#fdae6b"],
                     [0.6,"#f16913"],[0.8,"#d94801"],[1,"#7f2704"]];
@@ -297,8 +340,8 @@ const countryName = code => {
   catch (e) { return code; }
 };
 
-let DATA, META, EPOCH_MS, booted = false;
-let state = {from: 0, to: 0, country: "all"};
+let DATA, META, EPOCH_MS;
+let state = {region: "all", country: "all", from: 0, to: 0};
 let sortKey = "det10", sortDir = -1;
 
 const dayToDate = d => new Date(EPOCH_MS + d * MS_DAY);
@@ -314,10 +357,18 @@ const PRESETS = [
   ["All 2018-now", () => [0, META.max_day]],
 ];
 
+const assetRegion = a => GEO.countryRegion[a.country] || "other";
+const regionLabel = key => key === "all" ? "All regions" : GEO.defs[key].label;
+const inRegion = a => state.region === "all" || assetRegion(a) === state.region;
+
+function dailySeries() {
+  return DATA.daily[state.region] || DATA.daily.all;
+}
+
 function rangeAssets() {
   const {from, to, country} = state;
   return DATA.assets
-    .filter(a => country === "all" || a.country === country)
+    .filter(a => inRegion(a) && (country === "all" || a.country === country))
     .map(a => {
       const e = DATA.exposure[a.id];
       let det10 = 0, det25 = 0, frp10 = 0, days10 = 0, nearest = null;
@@ -335,21 +386,27 @@ function rangeAssets() {
     });
 }
 
-const monthMode = () => DATA.cell_period === "month";
 function monthStartIdx(d) {
   const date = dayToDate(d);
   return Math.round(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1) / MS_DAY
                     - EPOCH_MS / MS_DAY);
 }
 
+function inBoxes(lat, lon, boxes) {
+  for (const [w, s, e, n] of boxes) {
+    if (lon >= w && lon <= e && lat >= s && lat <= n) return true;
+  }
+  return false;
+}
+
 function heatTrace() {
-  const {from, to} = state;
-  // Month-period cells (world) are keyed by the first day of their month, so
-  // include any month that overlaps the selected range.
-  const lowBound = monthMode() ? monthStartIdx(from) : from;
+  const {from, to, region} = state;
+  const lowBound = monthStartIdx(from);
+  const boxes = region === "all" ? null : GEO.defs[region].bboxes;
   const c = DATA.cells, acc = new Map();
   for (let i = 0; i < c.d.length; i++) {
     if (c.d[i] < lowBound || c.d[i] > to) continue;
+    if (boxes && !inBoxes(c.la[i] * DATA.grid, c.lo[i] * DATA.grid, boxes)) continue;
     const key = c.la[i] + ":" + c.lo[i];
     acc.set(key, (acc.get(key) || 0) + c.n[i]);
   }
@@ -360,13 +417,11 @@ function heatTrace() {
   }
   const zs = [...z].sort((a, b) => a - b);
   const zmax = Math.max(5, zs[Math.floor(zs.length * 0.98)] || 5);
-  const cellLabel = monthMode() ? "Detections<br>per ~110 km cell" : "Detections<br>per ~5 km cell";
   return {
-    type: "densitymap", lat, lon, z,
-    radius: monthMode() ? 13 : (state.to - state.from) < 45 ? 9 : 7,
+    type: "densitymap", lat, lon, z, radius: state.region === "all" ? 6 : 13,
     colorscale: HEAT_SCALE, zmin: 0, zmax, showscale: true,
     hoverinfo: "skip", name: "Detections",
-    colorbar: {title: {text: cellLabel, font: {size: 11}},
+    colorbar: {title: {text: "Detections<br>per ~110 km cell", font: {size: 11}},
                thickness: 12, len: 0.5, y: 0.72, outlinewidth: 0},
   };
 }
@@ -380,7 +435,7 @@ function mapTraces(assets) {
       type: "scattermap", mode: "markers",
       lat: subset.map(a => a.lat), lon: subset.map(a => a.lon),
       marker: {size: style.size, color: style.color},
-      name: `${style.label} (${subset.length})`,
+      name: `${style.label} (${fmt(subset.length)})`,
       customdata: subset.map(a => [a.name, a.kind, a.det10, Math.round(a.frp10),
                                    a.nearest ?? "-", a.days10, a.baseline]),
       hovertemplate: "<b>%{customdata[0]}</b> (%{customdata[1]})<br>" +
@@ -397,7 +452,7 @@ function mapTraces(assets) {
 function trendFigure() {
   const {from, to} = state, span = to - from;
   const monthly = span > 120, acc = new Map();
-  const daily = DATA.daily;
+  const daily = dailySeries();
   for (let i = 0; i < daily.d.length; i++) {
     const d = daily.d[i];
     if (d < from || d > to) continue;
@@ -405,12 +460,13 @@ function trendFigure() {
     acc.set(key, (acc.get(key) || 0) + daily.n[i]);
   }
   document.getElementById("trend-title").textContent =
-    monthly ? "Detections per month" : "Detections per day";
+    (monthly ? "Detections per month" : "Detections per day") +
+    (state.region === "all" ? "" : " - " + regionLabel(state.region));
   return {
     data: [{type: "bar", x: [...acc.keys()], y: [...acc.values()],
             marker: {color: "#2a78d6", cornerradius: 3},
             hovertemplate: "%{x}: %{y:,} detections<extra></extra>"}],
-    layout: {height: 240, margin: {l: 55, r: 15, t: 10, b: 40},
+    layout: {height: 240, margin: {l: 60, r: 15, t: 10, b: 40},
       paper_bgcolor: "#ffffff", plot_bgcolor: "#ffffff", bargap: 0.25,
       font: {family: "Inter, system-ui, sans-serif"},
       xaxis: {tickfont: {size: 11, color: "#52514e"}, showgrid: false,
@@ -422,18 +478,18 @@ function trendFigure() {
 }
 
 const TILE_TIPS = {
-  "Fire detections": "Total satellite fire detections in the whole region during the selected range (the country filter does not reduce this number).",
+  "Fire detections": "Total satellite fire detections in the selected region during the selected range. Regional attribution uses bounding boxes, so borders are approximate; the country filter does not reduce this number.",
   "Exposed assets": "Assets with at least one detection within 10 km during the range.",
   "Near fire": "Assets whose closest detection in the range fell between 10 and 25 km.",
-  "Peak day": "The single day with the most detections in the range.",
-  "Strongest detection": "The highest fire radiative power (MW) of any single detection in the range.",
-  "Assets monitored": "Airports (large + medium) and named commercial ports in the current selection.",
+  "Peak day": "The single day with the most detections in the selected region and range.",
+  "Strongest detection": "The highest fire radiative power (MW) of any single detection in the selected region and range.",
+  "Assets monitored": "Large airports worldwide plus commercial ports (currently Spain and Portugal), in the current region/country selection.",
 };
 
 function kpis(assets) {
   const {from, to} = state;
   let detections = 0, peak = 0, peakDay = null, maxFrp = 0;
-  const daily = DATA.daily;
+  const daily = dailySeries();
   for (let i = 0; i < daily.d.length; i++) {
     const d = daily.d[i];
     if (d < from || d > to) continue;
@@ -444,15 +500,15 @@ function kpis(assets) {
   const exposed = assets.filter(a => a.status === "exposed").length;
   const nearby = assets.filter(a => a.status === "nearby").length;
   const high = assets.filter(a => a.baseline === "high").length;
-  const scope = state.country === "all" ? "" : countryName(state.country);
+  const scope = state.country === "all" ? regionLabel(state.region)
+                                        : countryName(state.country);
   return [
     ["Fire detections", fmt(detections), `${human(from)} - ${human(to)}`],
     ["Exposed assets", fmt(exposed), "fire within 10 km"],
     ["Near fire", fmt(nearby), "within 25 km"],
     ["Peak day", peakDay === null ? "-" : fmt(peak), peakDay === null ? "" : human(peakDay)],
     ["Strongest detection", maxFrp ? fmt(Math.round(maxFrp)) + " MW" : "-", "fire radiative power"],
-    ["Assets monitored", fmt(assets.length),
-     scope ? `${scope} · ${high} high-risk` : `${high} high-risk since 2018`],
+    ["Assets monitored", fmt(assets.length), `${scope} · ${fmt(high)} high-risk`],
   ];
 }
 
@@ -490,7 +546,7 @@ function renderTable(assets) {
     <td class="num">${fmt(r.days10)}</td><td class="num">${r.nearest ?? "-"}</td>
     <td>${r.baseline}</td></tr>`).join("");
   holder.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>` +
-    (rows.length > 40 ? `<div class="empty">Showing the top 40 of ${rows.length} assets.</div>` : "");
+    (rows.length > 40 ? `<div class="empty">Showing the top 40 of ${fmt(rows.length)} assets.</div>` : "");
   holder.querySelectorAll("th[data-key]").forEach(th => th.onclick = () => {
     const k = th.dataset.key;
     if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = -1; }
@@ -498,22 +554,26 @@ function renderTable(assets) {
   });
 }
 
-const MAP_LAYOUT = () => ({
-  map: {style: "carto-positron", center: META.center, zoom: META.zoom},
-  margin: {l: 0, r: 0, t: 0, b: 0}, paper_bgcolor: "#ffffff",
-  font: {family: "Inter, system-ui, sans-serif"},
-  legend: {x: 0.01, y: 0.99, bgcolor: "rgba(255,255,255,0.9)", font: {size: 12}},
-});
+function mapLayout() {
+  const view = state.region === "all" ? META.view : GEO.defs[state.region];
+  return {
+    map: {style: "carto-positron", center: view.center, zoom: view.zoom},
+    margin: {l: 0, r: 0, t: 0, b: 0}, paper_bgcolor: "#ffffff",
+    font: {family: "Inter, system-ui, sans-serif"},
+    legend: {x: 0.01, y: 0.99, bgcolor: "rgba(255,255,255,0.9)", font: {size: 12}},
+  };
+}
 
 function update(fullRedraw = true) {
   const assets = rangeAssets();
   renderTiles(assets);
   renderTable(assets);
+  document.getElementById("region-badge").textContent = regionLabel(state.region);
   document.getElementById("map-context").textContent =
-    `${human(state.from)} - ${human(state.to)} · ${state.to - state.from + 1} days` +
-    (monthMode() ? " · heat shown at monthly resolution" : "");
+    `${regionLabel(state.region)} · ${human(state.from)} - ${human(state.to)} · ` +
+    `${state.to - state.from + 1} days · heat at monthly resolution`;
   if (fullRedraw) {
-    Plotly.react("map", mapTraces(assets), MAP_LAYOUT(), {scrollZoom: true, responsive: true});
+    Plotly.react("map", mapTraces(assets), mapLayout(), {scrollZoom: true, responsive: true});
     const t = trendFigure();
     Plotly.react("trend", t.data, t.layout, t.config);
   }
@@ -538,7 +598,8 @@ function populateCountries() {
   const all = document.createElement("option");
   all.value = "all"; all.textContent = "All";
   select.appendChild(all);
-  const codes = [...new Set(DATA.assets.map(a => a.country).filter(Boolean))].sort();
+  const codes = [...new Set(DATA.assets.filter(inRegion).map(a => a.country).filter(Boolean))];
+  codes.sort((a, b) => countryName(a).localeCompare(countryName(b)));
   for (const code of codes) {
     const opt = document.createElement("option");
     opt.value = code; opt.textContent = countryName(code);
@@ -548,112 +609,93 @@ function populateCountries() {
   state.country = "all";
 }
 
-function applyRegion(payload) {
+fetch("data_world.json").then(r => r.json()).then(payload => {
   DATA = payload; META = payload.meta;
   EPOCH_MS = new Date(META.epoch + "T00:00:00Z").getTime();
-  document.getElementById("region-badge").textContent = META.region_label;
 
-  if (!booted) {
-    booted = true;
-    const app = document.getElementById("app");
-    app.classList.remove("loading");
-    app.innerHTML = "";
-    app.appendChild(document.getElementById("app-template").content);
+  const app = document.getElementById("app");
+  app.classList.remove("loading");
+  app.innerHTML = "";
+  app.appendChild(document.getElementById("app-template").content);
 
-    const regionSelect = document.getElementById("region");
-    for (const entry of MANIFEST) {
-      const opt = document.createElement("option");
-      opt.value = entry.slug;
-      opt.textContent = entry.available ? entry.label : `${entry.label} (${entry.note})`;
-      opt.disabled = !entry.available;
-      regionSelect.appendChild(opt);
-    }
-    regionSelect.value = META.region;
-    regionSelect.addEventListener("change", () => loadRegion(regionSelect.value));
-    document.getElementById("country").addEventListener("change", e => {
-      state.country = e.target.value;
-      update();
-    });
-    const chips = document.getElementById("chips");
-    PRESETS.forEach(([label], idx) => {
-      const b = document.createElement("button");
-      b.className = "chip"; b.textContent = label; b.dataset.idx = idx;
-      b.onclick = () => setRange(...PRESETS[idx][1]());
-      chips.appendChild(b);
-    });
-    const clampInput = () => setRange(dateToDay(document.getElementById("from").value),
-                                      dateToDay(document.getElementById("to").value));
-    for (const id of ["from", "to"]) {
-      document.getElementById(id).addEventListener("change", clampInput);
-    }
+  const regionSelect = document.getElementById("region");
+  const allOpt = document.createElement("option");
+  allOpt.value = "all"; allOpt.textContent = "All";
+  regionSelect.appendChild(allOpt);
+  for (const key of GEO.order) {
+    const opt = document.createElement("option");
+    opt.value = key; opt.textContent = GEO.defs[key].label;
+    regionSelect.appendChild(opt);
   }
+  regionSelect.addEventListener("change", () => {
+    state.region = regionSelect.value;
+    populateCountries();
+    update();
+  });
+  document.getElementById("country").addEventListener("change", e => {
+    state.country = e.target.value;
+    update();
+  });
+  const chips = document.getElementById("chips");
+  PRESETS.forEach(([label], idx) => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = label; b.dataset.idx = idx;
+    b.onclick = () => setRange(...PRESETS[idx][1]());
+    chips.appendChild(b);
+  });
+  const clampInput = () => setRange(dateToDay(document.getElementById("from").value),
+                                    dateToDay(document.getElementById("to").value));
   for (const id of ["from", "to"]) {
     const input = document.getElementById(id);
     input.min = META.epoch; input.max = isoOf(META.max_day);
+    input.addEventListener("change", clampInput);
   }
-  populateCountries();
 
+  populateCountries();
   state.from = META.max_day - 30;
   state.to = META.max_day;
   const assets = rangeAssets();
-  Plotly.newPlot("map", mapTraces(assets), MAP_LAYOUT(), {scrollZoom: true, responsive: true});
+  Plotly.newPlot("map", mapTraces(assets), mapLayout(), {scrollZoom: true, responsive: true});
   const t = trendFigure();
   Plotly.newPlot("trend", t.data, t.layout, t.config);
   update(false);
-}
-
-function loadRegion(slug) {
-  const entry = MANIFEST.find(e => e.slug === slug && e.available);
-  if (!entry) return;
-  document.getElementById("map-context").textContent = "loading...";
-  fetch(entry.file).then(r => r.json()).then(applyRegion)
-    .catch(err => { document.getElementById("app").textContent = "Failed to load data: " + err; });
-}
-
-fetch(MANIFEST.find(e => e.available).file).then(r => r.json()).then(applyRegion)
-  .catch(err => { document.getElementById("app").textContent = "Failed to load data: " + err; });
+}).catch(err => {
+  document.getElementById("app").textContent = "Failed to load data: " + err;
+});
 </script>
 </body>
 </html>
 """
 
 
-def render(region_names: list, source: str, out: Path) -> None:
+def render(source: str, out: Path) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
-    manifest = []
-    for name in region_names:
-        region = regions.resolve(name)
-        data = merged_data(region, source)
-        data_path = out.parent / f"data_{region.slug}.json"
-        # allow_nan=False: a stray NaN must fail the build, not ship invalid JSON
-        data_path.write_text(json.dumps(data, separators=(",", ":"), allow_nan=False),
-                             encoding="utf-8")
-        manifest.append({"slug": region.slug,
-                         "label": REGION_LABELS.get(region.slug, region.slug),
-                         "file": data_path.name, "available": True})
-        print(f"  {data_path} ({data_path.stat().st_size / 1e6:.1f} MB)")
-    if not any(entry["slug"] == "world" for entry in manifest):
-        manifest.insert(0, {"slug": "world", "label": REGION_LABELS["world"],
-                            "file": "", "available": False,
-                            "note": WORLD_PLACEHOLDER_NOTE})
+    data = build_world_data(source)
+    data_path = out.parent / "data_world.json"
+    # allow_nan=False: a stray NaN must fail the build, not ship invalid JSON
+    data_path.write_text(json.dumps(data, separators=(",", ":"), allow_nan=False),
+                         encoding="utf-8")
+    stale = out.parent / "data_iberia.json"
+    if stale.exists():
+        stale.unlink()
 
     generated = dt.datetime.now(dt.timezone.utc).strftime("%d %b %Y, %H:%M UTC")
     page = (PAGE_TEMPLATE
-            .replace("__MANIFEST__", json.dumps(manifest))
+            .replace("__GEO__", json.dumps(world_regions.client_payload(),
+                                           separators=(",", ":")))
             .replace("__GENERATED__", generated))
     out.write_text(page, encoding="utf-8")
-    print(f"wrote {out}")
+    print(f"assets {len(data['assets'])}, cell-months {len(data['cells']['d']):,} "
+          f"-> {out} + {data_path} ({data_path.stat().st_size / 1e6:.1f} MB)")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Render static wildfire dashboard.")
-    parser.add_argument("--regions", default="iberia",
-                        help="Comma-separated region names with prepared history")
     parser.add_argument("--source", default="VIIRS_SNPP_NRT",
-                        help="NRT source used to extend each archive to today")
+                        help="NRT source used to extend the archive to today")
     parser.add_argument("--out", default="site/index.html")
     args = parser.parse_args()
-    render([r.strip() for r in args.regions.split(",")], args.source, Path(args.out))
+    render(args.source, Path(args.out))
 
 
 if __name__ == "__main__":

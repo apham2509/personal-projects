@@ -28,11 +28,24 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+import world_regions
 from prepare_history import EPOCH, day_index
 from risk_analysis import haversine_km
 
 WORLD_GRID = 1.0
 LAT_WINDOW = 0.3   # degrees; > 25 km everywhere
+
+
+def assign_region(lat: np.ndarray, lon: np.ndarray) -> np.ndarray:
+    """Attribute detections to regions by bounding box (first match wins)."""
+    region = np.full(len(lat), "other", dtype=object)
+    unassigned = np.ones(len(lat), dtype=bool)
+    for key in world_regions.REGION_ORDER:
+        for west, south, east, north in world_regions.REGION_DEFS[key]["bboxes"]:
+            hit = unassigned & (lon >= west) & (lon <= east) & (lat >= south) & (lat <= north)
+            region[hit] = key
+            unassigned &= ~hit
+    return region
 
 
 def year_frames():
@@ -135,8 +148,12 @@ def main() -> None:
             lo=(fires["longitude"] / WORLD_GRID).round().astype(int))
             .groupby(["d", "la", "lo"]).size().reset_index(name="n"))
         cell_parts.append(cells)
-        daily = (fires.assign(d=day_index(fires["acq_date"]))
-                 .groupby("d").agg(n=("frp", "size"), fm=("frp", "max")).reset_index())
+        with_region = fires.assign(
+            d=day_index(fires["acq_date"]),
+            r=assign_region(fires["latitude"].to_numpy(), fires["longitude"].to_numpy()),
+        )
+        daily = (with_region.groupby(["r", "d"])
+                 .agg(n=("frp", "size"), fm=("frp", "max")).reset_index())
         daily_parts.append(daily)
         merge_exposure(exposure, exposure_for_year(assets, fires))
         print(f"  {path}: {len(fires):,} type-0 detections, "
@@ -144,8 +161,21 @@ def main() -> None:
 
     cells = (pd.concat(cell_parts).groupby(["d", "la", "lo"], as_index=False)["n"].sum()
              .sort_values("d"))
-    daily = (pd.concat(daily_parts).groupby("d", as_index=False)
-             .agg(n=("n", "sum"), fm=("fm", "max")).sort_values("d"))
+    per_region = (pd.concat(daily_parts).groupby(["r", "d"], as_index=False)
+                  .agg(n=("n", "sum"), fm=("fm", "max")))
+    daily_all = (per_region.groupby("d", as_index=False)
+                 .agg(n=("n", "sum"), fm=("fm", "max")).sort_values("d"))
+
+    def series(frame: pd.DataFrame) -> dict:
+        frame = frame.sort_values("d")
+        return {"d": frame["d"].tolist(), "n": frame["n"].tolist(),
+                "fm": [round(float(v), 1) for v in frame["fm"].fillna(0)]}
+
+    daily = {"all": series(daily_all)}
+    for key in world_regions.REGION_ORDER:
+        subset = per_region[per_region["r"] == key]
+        if len(subset):
+            daily[key] = series(subset)
 
     baseline = baseline_from_exposure(assets, exposure)
     baseline.to_csv("results/asset_risk_world.csv", index=False)
@@ -156,10 +186,10 @@ def main() -> None:
         "grid": WORLD_GRID,
         "cell_period": "month",
         "epoch": str(EPOCH.date()),
-        "archive_end": str(pd.Timestamp(EPOCH + pd.to_timedelta(int(daily['d'].max()), 'D')).date()),
+        "archive_end": str(pd.Timestamp(
+            EPOCH + pd.to_timedelta(int(daily_all["d"].max()), "D")).date()),
         "cells": {c: cells[c].tolist() for c in ["d", "la", "lo", "n"]},
-        "daily": {"d": daily["d"].tolist(), "n": daily["n"].tolist(),
-                  "fm": [round(float(v), 1) for v in daily["fm"].fillna(0)]},
+        "daily": daily,
         "exposure": exposure,
     }
     out = Path("results/history_world.json")

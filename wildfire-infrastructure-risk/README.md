@@ -23,7 +23,7 @@ Analyses run per region. Built-in regions: `world`, `iberia`, `greece`, `mediter
 
 Outputs are stored per region: `data/fires/<region>/`, `data/infrastructure/<region>/assets.csv`, `results/asset_risk_<region>.csv`.
 
-The web dashboard ships two scopes. **World**: the full 2018-2026 global archive (~165M detections, 2.8 GB raw) reduced to monthly 1-degree heat cells, daily totals, and daily exposure for the ~1,200 large airports worldwide (no ports - OSM cannot answer world-scale port queries). **Iberia**: the detailed regional study - daily ~5 km heat cells and 198 assets including ports. Both are gapless to yesterday via the near-real-time feed.
+The web dashboard is one unified world dataset: the full 2018-2026 global archive (~165M detections, 2.8 GB raw) reduced to monthly 1-degree heat cells, per-geographic-region daily totals, and day-accurate exposure for ~1,200 large airports worldwide plus the commercial ports of Spain and Portugal (port coverage grows region by region - OSM cannot answer world-scale port queries). The Region dropdown offers 11 geographic divisions (Europe, South Asia, ...) defined in `world_regions.py`; the Country dropdown cascades from the selected region. Regional fire counts attribute detections by bounding box, so region borders are approximate. Gapless to yesterday via the near-real-time feed.
 
 ## How to run the whole thing
 
@@ -52,7 +52,7 @@ python3 -m venv .venv
 .venv/bin/python dashboard.py --region iberia
 
 # 5b. Static web dashboard (archive + live NRT, date-range picker) -> site/
-.venv/bin/python render_static.py --regions world,iberia
+.venv/bin/python render_static.py
 ```
 
 To study another geography, repeat steps 1-4 with a different `--region` (e.g. `--region greece`, or `--region "20.0,35.0,30.0,42.0"`).
