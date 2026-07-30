@@ -38,13 +38,21 @@ def day_index(dates: pd.Series) -> pd.Series:
     return (dates - EPOCH).dt.days
 
 
-def aggregate_cells(fires: pd.DataFrame) -> dict:
-    """Detections per (day, grid cell) as compact integer arrays."""
+def aggregate_cells(fires: pd.DataFrame, grid: float = GRID, period: str = "day") -> dict:
+    """Detections per (day-or-month, grid cell) as compact integer arrays.
+
+    With period="month", d is the day index of the first day of the month -
+    used for world-scale data where daily cells would be too large to ship.
+    """
+    if period == "month":
+        d = day_index(fires["acq_date"].dt.to_period("M").dt.start_time)
+    else:
+        d = day_index(fires["acq_date"])
     grouped = (
         fires.assign(
-            d=day_index(fires["acq_date"]),
-            la=(fires["latitude"] / GRID).round().astype(int),
-            lo=(fires["longitude"] / GRID).round().astype(int),
+            d=d,
+            la=(fires["latitude"] / grid).round().astype(int),
+            lo=(fires["longitude"] / grid).round().astype(int),
         )
         .groupby(["d", "la", "lo"])
         .size()

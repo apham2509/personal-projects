@@ -75,8 +75,10 @@ def fetch_airports(region: regions.Region) -> pd.DataFrame:
     response = requests.get(OURAIRPORTS_URL, timeout=120)
     response.raise_for_status()
     df = pd.read_csv(io.StringIO(response.text))
+    # World scope keeps the dataset shippable by tracking large airports only.
+    types = ["large_airport"] if region.slug == "world" else ["large_airport", "medium_airport"]
     df = df[
-        df["type"].isin(["large_airport", "medium_airport"])
+        df["type"].isin(types)
         & df["latitude_deg"].between(south, north)
         & df["longitude_deg"].between(west, east)
     ]

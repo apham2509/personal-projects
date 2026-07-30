@@ -1,0 +1,1173 @@
+asset_id,name,kind,days_exposed_10km,total_frp_10km,nearest_km,risk_score,risk_level
+195,Simon Mwansa Kapwepwe International Airport,airport,874,30295.5,0.6,0.999,high
+194,Mfuwe International Airport,airport,881,21530.6,0.3,0.999,high
+560,Guadalajara International Airport,airport,858,15034.2,0.6,0.997,high
+224,Bangoka International Airport,airport,740,20921.5,0.3,0.995,high
+856,Arturo Michelena International Airport,airport,788,12676.4,0.0,0.994,high
+47,Kaduna International Airport,airport,717,13274.7,0.2,0.993,high
+687,Basra International Airport,airport,796,11883.1,4.4,0.992,high
+284,Juba International Airport,airport,687,14067.5,0.5,0.992,high
+226,Lubumbashi International Airport,airport,696,12224.8,0.5,0.99,high
+840,Cap FAP David Abenzur Rengifo International Airport,airport,607,13378.4,0.2,0.99,high
+855,General Manuel Carlos Piar International Airport,airport,925,9129.1,0.4,0.989,high
+193,Kenneth Kaunda International Airport,airport,649,12331.7,0.4,0.989,high
+173,Lanseria International Airport,airport,523,12461.7,0.4,0.987,high
+212,Tete Airport,airport,752,7309.3,0.4,0.983,high
+43,Asaba International Airport,airport,507,9765.2,0.3,0.983,high
+185,Bangui M'Poko International Airport,airport,526,9583.6,0.0,0.982,high
+641,Qasem Soleimani International Airport,airport,760,6440.5,1.6,0.982,high
+3,Nadzab Tomodachi International Airport,airport,527,9232.6,0.2,0.982,high
+584,Daniel Oduber Quirós International Airport,airport,433,15842.7,0.2,0.981,high
+175,O.R. Tambo International Airport,airport,677,7463.3,0.5,0.981,high
+1007,Luang Phabang International Airport,airport,425,18016.7,1.0,0.981,high
+56,Niamtougou International Airport,airport,476,11785.6,0.2,0.981,high
+1003,Halwara International Airport,airport,412,21549.0,0.7,0.98,high
+775,Teniente Benjamín Matienzo International Airport,airport,459,12279.5,0.4,0.979,high
+51,Port Harcourt International Airport,airport,573,6860.3,0.3,0.979,high
+548,Ramón Villeda Morales International Airport,airport,481,9474.6,0.7,0.978,high
+41,Yamoussoukro International Airport,airport,438,11799.2,0.1,0.977,high
+565,General Francisco J. Mujica International Airport,airport,499,8246.9,0.9,0.977,high
+172,Kruger Mpumalanga International Airport,airport,489,6776.5,0.3,0.974,high
+237,Roberts International Airport,airport,416,9621.1,0.5,0.972,high
+586,El Salvador International Airport Saint Óscar Arnulfo Romero y Galdámez,airport,452,8415.7,0.9,0.972,high
+1015,Vijayawada International Airport,airport,467,7110.1,0.2,0.972,high
+38,Yakubu Tali International Airport,airport,403,11495.9,0.4,0.971,high
+192,Harry Mwanga Nkumbula International Airport,airport,407,9731.5,0.7,0.971,high
+204,Dr. Antonio Agostinho Neto International Airport,airport,482,5861.3,1.0,0.97,high
+528,Çukurova International Airport,airport,380,13109.5,0.8,0.969,high
+562,Guanajuato International Airport,airport,470,5785.6,1.0,0.968,high
+987,Sihanouk International Airport,airport,460,6202.8,1.3,0.968,high
+1072,Supadio International Airport,airport,352,21235.6,1.2,0.967,high
+999,Sri Guru Ram Das Ji International Airport,airport,373,10679.1,0.4,0.965,high
+803,Rio Branco-Plácido de Castro International Airport,airport,370,9956.7,0.7,0.964,high
+686,Kirkuk International Airport,airport,460,5345.4,0.3,0.964,high
+334,Dara Sakor International Airport,airport,385,8296.4,0.3,0.963,high
+776,Resistencia International Airport,airport,365,9743.5,0.3,0.962,high
+168,Cape Town International Airport,airport,454,5237.4,0.7,0.962,high
+827,Ernesto Cortissoz International Airport,airport,541,3749.4,0.5,0.961,high
+217,Robert Gabriel Mugabe International Airport,airport,413,5124.4,0.3,0.958,high
+45,Akanu Ibiam International Airport,airport,401,5581.8,0.3,0.957,high
+837,Viru Viru International Airport,airport,335,8765.9,0.2,0.956,high
+755,Clark International Airport / Clark Air Base,airport,395,5418.8,0.6,0.955,high
+4,Port Moresby Jacksons International Airport,airport,407,5002.8,0.4,0.955,high
+581,Ixtapa-Zihuatanejo International Airport,airport,346,8136.7,0.6,0.955,high
+579,Carlos Rovirosa Pérez International Airport,airport,361,6596.7,1.1,0.954,high
+940,Kurchatov Chelyabinsk International Airport,airport,506,3215.8,2.0,0.954,high
+589,Ignacio Agramonte International Airport,airport,317,10492.3,0.6,0.954,high
+577,Adolfo López Mateos International Airport,airport,380,5538.4,0.6,0.953,high
+788,Várzea Grande–Marechal Rondon International Airport,airport,357,6394.8,0.3,0.952,high
+850,General José Antonio Anzoategui International Airport,airport,404,4410.7,0.7,0.951,high
+794,Santa Genoveva International Airport,airport,305,9901.0,0.6,0.951,high
+986,Siem Reap-Angkor International Airport,airport,390,5033.9,0.3,0.951,high
+671,Suhar International Airport,airport,488,2996.9,2.9,0.95,high
+851,Jacinto Lara International Airport,airport,465,3206.6,0.4,0.949,high
+873,Piarco International Airport,airport,379,5067.6,0.5,0.949,high
+591,José Martí International Airport,airport,383,4669.8,0.7,0.949,high
+574,Felipe Ángeles International Airport,airport,319,7881.0,0.1,0.949,high
+580,General Heriberto Jara International Airport,airport,378,5047.0,1.0,0.948,high
+191,Yaoundé Nsimalen International Airport,airport,324,6186.8,0.5,0.947,high
+786,Tancredo Neves International Airport,airport,330,5671.3,0.7,0.946,high
+209,Beira International Airport,airport,406,3636.3,0.4,0.946,high
+176,Chief Dawid Stuurman International Airport,airport,263,15022.0,0.2,0.946,high
+570,Hermanos Serdán International Airport,airport,402,3769.0,0.9,0.946,high
+981,Surat International Airport,airport,449,3070.5,1.0,0.945,high
+852,La Chinita International Airport,airport,407,3223.8,0.8,0.944,high
+227,Modibo Keita International Airport,airport,467,2675.5,1.2,0.944,high
+553,General Juan N. Álvarez International Airport,airport,334,5135.2,0.3,0.944,high
+841,Capitán FAP José A. Quiñones González International Airport,airport,396,3405.1,1.4,0.941,high
+681,Sialkot International Airport,airport,326,4754.8,0.3,0.94,high
+550,Palmerola International Airport,airport,297,6115.9,0.4,0.939,high
+564,Manuel Crescencio Rejón International Airport,airport,361,3805.9,1.6,0.938,high
+1130,Jiayuguan International Airport,airport,698,2003.7,2.9,0.938,high
+235,Lungi International Airport,airport,287,6100.1,0.6,0.937,high
+1060,Syamsudin Noor International Airport,airport,243,13937.8,1.5,0.936,high
+601,Nadi International Airport,airport,365,3139.7,0.1,0.933,high
+802,Governador Jorge Teixeira de Oliveira International Airport,airport,277,5690.4,0.8,0.933,high
+778,Gobernador Horacio Guzman International Airport,airport,280,5669.2,0.4,0.933,high
+592,Frank Pais International Airport,airport,261,6698.4,1.0,0.931,high
+685,Erbil International Airport,airport,268,5973.8,2.4,0.931,high
+218,Chileka International Airport,airport,321,3715.7,0.1,0.931,high
+42,Nnamdi Azikiwe International Airport,airport,333,3275.7,0.1,0.931,high
+594,Juan Gualberto Gomez International Airport,airport,250,8393.5,0.3,0.929,high
+797,Viracopos International Airport,airport,309,3549.9,0.7,0.927,high
+1169,Harbin Taiping International Airport,airport,232,9505.4,1.0,0.926,high
+167,Bram Fischer International Airport,airport,251,6394.9,1.4,0.926,high
+295,Khartoum International Airport,airport,326,3019.9,0.4,0.926,high
+556,Bachigualato Federal International Airport,airport,289,3706.7,0.8,0.924,high
+554,Aguascalientes International Airport,airport,238,7180.1,0.3,0.923,high
+567,Monterrey International Airport,airport,381,2229.6,1.8,0.922,high
+585,Juan Santamaría International Airport,airport,312,2901.3,0.6,0.921,high
+1170,Qiqihar Sanjiazi Airport,airport,281,3657.9,0.9,0.921,high
+36,Bobo Dioulasso Airport,airport,287,3284.0,0.2,0.92,high
+335,Techo International Airport,airport,322,2653.6,0.5,0.92,high
+974,Raja Bhoj International Airport,airport,260,4411.8,1.1,0.919,high
+815,Carriel Sur International Airport,airport,218,8450.7,0.7,0.918,high
+583,Tocumen International Airport,airport,268,3657.5,0.7,0.917,high
+764,Bacolod-Silay International Airport,airport,299,2816.2,0.6,0.916,high
+572,Querétaro Intercontinental Airport,airport,267,3415.1,1.0,0.915,high
+540,Podgorica Airport / Podgorica Golubovci Airbase,airport,253,3850.6,1.3,0.913,high
+301,Navi Mumbai International Airport,airport,321,2388.8,0.6,0.913,high
+568,General Rafael Buelna International Airport,airport,302,2546.2,0.5,0.912,high
+796,Presidente Castro Pinto International Airport,airport,243,4359.8,0.5,0.912,high
+774,Governor Francisco Gabrielli International Airport,airport,269,2987.7,1.6,0.911,high
+760,General Santos International Airport,airport,248,4067.3,0.5,0.911,high
+177,Polokwane International Airport,airport,237,4479.8,0.5,0.91,high
+215,Joshua Mqabuko Nkomo International Airport,airport,194,12614.6,0.9,0.909,high
+985,Phnom Penh International Airport,airport,277,2675.0,0.9,0.909,high
+420,Reus Airport,airport,295,2481.9,1.4,0.909,high
+938,Astrakhan Narimanovo Boris M. Kustodiev International Airport,airport,218,5161.5,0.7,0.907,high
+640,Abadan Ayatollah Jami International Airport,airport,311,2088.7,0.6,0.906,high
+813,Comodoro Arturo Merino Benítez International Airport,airport,287,2313.7,0.7,0.905,high
+23,Houari Boumediene Airport,airport,400,1457.9,1.1,0.904,high
+877,Almaty International Airport,airport,260,2697.2,0.5,0.903,high
+274,Cairo International Airport,airport,413,1289.3,2.6,0.901,high
+994,Visakhapatnam International Airport,airport,262,2502.3,1.2,0.9,high
+236,Osvaldo Vieira International Airport,airport,261,2459.4,0.2,0.899,high
+688,Al Najaf International Airport,airport,323,1730.6,1.6,0.899,high
+211,Nampula Airport,airport,273,2215.0,0.2,0.899,high
+903,Zvartnots International Airport,airport,274,2071.3,0.5,0.896,high
+825,Guaraní International Airport,airport,244,2559.8,0.6,0.895,high
+777,Martín Miguel de Güemes International Airport,airport,225,3099.3,0.9,0.895,high
+1002,Maharaja Agrasen International Airport,airport,282,1845.0,0.6,0.894,high
+644,Imam Khomeini International Airport,airport,252,2287.4,2.3,0.892,high
+645,Mehrabad International Airport,airport,332,1398.6,0.8,0.892,high
+1051,Nay Pyi Taw International Airport,airport,306,1616.5,1.9,0.891,high
+276,Luxor International Airport,airport,254,2096.5,2.4,0.889,high
+182,Maya-Maya International Airport,airport,255,2072.6,0.4,0.888,high
+1011,Long Thanh International Airport (Under Construction),airport,241,2210.0,0.7,0.886,high
+174,King Shaka International Airport,airport,223,2548.3,1.2,0.886,high
+1160,Chongqing Jiangbei International Airport,airport,212,2680.6,0.0,0.886,high
+44,Sir Abubakar Tafawa Balewa Bauchi State International Airport,airport,194,4096.4,0.2,0.885,high
+1014,Kempegowda International Airport Bengaluru,airport,247,2070.2,0.2,0.884,high
+561,General Ignacio L. Pesqueira International Airport,airport,270,1663.6,1.2,0.884,high
+1026,Tirupati International Airport,airport,209,2821.4,1.1,0.884,high
+203,Nosy Be International Airport,airport,196,3409.3,0.7,0.882,high
+1168,Changchun Longjia International Airport,airport,174,6219.5,1.1,0.882,high
+431,Marseille Provence Airport,airport,189,4343.8,2.2,0.881,high
+1012,Gautam Buddha International Airport,airport,210,2541.9,0.8,0.88,high
+1019,Manohar International Airport,airport,214,2395.6,0.6,0.88,high
+202,Amborovy Airport,airport,187,4353.7,1.8,0.879,high
+458,Catania-Fontanarossa Airport,airport,201,2833.0,1.4,0.879,high
+575,General Abelardo L. Rodriguez International Airport,airport,263,1592.0,1.7,0.879,high
+949,Türkmenabat International Airport,airport,500,816.9,5.0,0.878,high
+857,Cheddi Jagan International Airport,airport,231,2000.6,1.1,0.877,high
+976,Devi Ahilya Bai Holkar International Airport,airport,196,2923.1,0.3,0.876,high
+1023,Mangaluru International Airport,airport,307,1189.7,1.8,0.876,high
+1114,Changsha Huanghua International Airport,airport,239,1776.5,1.1,0.875,high
+810,Eurico de Aguiar Salles International Airport,airport,250,1607.9,1.6,0.873,high
+1000,Shaheed Bhagat Singh International Airport,airport,229,1856.0,1.1,0.873,high
+943,Perm International Airport,airport,263,1378.7,1.6,0.872,high
+1096,Darwin International Airport / RAAF Darwin,airport,168,5105.7,0.9,0.871,high
+206,Port Gentil International Airport,airport,258,1417.1,0.2,0.871,high
+823,Silvio Pettirossi International Airport,airport,200,2364.0,0.7,0.87,high
+296,Julius Nyerere International Airport,airport,367,950.7,2.7,0.869,high
+49,Maiduguri International Airport,airport,209,2023.4,0.3,0.868,high
+39,Prempeh I International Airport,airport,267,1202.6,0.5,0.866,high
+578,Cancún International Airport,airport,180,3089.4,1.8,0.865,high
+223,Ndjili International Airport,airport,193,2449.4,0.5,0.865,high
+773,Ezeiza International Airport - Ministro Pistarini,airport,180,3006.4,0.2,0.865,high
+8,Priština Adem Jashari International Airport,airport,192,2494.4,0.4,0.865,high
+1070,Soekarno-Hatta International Airport,airport,281,1098.9,2.6,0.865,high
+892,Pavlodar International Airport,airport,157,5086.2,1.1,0.864,high
+35,Ouagadougou Thomas Sankara International Airport,airport,298,1027.0,0.4,0.863,high
+229,Banjul International Airport,airport,206,1844.6,0.5,0.863,high
+286,Jomo Kenyatta International Airport,airport,231,1436.0,1.5,0.862,high
+178,Phillip Gaonwe Matante International Airport,airport,170,3417.6,0.8,0.862,high
+467,Bologna Guglielmo Marconi Airport,airport,189,2425.4,1.0,0.861,high
+1008,Pakse International Airport,airport,220,1557.8,1.2,0.861,high
+784,Presidente Juscelino Kubitschek International Airport,airport,165,3834.1,0.7,0.861,high
+599,Philip S. W. Goldson International Airport,airport,171,3159.8,0.8,0.86,high
+798,Zumbi dos Palmares International Airport,airport,178,2613.7,0.8,0.857,high
+942,Nizhnevartovsk Airport,airport,203,1706.9,1.9,0.857,high
+652,Shiraz Shahid Dastghaib International Airport,airport,225,1371.6,1.2,0.856,high
+880,Petropavl International Airport,airport,176,2606.5,0.8,0.856,high
+265,Bujumbura Melchior Ndadaye International Airport,airport,154,4199.0,0.5,0.855,high
+806,Rio Grande do Norte/São Gonçalo do Amarante–Governador Aluízio Alves International Airport,airport,183,2272.0,1.2,0.854,high
+582,Augusto C. Sandino (Managua) International Airport,airport,197,1732.5,0.9,0.854,high
+972,Chhatrapati Shivaji Maharaj International Airport,airport,258,1070.2,1.0,0.853,high
+833,Jorge Wilsterman International Airport,airport,196,1677.2,1.3,0.85,high
+252,Blaise Diagne International Airport,airport,181,2084.7,2.2,0.849,high
+792,Pinto Martins International Airport,airport,184,2004.5,0.8,0.849,high
+190,Garoua International Airport,airport,196,1641.2,0.5,0.849,high
+785,Atlas Brasil Cantanhede International Airport,airport,165,2648.3,0.4,0.848,high
+1057,Dortheys Hiyo Eluay International Airport,airport,187,1762.5,0.1,0.844,high
+754,Subic Bay International Airport / Naval Air Station Cubi Point,airport,178,1920.5,4.0,0.843,high
+954,Namangan International Airport,airport,308,760.4,1.1,0.843,high
+1009,Wattay International Airport,airport,208,1223.6,1.2,0.842,high
+169,King Phalo Airport,airport,191,1573.0,0.8,0.841,high
+910,Vladivostok International Airport,airport,139,3730.0,0.6,0.84,high
+853,Del Caribe Santiago Mariño International Airport,airport,202,1252.2,0.8,0.84,high
+196,Prince Said Ibrahim International Airport,airport,159,2278.7,0.7,0.839,high
+593,Abel Santamaria International Airport,airport,154,2567.2,0.6,0.838,high
+958,Samarkand International Airport,airport,202,1198.3,0.7,0.837,high
+884,Shymkent International Airport,airport,211,1061.5,0.5,0.835,high
+456,Brindisi Airport,airport,192,1332.8,0.6,0.834,high
+948,Dashoguz International Airport,airport,363,558.6,3.2,0.833,high
+302,Noida International Airport,airport,194,1254.9,0.4,0.833,high
+1081,Presidente Nicolau Lobato International Airport,airport,196,1176.5,1.3,0.832,high
+1172,Shenyang Taoxian International Airport,airport,196,1173.9,1.8,0.831,high
+397,Plovdiv International Airport,airport,210,1020.5,1.2,0.831,high
+385,Salt Lake City International Airport,airport,213,997.1,1.8,0.831,high
+838,Johan Adolf Pengel International Airport,airport,158,1935.8,1.0,0.83,high
+1037,Mae Fah Luang - Chiang Rai International Airport,airport,187,1344.3,0.8,0.83,high
+57,Lomé–Tokoin International Airport,airport,220,958.5,1.2,0.829,high
+817,La Araucanía International Airport,airport,115,5320.3,1.1,0.829,high
+925,Barnaul Gherman Titov International Airport,airport,150,2211.9,0.3,0.828,high
+772,Ingeniero Aeronáutico Ambrosio L.V. Taravella International Airport,airport,168,1629.8,1.1,0.827,high
+179,Kasane International Airport,airport,139,2634.1,3.0,0.827,high
+747,Gimhae International Airport,airport,239,820.9,2.0,0.826,high
+1021,Rajiv Gandhi International Airport,airport,210,966.5,0.3,0.826,high
+846,Capitán FAP Carlos Martínez de Pinillos International Airport,airport,231,853.2,1.9,0.826,high
+349,Memphis International Airport,airport,209,973.5,3.4,0.825,high
+881,Taraz International Airport,airport,229,870.1,1.2,0.825,high
+795,São Paulo/Guarulhos–Governor André Franco Montoro International Airport,airport,210,943.3,1.2,0.823,high
+588,Toussaint Louverture International Airport,airport,211,911.1,0.7,0.823,high
+844,Coronel FAP Francisco Secada Vignetta International Airport,airport,156,1751.8,0.9,0.822,high
+1082,Oecusse Route of the Sandalwood International Airport,airport,156,1756.2,0.9,0.822,high
+675,Jinnah International Airport,airport,188,1112.3,1.0,0.821,high
+1123,Wuhan Tianhe International Airport,airport,168,1405.6,0.0,0.821,high
+569,Xoxocotlán International Airport,airport,154,1810.7,0.7,0.821,high
+285,Eldoret International Airport,airport,154,1810.9,1.1,0.821,high
+955,Nukus International Airport,airport,168,1396.4,1.6,0.82,high
+1064,Jenderal Ahmad Yani Airport,airport,159,1508.1,1.6,0.819,high
+183,Antonio Agostinho-Neto International Airport,airport,193,1008.1,0.2,0.816,high
+466,Milano Linate Airport,airport,196,971.2,1.3,0.816,high
+914,Zaporizhzhia International Airport,airport,203,870.5,0.8,0.814,high
+642,Kish International Airport,airport,169,1212.3,1.8,0.812,high
+883,Osh International Airport,airport,138,2059.5,3.1,0.812,high
+1104,Datong Yungang International Airport,airport,166,1260.5,0.5,0.812,high
+1034,Suvarnabhumi Airport,airport,177,1093.4,1.1,0.811,high
+959,Tashkent International Airport,airport,190,980.3,1.0,0.811,high
+847,Captain Renán Elías Olivera International Airport,airport,192,950.9,1.3,0.81,high
+40,Félix-Houphouët-Boigny International Airport,airport,225,706.5,2.6,0.81,high
+171,Kimberley Airport,airport,117,2719.1,0.5,0.81,high
+557,Abraham González International Airport,airport,172,1102.7,1.2,0.809,high
+710,Kaohsiung International Airport,airport,191,923.6,2.3,0.806,high
+378,Savannah Hilton Head International Airport,airport,181,976.8,1.6,0.806,high
+46,General Tunde Idiagbon International Airport,airport,170,1078.1,0.4,0.805,high
+596,Grand Bahama International Airport,airport,108,2921.3,0.6,0.804,high
+186,Bata International Airport,airport,135,1794.7,1.8,0.803,high
+1105,Hohhot Baita International Airport,airport,140,1535.9,1.4,0.803,high
+1042,Udon Thani International Airport,airport,166,1097.3,1.8,0.803,high
+336,William P. Hobby Airport,airport,257,491.3,1.8,0.802,high
+933,Akhmat Kadyrov Grozny International Airport,airport,152,1308.7,1.1,0.802,high
+770,Rosario Islas Malvinas International Airport,airport,158,1128.7,0.9,0.802,high
+547,La Aurora International Airport,airport,154,1220.6,1.5,0.801,high
+684,Mosul International Airport,airport,120,2191.8,1.1,0.801,high
+807,Marechal Cunha Machado International Airport,airport,153,1247.8,1.0,0.8,high
+1027,Tiruchirappalli International Airport,airport,157,1108.8,1.7,0.8,high
+566,Mexico City Benito Juárez International Airport,airport,138,1575.3,1.8,0.8,high
+201,Toamasina Ambalamanasy Airport,airport,147,1289.7,1.2,0.799,high
+545,Las Américas International Airport,airport,183,901.1,2.4,0.799,high
+187,Malabo International Airport,airport,174,957.8,1.0,0.798,high
+537,Gibraltar Airport,airport,146,1308.4,2.3,0.798,high
+555,Bahías de Huatulco International Airport,airport,138,1517.0,0.9,0.798,high
+536,Skopje International Airport,airport,115,2125.8,1.0,0.797,high
+424,Seville Airport,airport,149,1177.1,1.0,0.795,high
+538,Belgrade Nikola Tesla Airport,airport,120,1870.2,1.1,0.794,high
+1109,Tianjin Binhai International Airport,airport,139,1354.4,2.3,0.794,high
+1120,Zhanjiang Wuchuan International Airport,airport,145,1233.0,0.9,0.794,high
+683,Baghdad International Airport / New Al Muthana Air Base,airport,125,1681.0,2.1,0.793,high
+288,Moi International Airport,airport,174,898.4,1.7,0.793,high
+22,Soummam–Abane Ramdane Airport,airport,83,5203.1,1.6,0.792,high
+54,Tunis Carthage International Airport,airport,229,506.5,1.7,0.792,high
+849,Carrasco General Cesáreo L. Berisso International Airport,airport,114,1910.9,1.1,0.79,high
+1157,Yantai Penglai International Airport,airport,128,1469.0,2.4,0.789,high
+1171,Dalian Zhoushuizi International Airport,airport,180,789.6,2.1,0.789,high
+262,Aba Tenna Dejazmach Yilma International Airport,airport,203,591.8,0.9,0.789,high
+353,Louis Armstrong New Orleans International Airport,airport,174,825.8,1.9,0.788,high
+882,Manas International Airport,airport,128,1419.7,1.2,0.788,high
+37,Kotoka International Airport,airport,198,608.6,0.6,0.788,high
+273,Alexandria International Airport,airport,166,904.3,2.6,0.787,high
+936,Platov International Airport,airport,102,2204.4,2.1,0.785,high
+386,Sacramento International Airport,airport,96,2504.4,1.5,0.784,high
+524,Adnan Menderes International Airport,airport,72,6214.7,0.9,0.783,high
+977,Dr. Babasaheb Ambedkar International Airport,airport,132,1220.6,2.3,0.782,high
+822,Carlos Concha Torres International Airport,airport,123,1362.3,0.4,0.781,high
+520,Konya Airport,airport,180,670.3,1.8,0.78,high
+793,Rio Galeão – Tom Jobim International Airport,airport,156,904.6,1.6,0.78,high
+743,Tokyo Haneda International Airport,airport,207,475.7,1.5,0.78,high
+518,Antalya International Airport,airport,120,1394.6,1.4,0.779,high
+902,Shirak International Airport,airport,134,1163.1,0.7,0.779,high
+891,Oskemen International Airport,airport,160,815.0,2.1,0.778,high
+48,Mallam Aminu Kano International Airport,airport,139,1054.0,0.4,0.778,high
+859,Grantley Adams International Airport,airport,94,2345.8,1.2,0.778,high
+653,Tabriz International Airport,airport,147,967.4,0.6,0.778,high
+1167,Ürümqi Tianshan International Airport,airport,156,869.5,0.8,0.777,high
+646,Payam International Airport,airport,150,946.5,0.6,0.777,high
+358,Ontario International Airport,airport,119,1385.3,1.3,0.777,high
+114,Amsterdam Airport Schiphol,airport,73,4565.8,1.6,0.776,high
+893,Semei International Airport,airport,159,795.0,1.6,0.776,high
+118,Rotterdam The Hague Airport,airport,95,2163.0,1.8,0.775,high
+279,Port Said International Airport,airport,187,593.9,0.8,0.774,high
+115,Maastricht Aachen Airport,airport,174,650.4,4.6,0.774,high
+676,Allama Iqbal International Airport,airport,230,362.4,3.7,0.773,high
+308,Birmingham-Shuttlesworth International Airport,airport,179,607.9,0.7,0.772,high
+956,Urgench International Airport,airport,198,446.7,1.4,0.772,high
+824,Teniente Ramon A. Ayub Gonzalez International Airport,airport,137,1009.5,2.6,0.771,high
+756,Laoag International Airport,airport,103,1578.4,1.5,0.77,high
+1145,Ningbo Lishe International Airport,airport,128,1077.7,1.9,0.769,high
+1052,Yangon International Airport,airport,136,1005.6,2.0,0.769,high
+1115,Guilin Liangjiang International Airport,airport,93,2006.2,0.5,0.769,high
+711,Taichung International Airport / Ching Chuang Kang Air Base,airport,107,1399.0,1.1,0.769,high
+269,Djibouti-Ambouli Airport,airport,147,841.6,2.5,0.768,high
+446,Kavala Alexander the Great International Airport,airport,120,1122.2,1.0,0.767,high
+651,Mashhad International Airport,airport,198,397.2,1.1,0.767,high
+911,Chita-Kadala International Airport,airport,92,2038.6,0.5,0.767,high
+210,Maputo Airport,airport,157,714.6,0.6,0.766,high
+471,Verona Villafranca Valerio Catullo Airport,airport,153,760.9,2.6,0.765,high
+477,"Florence Airport, Peretola",airport,138,927.7,1.1,0.765,high
+1053,Sultan Hasanuddin International Airport,airport,149,778.3,1.4,0.764,high
+1165,Chengdu Shuangliu International Airport,airport,86,2099.8,1.7,0.763,high
+463,Il Caravaggio International Airport,airport,172,572.2,1.1,0.762,high
+787,Curitiba-Afonso Pena International Airport,airport,110,1174.0,0.7,0.761,high
+703,Kahului International Airport,airport,63,4647.0,2.0,0.759,high
+922,Khrabrovo Airport,airport,104,1239.8,0.8,0.758,high
+395,Tirana International Airport Mother Teresa,airport,114,1064.4,0.5,0.757,high
+935,Mineralnye Vody Airport,airport,92,1649.5,1.0,0.757,high
+500,Mostar International Airport,airport,86,1820.7,2.3,0.756,high
+990,Biju Patnaik International Airport,airport,145,733.9,0.8,0.756,high
+558,General Roberto Fierro Villalobos International Airport,airport,120,988.9,1.0,0.756,high
+1,Honiara International Airport,airport,140,742.0,0.3,0.756,high
+216,Victoria Falls International Airport,airport,64,3945.4,2.3,0.756,high
+811,President Carlos Ibáñez International Airport,airport,141,739.4,4.7,0.755,high
+1111,Taiyuan Wusu International Airport,airport,130,871.5,0.6,0.755,high
+170,George Airport,airport,111,1063.7,1.3,0.754,high
+219,Kamuzu International Airport,airport,145,712.5,0.9,0.754,high
+928,Novosibirsk Tolmachevo Airport,airport,86,1772.1,2.2,0.754,high
+801,Porto Seguro International Airport,airport,89,1665.3,1.5,0.754,high
+979,Pune International Airport,airport,137,792.6,1.3,0.753,high
+689,Aleppo International Airport,airport,131,838.6,0.9,0.753,high
+460,Cagliari Elmas Airport,airport,95,1368.1,1.1,0.752,high
+340,Jacksonville International Airport,airport,129,840.2,2.2,0.751,high
+781,Presidente Perón International Airport,airport,138,756.0,0.6,0.751,high
+1024,Chennai International Airport,airport,140,680.9,0.6,0.75,high
+181,Sir Seretse Khama International Airport,airport,89,1542.1,0.9,0.75,high
+1166,Kashgar Laining International Airport,airport,202,321.6,1.5,0.75,high
+571,Puerto Vallarta International Airport,airport,126,843.6,2.3,0.749,high
+889,Korkyt Ata International Airport,airport,70,2418.9,3.3,0.748,high
+180,Maun International Airport,airport,88,1504.6,1.4,0.747,high
+992,Lokpriya Gopinath Bordoloi International Airport,airport,106,1017.7,1.3,0.747,high
+59,Brussels South Charleroi Airport,airport,196,331.3,2.6,0.747,high
+973,Vadodara International Airport,airport,130,778.1,1.7,0.747,high
+28,Mohamed Boudiaf International Airport,airport,108,1002.9,2.3,0.747,high
+728,Kumamoto Airport,airport,77,1808.0,0.7,0.745,high
+457,Lamezia Terme Sant'Eufemia International Airport,airport,97,1097.9,1.2,0.744,high
+473,Ciampino–G. B. Pastine International Airport,airport,85,1447.6,1.8,0.744,high
+848,Alejandro Velasco Astete International Airport,airport,62,2985.8,2.2,0.743,high
+608,Pokhara International Airport,airport,121,789.2,0.7,0.742,high
+924,Abakan International Airport,airport,76,1736.0,1.4,0.742,high
+957,Bukhara International Airport,airport,146,581.2,0.3,0.742,high
+27,Annaba Rabah Bitat Airport,airport,130,716.6,0.8,0.742,high
+658,Kuwait International Airport,airport,156,470.4,1.9,0.742,high
+964,Vnukovo International Airport,airport,98,1040.4,2.2,0.741,high
+667,Ras Al Khaimah International Airport,airport,238,216.6,4.3,0.741,high
+897,Kostanay International Airport,airport,84,1371.6,1.5,0.739,high
+915,Simferopol International Airport,airport,121,756.8,1.9,0.739,high
+934,Makhachkala Uytash International Airport,airport,130,652.6,0.4,0.738,high
+357,Eppley Airfield,airport,57,3231.6,1.9,0.736,high
+1016,Coimbatore International Airport,airport,120,741.0,1.1,0.735,high
+829,Alfonso Bonilla Aragon International Airport,airport,96,1004.9,1.1,0.734,high
+68,Düsseldorf Airport,airport,167,366.4,1.4,0.733,high
+1036,Chiang Mai International Airport,airport,93,1052.3,2.1,0.732,high
+1147,Hefei Xinqiao International Airport,airport,110,784.4,1.2,0.731,high
+963,Sheremetyevo International Airport,airport,156,387.4,2.3,0.731,high
+1033,Don Mueang International Airport,airport,112,741.7,0.9,0.73,high
+544,Punta Cana International Airport,airport,105,829.0,1.3,0.73,high
+1106,Hulunbuir Hailar Airport,airport,136,553.9,1.0,0.729,high
+535,Ohrid St. Paul the Apostle Airport,airport,83,1176.2,0.4,0.729,high
+960,Zhukovsky International Airport,airport,101,879.5,1.4,0.729,high
+1087,Broome International Airport,airport,48,4501.0,0.5,0.727,high
+647,Bandar Abbas International Airport,airport,122,603.4,0.9,0.726,high
+916,Lviv International Airport,airport,78,1155.4,0.5,0.721,high
+605,Sir Ahmadu Bello International Airport,airport,90,964.4,1.8,0.721,high
+1121,Zhengzhou Xinzheng International Airport,airport,114,612.9,0.1,0.72,high
+828,Rafael Nuñez International Airport,airport,112,616.7,2.1,0.72,high
+758,Ninoy Aquino International Airport,airport,105,722.7,0.1,0.72,high
+890,Manshuk Mametova International Airport,airport,66,1508.0,3.0,0.719,high
+539,Niš Constantine the Great Airport,airport,93,884.1,0.2,0.719,high
+929,Omsk Central Airport,airport,85,975.3,2.6,0.717,high
+485,Ben Gurion International Airport,airport,73,1163.3,1.7,0.717,high
+375,Southwest Florida International Airport,airport,105,658.1,1.9,0.716,high
+804,Recife/Guararapes - Gilberto Freyre International Airport,airport,139,382.9,1.7,0.715,high
+808,Congonhas–Deputado Freitas Nobre Airport,airport,123,478.9,3.1,0.715,high
+978,Nashik International Airport,airport,91,874.8,0.6,0.715,high
+474,Rome–Fiumicino Leonardo da Vinci International Airport,airport,74,1085.1,2.3,0.714,high
+411,Bilbao Airport,airport,174,255.9,4.0,0.714,high
+1133,Xi'an Xianyang International Airport,airport,107,614.9,1.8,0.714,high
+1063,Juanda International Airport,airport,111,590.1,2.0,0.713,high
+1153,Huangshan Tunxi International Airport,airport,80,989.1,0.9,0.712,high
+919,Pulkovo Airport,airport,96,727.6,0.4,0.711,high
+304,Albany International Airport,airport,121,462.4,1.3,0.711,high
+1122,Ezhou Huahu International Airport,airport,88,849.8,2.1,0.71,high
+1100,Newcastle Airport,airport,43,4042.7,1.0,0.71,high
+256,Ahmed Sékou Touré International Airport,airport,140,345.9,1.0,0.709,high
+50,Murtala Muhammed International Airport,airport,98,638.9,2.4,0.709,high
+587,Cap Haitien International Airport,airport,101,621.3,1.6,0.709,high
+422,Valencia Airport,airport,92,772.1,1.1,0.708,high
+907,Tbilisi International Airport,airport,91,778.8,0.2,0.708,high
+208,São Tomé International Airport,airport,72,1067.1,0.8,0.708,high
+835,Juan Mendoza International Airport,airport,79,947.1,2.5,0.706,high
+603,Fua'amotu International Airport,airport,102,566.4,0.5,0.703,high
+519,Gaziantep Oğuzeli International Airport,airport,83,825.3,0.7,0.703,high
+629,Prince Naif bin Abdulaziz International Airport,airport,96,615.9,2.5,0.702,high
+1107,Baotou Donghe International Airport,airport,101,561.2,1.1,0.701,high
+590,Antonio Maceo International Airport,airport,104,530.2,2.0,0.701,high
+1091,Melbourne Avalon International Airport,airport,61,1217.6,0.6,0.698,medium
+1161,Guiyang Longdongbao International Airport,airport,106,458.1,1.3,0.697,medium
+454,Bari Karol Wojtyła International Airport,airport,90,643.1,1.5,0.696,medium
+541,M. R. Štefánik Airport,airport,97,524.2,2.8,0.694,medium
+300,Entebbe International Airport,airport,62,1095.3,1.0,0.693,medium
+950,Dushanbe International Airport,airport,120,361.6,0.9,0.693,medium
+1005,Chaudhary Charan Singh International Airport,airport,92,605.1,1.5,0.693,medium
+1143,Jinan Yaoqiang International Airport,airport,97,492.8,1.0,0.692,medium
+543,Casa De Campo International Airport,airport,50,1707.3,1.6,0.692,medium
+328,Newark Liberty International Airport,airport,127,341.2,1.0,0.692,medium
+389,St. Louis Lambert International Airport,airport,154,228.1,4.2,0.692,medium
+1102,Beijing Daxing International Airport,airport,94,548.3,0.8,0.69,medium
+529,Balıkesir Koca Seyit Airport,airport,78,728.6,0.2,0.688,medium
+464,Turin Airport,airport,97,459.5,2.4,0.688,medium
+427,Bastia-Poretta International airport,airport,59,1103.9,1.6,0.688,medium
+898,Heydar Aliyev International Airport,airport,90,592.2,2.4,0.688,medium
+918,Odesa International Airport,airport,79,698.4,2.0,0.686,medium
+1098,Perth International Airport,airport,59,1082.9,1.3,0.686,medium
+261,Addis Ababa Bole International Airport,airport,94,479.1,1.3,0.685,medium
+834,El Alto International Airport,airport,82,629.9,1.0,0.685,medium
+656,Marka International (Amman Civil) Airport,airport,132,265.0,1.7,0.682,medium
+189,Douala International Airport,airport,100,385.5,0.5,0.681,medium
+329,Fresno Yosemite International Airport,airport,81,598.0,2.8,0.68,medium
+1129,Yinchuan Hedong International Airport,airport,93,447.1,3.2,0.68,medium
+200,Ivato International Airport,airport,62,936.8,1.7,0.679,medium
+271,El Arish International Airport,airport,67,814.2,0.2,0.679,medium
+238,Al Massira Airport,airport,138,231.6,4.2,0.679,medium
+662,Al Bateen Executive Airport,airport,146,209.0,2.2,0.678,medium
+2,Western Sydney International (Nancy-Bird Walton) Airport,airport,125,266.4,2.6,0.676,medium
+225,Goma International Airport,airport,61,910.9,0.2,0.676,medium
+379,San Bernardino International Airport,airport,42,1825.8,0.8,0.675,medium
+415,Adolfo Suárez Madrid–Barajas Airport,airport,71,658.4,0.3,0.674,medium
+695,Sanaa International Airport,airport,107,327.4,0.4,0.673,medium
+188,Sir Seewoosagur Ramgoolam International Airport,airport,57,976.6,0.9,0.672,medium
+283,Sphinx International Airport,airport,80,544.6,3.1,0.672,medium
+1045,Can Tho International Airport,airport,79,555.6,0.7,0.672,medium
+809,Deputado Luiz Eduardo Magalhães International Airport,airport,110,304.1,0.3,0.672,medium
+400,Ercan International Airport,airport,67,725.7,1.2,0.671,medium
+1137,Lijiang Sanyi International Airport,airport,80,524.4,0.2,0.671,medium
+1080,Sultan Abdul Aziz Shah International Airport,airport,69,658.0,1.3,0.67,medium
+392,Tulsa International Airport,airport,93,377.9,3.3,0.669,medium
+1110,Yuncheng Yanhu International Airport,airport,75,557.8,1.2,0.669,medium
+404,Pula Airport,airport,65,741.0,1.8,0.669,medium
+493,Vienna International Airport,airport,96,361.1,1.5,0.669,medium
+939,Volgograd International Airport,airport,64,754.3,2.4,0.668,medium
+11,Kelowna International Airport,airport,28,4135.1,0.3,0.666,medium
+1020,Goa Dabolim International Airport,airport,74,515.9,0.7,0.664,medium
+597,Lynden Pindling International Airport,airport,50,1058.8,0.4,0.664,medium
+1068,Hang Nadim International Airport,airport,69,598.4,0.7,0.663,medium
+858,V. C. Bird International Airport,airport,80,441.6,2.5,0.662,medium
+995,Shah Amanat International Airport,airport,85,390.0,0.8,0.662,medium
+475,Naples International Airport,airport,67,612.9,0.7,0.662,medium
+967,Saransk International Airport,airport,55,895.6,1.3,0.661,medium
+1074,Sultan Iskandar Muda International Airport,airport,62,697.5,3.4,0.66,medium
+345,Long Beach International Airport,airport,191,228.8,5.2,0.66,medium
+1142,Hangzhou Xiaoshan International Airport,airport,74,445.8,2.4,0.657,medium
+89,Lappeenranta Airport,airport,155,132.5,2.1,0.656,medium
+1049,Tan Son Nhat International Airport,airport,98,278.6,1.6,0.655,medium
+253,Léopold Sédar Senghor International Airport,airport,108,228.5,0.7,0.654,medium
+408,Zadar Airport,airport,59,686.4,1.2,0.653,medium
+1038,Krabi International Airport,airport,88,341.9,0.5,0.653,medium
+287,Kisumu International Airport,airport,70,469.3,0.4,0.652,medium
+527,Şanlıurfa GAP Airport,airport,60,637.8,2.3,0.652,medium
+1076,Senai International Airport,airport,115,208.7,0.7,0.651,medium
+32,Oran Es-Sénia (Ahmed Ben Bella) International Airport,airport,81,357.6,2.0,0.649,medium
+1101,Beijing Capital International Airport,airport,56,733.5,2.4,0.649,medium
+1149,Qingdao Jiaodong International Airport,airport,73,392.0,0.3,0.649,medium
+886,Zhezkazgan National Airport,airport,139,347.3,5.8,0.647,medium
+637,Prince Sultan bin Abdulaziz International Airport,airport,59,611.9,4.6,0.646,medium
+1124,Luoyang Beijiao Airport,airport,72,384.8,1.2,0.645,medium
+854,Maiquetía Simón Bolívar International Airport,airport,57,629.2,1.6,0.644,medium
+508,Craiova International Airport,airport,60,565.7,1.5,0.643,medium
+1146,Nanjing Lukou International Airport,airport,66,446.3,0.6,0.643,medium
+912,Irkutsk International Airport,airport,73,365.9,0.7,0.642,medium
+1136,Xishuangbanna Gasa International Airport,airport,70,387.3,0.8,0.642,medium
+1138,Kunming Changshui International Airport,airport,67,429.0,1.1,0.642,medium
+674,Islamabad International Airport,airport,62,492.9,1.5,0.641,medium
+469,Trieste Airport,airport,47,868.7,1.7,0.641,medium
+896,Aktobe International Airport,airport,42,1016.3,3.3,0.641,medium
+654,Zahedan International Airport,airport,107,200.0,3.1,0.64,medium
+551,Norman Manley International Airport,airport,96,227.3,1.9,0.64,medium
+648,Ayatollah Hashemi Rafsanjani International Airport,airport,96,224.9,0.8,0.64,medium
+997,Osmany International Airport,airport,105,200.3,0.7,0.638,medium
+800,Porto Alegre-Salgado Filho International Airport,airport,64,442.7,1.3,0.638,medium
+832,Alcantarí International Airport,airport,44,905.9,0.4,0.638,medium
+996,Hazrat Shahjalal International Airport,airport,82,292.5,1.9,0.637,medium
+965,Nizhny Novgorod / Strigino International Airport,airport,60,485.6,1.6,0.636,medium
+820,Mariscal Sucre International Airport,airport,52,636.3,1.3,0.636,medium
+499,Banja Luka International Airport,airport,70,346.3,1.3,0.633,medium
+1156,Yancheng Nanyang International Airport,airport,68,369.1,1.5,0.633,medium
+356,OKC Will Rogers World Airport,airport,61,446.2,3.6,0.633,medium
+1046,Da Nang International Airport,airport,65,382.9,3.8,0.632,medium
+327,El Paso International Airport,airport,102,190.8,1.9,0.631,medium
+865,Robert L. Bradshaw International Airport,airport,41,954.1,0.4,0.631,medium
+26,Jijel Ferhat Abbas Airport,airport,52,594.9,0.7,0.63,medium
+727,Kyushu Saga International Airport,airport,69,344.2,1.2,0.629,medium
+712,Tainan International Airport / Tainan Air Base,airport,70,332.6,0.8,0.628,medium
+1058,Sultan Aji Muhammad Sulaiman Sepinggan International Airport,airport,82,256.7,1.9,0.628,medium
+1154,Sunan Shuofang International Airport,airport,73,302.5,2.5,0.628,medium
+1152,Shanghai Hongqiao International Airport,airport,66,351.6,1.7,0.627,medium
+313,Hollywood Burbank/Bob Hope Airport,airport,58,444.3,2.7,0.626,medium
+343,Los Angeles International Airport,airport,112,148.9,1.4,0.626,medium
+251,Tangier Ibn Battuta Airport,airport,47,635.0,2.5,0.624,medium
+1062,Adisoemarmo International Airport,airport,78,257.0,1.1,0.623,medium
+462,Milan Malpensa International Airport,airport,72,282.2,1.3,0.622,medium
+1140,Nanchang Changbei International Airport,airport,61,376.4,2.3,0.622,medium
+387,John Wayne Orange County International Airport,airport,71,282.3,3.7,0.621,medium
+1084,Brisbane International Airport,airport,95,179.5,2.9,0.619,medium
+993,Bir Tikendrajit International Airport,airport,68,301.4,1.2,0.618,medium
+622,Bahrain International Airport,airport,128,260.0,5.4,0.616,medium
+1075,Sultan Azlan Shah Airport,airport,66,298.5,1.1,0.615,medium
+672,Faisalabad International Airport,airport,63,323.9,2.5,0.614,medium
+1050,Mandalay International Airport,airport,65,305.1,2.1,0.614,medium
+534,Chişinău International Airport,airport,51,453.0,2.0,0.614,medium
+904,Platon Oyunsky Yakutsk International Airport,airport,58,371.4,1.9,0.614,medium
+917,Uzhhorod International Airport,airport,57,375.6,0.6,0.613,medium
+1117,Jieyang Chaoshan International Airport,airport,57,376.5,1.7,0.613,medium
+819,José Joaquín de Olmedo International Airport,airport,52,422.1,3.3,0.612,medium
+715,Taiwan Taoyuan International Airport,airport,73,221.0,0.2,0.61,medium
+613,La Tontouta International Airport,airport,21,2163.0,1.1,0.61,medium
+250,Sania Ramel Airport,airport,43,612.8,1.1,0.61,medium
+214,N'Djamena International Airport,airport,64,287.0,1.2,0.609,medium
+926,Alexei Leonov Kemerovo International Airport,airport,48,475.2,0.7,0.609,medium
+546,Cibao International Airport,airport,69,245.6,1.0,0.608,medium
+429,Clermont-Ferrand Auvergne airport,airport,63,284.8,0.6,0.607,medium
+643,Isfahan Shahid Beheshti International Airport,airport,53,377.7,2.2,0.607,medium
+932,Krasnodar Pashkovsky International Airport,airport,60,309.3,1.3,0.605,medium
+1099,Sydney Kingsford Smith International Airport,airport,51,383.3,2.7,0.604,medium
+664,Dubai International Airport,airport,71,217.1,1.7,0.604,medium
+659,Beirut Rafic Hariri International Airport,airport,56,345.0,1.7,0.604,medium
+184,King Mswati III International Airport,airport,34,798.6,1.5,0.603,medium
+382,Orlando Sanford International Airport,airport,48,400.5,1.9,0.601,medium
+507,Avram Iancu Cluj International Airport,airport,47,426.6,1.7,0.601,medium
+1067,Brunei International Airport,airport,41,597.6,2.1,0.6,medium
+635,King Khalid International Airport,airport,19,2279.8,0.6,0.6,medium
+895,Atyrau International Airport,airport,55,336.3,2.1,0.6,medium
+530,Milas Bodrum International Airport,airport,46,429.2,0.9,0.599,medium
+1092,Hobart International Airport,airport,39,616.7,1.4,0.599,medium
+290,Benina International Airport,airport,55,326.5,2.0,0.597,medium
+845,Rodríguez Ballón International Airport,airport,69,212.0,1.5,0.597,medium
+1043,Cat Bi International Airport,airport,61,249.9,2.2,0.595,medium
+494,Faro - Gago Coutinho International Airport,airport,26,1041.6,1.8,0.594,medium
+347,Orlando International Airport,airport,58,277.1,4.1,0.594,medium
+867,Queen Beatrix International Airport,airport,51,341.5,1.1,0.593,medium
+291,Mitiga International Airport,airport,76,169.8,0.7,0.593,medium
+759,Francisco Bangoy International Airport,airport,65,217.6,2.6,0.593,medium
+326,Detroit Metropolitan Wayne County Airport,airport,119,76.1,2.5,0.591,medium
+124,Billund Airport,airport,22,1312.3,1.1,0.59,medium
+1006,Sheikh ul Alam International Airport,airport,46,374.9,1.6,0.589,medium
+905,David the Builder Kutaisi International Airport,airport,43,403.6,2.0,0.588,medium
+968,Gagarin International Airport,airport,38,537.8,0.8,0.587,medium
+619,Kabul International Airport,airport,58,244.2,0.7,0.587,medium
+1078,Langkawi International Airport,airport,38,526.4,0.8,0.586,medium
+1048,Phú Quốc International Airport,airport,45,366.4,0.3,0.586,medium
+843,Inca Manco Capac International Airport,airport,30,756.7,0.3,0.585,medium
+1029,Paro International Airport,airport,15,2526.0,0.5,0.585,medium
+234,Tenerife Norte-Ciudad de La Laguna Airport,airport,21,1306.0,0.8,0.584,medium
+506,Mihail Kogălniceanu International Airport,airport,39,477.5,2.0,0.584,medium
+736,Matsuyama Airport,airport,51,292.0,3.8,0.583,medium
+315,Charleston International Airport,airport,42,395.4,3.3,0.583,medium
+77,Paderborn Lippstadt Airport,airport,87,119.1,4.2,0.583,medium
+866,Hewanorra International Airport,airport,48,321.6,0.8,0.582,medium
+30,Chlef Aboubakr Belkaid International Airport,airport,58,223.3,1.5,0.582,medium
+1077,Kuala Lumpur International Airport,airport,50,296.1,1.0,0.582,medium
+805,Santos Dumont Airport,airport,41,412.0,3.4,0.582,medium
+1151,Huai'an Lianshui Airport,airport,52,267.4,1.1,0.581,medium
+514,Timișoara Traian Vuia International Airport,airport,36,508.8,1.9,0.581,medium
+128,Aalborg Airport,airport,73,150.6,3.3,0.581,medium
+1155,Wenzhou Longwan International Airport,airport,51,278.8,1.0,0.58,medium
+53,Diori Hamani International Airport,airport,45,344.3,0.6,0.58,medium
+338,George Bush Intercontinental Airport,airport,51,273.5,3.8,0.579,medium
+899,Ganja International Airport,airport,45,340.4,2.3,0.578,medium
+900,Nakhchivan International Airport,airport,40,407.9,2.0,0.578,medium
+726,Kitakyushu Airport,airport,89,267.3,5.7,0.578,medium
+451,Budapest Liszt Ferenc International Airport,airport,51,263.8,2.6,0.576,medium
+399,Varna Airport,airport,35,455.4,1.6,0.575,medium
+879,Kokshetau International Airport,airport,29,659.5,0.2,0.574,medium
+750,Daegu International Airport,airport,44,331.4,3.6,0.573,medium
+380,Louisville Muhammad Ali International Airport,airport,52,230.5,0.1,0.573,medium
+887,Sary-Arka Airport,airport,21,1078.3,2.4,0.572,medium
+266,Bender Qassim International Airport,airport,61,185.3,2.0,0.572,medium
+509,Iaşi International Airport,airport,33,508.8,4.1,0.571,medium
+1035,U-Tapao–Rayong–Pattaya International Airport,airport,49,262.0,2.3,0.571,medium
+839,Cayenne – Félix Eboué Airport,airport,40,375.4,2.6,0.57,medium
+1150,Quanzhou Jinjiang International Airport,airport,49,249.0,1.5,0.569,medium
+352,Minneapolis–Saint Paul International Airport / Wold–Chamberlain Field,airport,48,253.3,0.9,0.568,medium
+1089,Toowoomba Wellcamp Airport,airport,40,363.6,1.8,0.568,medium
+1059,Sam Ratulangi International Airport,airport,46,276.3,2.1,0.567,medium
+255,Nouadhibou International Airport,airport,47,264.0,2.1,0.567,medium
+468,Treviso Airport,airport,57,195.8,0.8,0.567,medium
+945,Koltsovo Airport,airport,50,223.9,1.5,0.565,medium
+790,Cataratas International Airport,airport,41,336.1,1.1,0.565,medium
+1097,Port Hedland International Airport,airport,11,3211.3,2.8,0.565,medium
+331,Spokane International Airport,airport,17,1367.8,0.6,0.564,medium
+423,Zaragoza Airport,airport,44,280.4,3.0,0.564,medium
+525,Dalaman International Airport,airport,42,310.1,1.5,0.564,medium
+542,Providenciales International Airport,airport,42,318.7,0.8,0.564,medium
+1116,Nanning Wuxu International Airport,airport,53,203.9,1.3,0.563,medium
+552,Sangster International Airport,airport,42,302.0,1.0,0.562,medium
+1069,Halim Perdanakusuma International Airport,airport,56,184.3,2.6,0.56,medium
+638,Taif International Airport,airport,43,272.3,0.6,0.558,medium
+799,Ministro Victor Konder International Airport,airport,46,230.0,0.6,0.558,medium
+830,Jose Maria Córdova International Airport,airport,45,237.8,2.6,0.558,medium
+501,Sarajevo International Airport,airport,37,341.7,1.4,0.557,medium
+220,Moshoeshoe I International Airport,airport,40,312.3,0.1,0.557,medium
+975,Rajkot International Airport,airport,44,247.0,2.7,0.556,medium
+406,Split Saint Jerome Airport,airport,13,1904.9,3.1,0.556,medium
+498,Lisbon Humberto Delgado Airport,airport,27,561.0,1.8,0.556,medium
+442,Athens Eleftherios Venizelos International Airport,airport,19,1014.7,1.1,0.555,medium
+444,"Kos International Airport ""Ippokratis""",airport,17,1158.7,2.8,0.555,medium
+510,Oradea International Airport,airport,34,356.4,1.2,0.554,medium
+952,Khujand International Airport,airport,53,179.2,2.6,0.554,medium
+1041,Hat Yai International Airport,airport,49,204.0,2.1,0.554,medium
+971,Sardar Vallabh Patel International Airport,airport,47,210.9,0.4,0.552,medium
+818,El Tepual International Airport,airport,27,522.7,2.7,0.552,medium
+991,Netaji Subhash Chandra Bose International Airport,airport,54,167.7,1.4,0.552,medium
+1132,Xining Caojiabao International Airport,airport,50,191.7,3.6,0.55,medium
+398,Sofia Airport,airport,33,353.1,1.9,0.549,medium
+941,Magnitogorsk International Airport,airport,31,378.3,1.2,0.549,medium
+323,Denver International Airport,airport,83,67.0,4.8,0.547,medium
+1158,Yiwu Airport,airport,43,220.0,1.8,0.546,medium
+342,Harry Reid International Airport,airport,43,217.9,1.2,0.545,medium
+303,Albuquerque International Sunport,airport,65,102.2,3.2,0.544,medium
+402,Paphos International Airport,airport,35,295.5,1.4,0.544,medium
+573,Los Cabos International Airport,airport,33,334.5,1.5,0.543,medium
+1047,Noi Bai International Airport,airport,40,243.8,1.1,0.542,medium
+682,Turbat International Airport,airport,33,324.4,3.7,0.541,medium
+980,Shirdi International Airport,airport,44,200.5,1.4,0.541,medium
+741,Niigata Airport,airport,54,132.5,0.1,0.538,medium
+632,Prince Mohammad Bin Abdulaziz Airport,airport,44,196.2,3.0,0.538,medium
+602,Nausori International Airport,airport,34,279.9,2.3,0.537,medium
+1044,Cam Ranh International Airport / Cam Ranh Air Base,airport,36,235.9,2.1,0.534,medium
+913,Baikal International Airport,airport,22,576.6,2.2,0.534,medium
+869,Hato International Airport,airport,43,193.6,1.4,0.534,medium
+512,Sibiu International Airport,airport,41,209.1,1.7,0.534,medium
+947,Ashgabat International Airport,airport,40,213.4,2.5,0.533,medium
+246,Mohammed V International Airport,airport,44,181.5,3.2,0.533,medium
+363,Philadelphia International Airport,airport,57,111.8,1.4,0.532,medium
+34,Cotonou Cadjehoun International Airport,airport,49,148.1,1.0,0.532,medium
+365,St. Petersburg Clearwater International Airport,airport,59,99.8,2.1,0.531,medium
+521,Kayseri Erkilet International Airport,airport,38,217.8,1.4,0.531,medium
+699,Antonio B. Won Pat International Airport,airport,24,431.5,2.1,0.529,medium
+677,Multan International Airport,airport,47,149.4,1.1,0.529,medium
+339,Indianapolis International Airport,airport,25,388.1,1.4,0.528,medium
+102,London Gatwick Airport,airport,45,157.1,1.3,0.528,medium
+325,Des Moines International Airport,airport,30,296.1,2.6,0.527,medium
+1001,Indira Gandhi International Airport,airport,37,213.4,1.1,0.527,medium
+260,Cesaria Evora International Airport,airport,68,193.2,6.7,0.527,medium
+497,Francisco de Sá Carneiro Airport,airport,31,276.9,2.2,0.525,medium
+767,Mactan Cebu International Airport,airport,35,216.7,1.8,0.525,medium
+816,Mataveri International Airport,airport,24,396.2,2.5,0.525,medium
+103,London Heathrow Airport,airport,47,134.7,0.7,0.523,medium
+299,Abeid Amani Karume International Airport,airport,38,200.0,4.1,0.522,medium
+698,Rota International Airport,airport,26,341.4,1.0,0.521,medium
+405,Rijeka Airport,airport,50,115.1,3.2,0.521,medium
+1088,Sunshine Coast Airport,airport,29,290.4,1.1,0.521,medium
+248,Marrakesh Menara Airport,airport,45,141.0,1.2,0.521,medium
+691,Doha International Airport,airport,54,98.6,3.5,0.52,medium
+346,Kansas City International Airport,airport,34,213.4,3.2,0.519,medium
+416,Málaga-Costa del Sol Airport,airport,34,211.4,1.9,0.518,medium
+1131,Lanzhou Zhongchuan International Airport,airport,29,269.5,1.5,0.517,medium
+100,Liverpool John Lennon Airport,airport,53,239.3,5.7,0.517,medium
+407,Zagreb Franjo Tuđman International Airport,airport,45,127.5,0.8,0.514,medium
+487,Malta International Airport,airport,42,146.1,1.3,0.513,medium
+692,Hamad International Airport,airport,53,89.4,0.5,0.512,medium
+306,Austin Bergstrom International Airport,airport,34,193.8,3.0,0.511,medium
+98,Cardiff International Airport,airport,57,77.9,2.4,0.511,medium
+275,Hurghada International Airport,airport,59,69.6,3.6,0.51,medium
+1112,Zhangjiajie Hehua International Airport,airport,31,215.4,0.2,0.51,medium
+888,Baikonur Krayniy International Airport,airport,29,238.5,5.0,0.51,medium
+502,Tuzla International Airport,airport,32,207.4,0.5,0.509,medium
+450,Thessaloniki Macedonia International Airport,airport,21,384.6,1.2,0.508,medium
+872,A.N.R. Robinson International Airport,airport,34,188.3,1.7,0.508,medium
+1094,Adelaide International Airport,airport,38,153.3,2.8,0.505,medium
+668,Sharjah International Airport,airport,35,165.6,3.5,0.505,medium
+909,Yuzhno-Sakhalinsk International Airport,airport,22,349.6,1.4,0.505,medium
+906,Alexander Kartveli Batumi International Airport,airport,35,162.9,1.2,0.504,medium
+231,Gran Canaria Airport,airport,41,127.8,3.2,0.502,medium
+531,Istanbul Sabiha Gökçen International Airport,airport,20,379.0,1.2,0.501,medium
+946,Roshchino International Airport,airport,30,203.2,0.6,0.501,medium
+258,Aristides Pereira International Airport,airport,23,308.9,3.5,0.5,medium
+292,Al Abraq International Airport,airport,24,279.5,0.4,0.499,medium
+243,Rabat-Salé Airport,airport,42,112.1,2.6,0.498,medium
+33,Biskra - Mohamed Khider Airport,airport,41,120.1,2.2,0.498,medium
+1055,Lombok International Airport,airport,37,138.9,1.5,0.498,medium
+1066,Kota Kinabalu International Airport,airport,32,174.3,0.9,0.497,medium
+294,Port Sudan New International Airport,airport,33,167.2,1.7,0.497,medium
+207,Libreville Leon M'ba International Airport,airport,33,164.6,1.9,0.496,medium
+768,Puerto Princesa International Airport / PAF Antonio Bautista Air Base,airport,26,221.5,0.9,0.495,medium
+1054,Denpasar I Gusti Ngurah Rai International Airport,airport,29,196.5,0.5,0.494,medium
+639,Prince Abdulmohsen Bin Abdulaziz International Airport,airport,27,211.8,4.1,0.494,medium
+78,Weeze (Niederrhein) Airport,airport,30,180.7,1.5,0.493,medium
+878,Nursultan Nazarbayev International Airport,airport,15,527.8,0.9,0.492,medium
+459,Falcone–Borsellino Airport,airport,17,440.8,1.8,0.492,medium
+982,Bandaranaike International Colombo Airport,airport,34,142.1,1.4,0.492,medium
+403,Dubrovnik Ruđer Bošković Airport,airport,17,406.9,0.4,0.49,medium
+504,Bucharest Băneasa Aurel Vlaicu International Airport,airport,31,162.5,1.2,0.489,medium
+433,Montpellier-Méditerranée Airport,airport,33,148.6,1.3,0.489,medium
+1125,Haikou Meilan International Airport,airport,29,174.2,2.6,0.486,medium
+52,Sadiq Abubakar III International Airport,airport,21,289.1,0.1,0.486,medium
+620,Ahmad Shah Baba International Airport,airport,26,202.6,2.0,0.486,medium
+364,Phoenix Sky Harbor International Airport,airport,27,192.0,2.3,0.485,medium
+205,Quatro de Fevereiro International Airport,airport,34,124.3,2.7,0.485,medium
+988,Bagdogra Airport,airport,34,124.2,2.6,0.484,medium
+158,Luleå Airport,airport,40,93.2,4.1,0.48,medium
+616,Queenstown Airport,airport,19,317.3,1.6,0.479,medium
+249,Ouarzazate International Airport,airport,27,171.6,4.4,0.479,medium
+309,Nashville International Airport,airport,29,153.8,3.2,0.478,medium
+826,El Dorado International Airport,airport,29,151.3,3.1,0.477,medium
+126,Odense Hans Christian Andersen Airport,airport,28,154.6,3.2,0.476,medium
+751,Cheongju International Airport/Cheongju Air Base (K-59/G-513),airport,28,155.6,1.3,0.476,medium
+7,Keflavik International Airport,airport,4,1722.4,2.4,0.476,medium
+368,Palm Springs International Airport,airport,22,220.7,0.8,0.475,medium
+282,Aswan International Airport,airport,21,234.1,2.3,0.474,medium
+1093,Melbourne Airport,airport,25,177.9,4.0,0.472,medium
+163,Riga International Airport,airport,14,390.9,2.7,0.471,medium
+314,Baltimore/Washington International Thurgood Marshall Airport,airport,25,170.6,2.8,0.469,medium
+984,Jaffna International Airport,airport,29,131.2,1.0,0.469,medium
+393,Tucson International Airport,airport,27,143.9,2.1,0.468,medium
+503,Bacău George Enescu International  Airport,airport,24,176.3,1.0,0.467,medium
+354,Myrtle Beach International Airport,airport,33,101.6,4.7,0.467,medium
+240,Fes Saïss International Airport,airport,34,92.5,0.6,0.466,medium
+401,Larnaca International Airport,airport,25,159.0,2.9,0.465,medium
+953,Bokhtar International Airport,airport,23,187.0,1.0,0.465,medium
+149,Warsaw Chopin Airport,airport,35,83.6,0.9,0.464,medium
+268,Aden Adde International Airport,airport,33,95.6,1.7,0.464,medium
+690,Damascus International Airport,airport,23,181.7,0.8,0.464,medium
+64,Frankfurt Main Airport,airport,31,104.0,1.6,0.463,medium
+702,Daniel K. Inouye International Airport,airport,15,333.2,1.4,0.462,medium
+305,Hartsfield Jackson Atlanta International Airport,airport,29,114.2,3.0,0.461,medium
+233,Tenerife Sur Airport,airport,14,353.1,2.4,0.461,medium
+436,Charles de Gaulle International Airport,airport,23,167.1,1.7,0.458,medium
+961,Domodedovo International Airport,airport,19,222.6,3.8,0.458,medium
+749,Seoul Gimpo International Airport,airport,25,138.4,2.5,0.457,medium
+71,Leipzig/Halle Airport,airport,20,207.0,2.2,0.457,medium
+63,Erfurt-Weimar Airport,airport,20,200.2,1.3,0.455,medium
+937,Sochi International Airport,airport,25,134.4,0.2,0.454,medium
+731,Komatsu Airport / JASDF Komatsu Air Base,airport,26,121.6,1.2,0.454,medium
+669,Muscat International Airport,airport,38,63.5,2.1,0.454,medium
+9,Edmonton International Airport,airport,31,90.3,0.8,0.454,medium
+737,Osaka Itami International Airport,airport,43,48.4,1.6,0.453,medium
+970,Kurumoch International Airport,airport,20,195.6,4.9,0.453,medium
+31,Zenata – Messali El Hadj Airport,airport,29,98.6,2.1,0.452,medium
+515,Geneva International Airport,airport,31,84.2,0.8,0.451,medium
+242,Beni Mellal Airport,airport,25,123.7,1.4,0.45,medium
+1144,Lianyungang Huaguoshan International Airport,airport,32,80.5,1.9,0.45,medium
+655,Queen Alia International Airport,airport,24,134.7,2.2,0.45,medium
+1141,Fuzhou Changle International Airport,airport,27,105.9,0.7,0.45,medium
+394,McGhee Tyson Airport,airport,30,87.9,1.6,0.449,medium
+1073,Minangkabau International Airport,airport,30,88.7,0.5,0.449,medium
+150,Copernicus Wrocław Airport,airport,21,166.8,2.2,0.448,medium
+267,Egal International Airport,airport,36,60.4,2.0,0.448,medium
+293,Kigali International Airport,airport,26,108.0,2.1,0.446,medium
+714,Taipei Songshan International Airport,airport,25,112.7,1.0,0.445,medium
+618,Herat - Khwaja Abdullah Ansari International Airport,airport,30,81.9,1.1,0.445,medium
+435,Paris-Le Bourget International Airport,airport,34,61.4,1.4,0.444,medium
+1163,Xigaze Peace Airport / Shigatse Air Base,airport,16,220.0,1.5,0.443,medium
+615,Christchurch International Airport,airport,20,156.4,2.5,0.44,medium
+505,Brașov-Ghimbav International Airport,airport,23,120.8,1.7,0.439,medium
+321,Dallas Love Field,airport,19,174.3,0.9,0.439,medium
+396,Burgas Airport,airport,22,131.1,2.9,0.439,medium
+409,Alicante-Elche Miguel Hernández Airport,airport,19,171.9,0.8,0.438,medium
+333,Piedmont Triad International Airport,airport,26,93.1,3.1,0.438,medium
+765,Iloilo International Airport,airport,25,98.6,3.6,0.436,medium
+908,Yelizovo Airport,airport,16,207.2,2.0,0.436,medium
+93,Turku Airport,airport,17,191.9,0.5,0.435,medium
+624,Abha International Airport,airport,40,37.8,4.5,0.434,medium
+1113,Guangzhou Baiyun International Airport,airport,25,94.1,0.9,0.434,medium
+526,Hasan Polatkan Airport,airport,23,110.7,3.9,0.433,medium
+1040,Phuket International Airport,airport,25,92.2,2.6,0.432,medium
+418,Region of Murcia International Airport,airport,22,113.6,3.4,0.431,medium
+693,Aden International Airport,airport,23,105.5,0.3,0.431,medium
+1056,Yogyakarta International Airport,airport,15,207.2,0.1,0.431,medium
+439,Brest Bretagne airport,airport,16,192.6,2.1,0.431,medium
+412,Josep Tarradellas Barcelona-El Prat Airport,airport,22,111.6,0.9,0.429,medium
+1108,Shijiazhuang Zhengding International Airport,airport,23,102.1,3.6,0.429,medium
+860,Martinique Aimé Césaire International Airport,airport,20,127.7,0.6,0.427,medium
+779,General Enrique Mosconi International Airport,airport,25,82.5,2.4,0.426,medium
+79,Dortmund Airport,airport,24,90.6,1.3,0.426,medium
+678,Bacha Khan International Airport,airport,30,57.5,0.7,0.426,medium
+930,Tomsk Kamov Airport,airport,19,142.4,2.4,0.426,medium
+384,Norman Y. Mineta San Jose International Airport,airport,23,94.1,0.8,0.425,medium
+735,Kochi Ryoma Airport,airport,21,112.7,1.1,0.425,medium
+447,"Rhodes International Airport ""Diagoras""",airport,8,397.2,3.0,0.425,medium
+116,Eindhoven Airport,airport,32,50.1,4.3,0.425,medium
+734,Okayama Momotaro Airport,airport,18,151.6,3.2,0.424,medium
+549,Juan Manuel Gálvez International Airport,airport,22,100.9,3.3,0.423,medium
+264,Hawassa International Airport,airport,13,583.0,6.8,0.422,medium
+513,Suceava Ștefan cel Mare International Airport,airport,21,108.1,4.7,0.422,medium
+280,Suhaj International Airport,airport,23,91.8,4.2,0.422,medium
+989,Lal Bahadur Shastri International Airport,airport,23,89.4,5.0,0.421,medium
+19,Victoria International Airport,airport,25,74.5,2.7,0.421,medium
+230,Fuerteventura Airport,airport,16,161.5,3.9,0.42,medium
+718,Ibaraki Airport,airport,19,129.6,2.3,0.42,medium
+486,Ramon International Airport,airport,20,108.6,1.4,0.417,medium
+461,Olbia Costa Smeralda Airport,airport,17,142.4,1.0,0.417,medium
+65,Münster Osnabrück Airport,airport,13,210.6,4.2,0.417,medium
+1127,Pyongyang Sunan International Airport,airport,14,190.3,0.7,0.417,medium
+80,Bodensee Airport Friedrichshafen,airport,26,62.7,0.6,0.416,medium
+70,Nuremberg Airport,airport,26,63.4,1.5,0.416,medium
+455,Abruzzo Airport,airport,20,105.7,1.5,0.416,medium
+1013,Tribhuvan International Airport,airport,22,86.0,4.6,0.414,medium
+492,Salzburg Airport,airport,32,38.2,1.0,0.413,medium
+630,Hail International Airport,airport,24,70.6,4.9,0.413,medium
+222,Hosea Kutako International Airport,airport,8,344.4,1.2,0.412,medium
+317,Charlotte Douglas International Airport,airport,28,146.0,5.5,0.411,medium
+69,Munich Airport,airport,19,111.2,1.3,0.411,medium
+75,Frankfurt-Hahn Airport,airport,17,130.1,1.6,0.411,medium
+1090,Mokha International Airport,airport,18,120.8,5.0,0.41,medium
+478,Perugia San Francesco d'Assisi – Umbria International Airport,airport,19,109.3,2.8,0.41,medium
+1135,Buyant-Ukhaa International Airport,airport,21,84.0,2.6,0.408,medium
+452,Debrecen International Airport,airport,21,83.8,1.9,0.408,medium
+96,Birmingham Airport,airport,19,102.7,3.0,0.407,medium
+17,Saskatoon John G. Diefenbaker International Airport,airport,14,153.9,4.4,0.405,medium
+969,Ufa International Airport,airport,15,136.3,2.4,0.405,medium
+923,Minsk National Airport,airport,11,214.3,1.2,0.405,medium
+228,Tombouktou Airport,airport,16,122.2,4.3,0.404,medium
+76,Memmingen Allgau Airport,airport,16,121.9,1.6,0.404,medium
+868,Flamingo International Airport,airport,18,110.5,2.2,0.404,medium
+359,Chicago O'Hare International Airport,airport,16,119.9,2.0,0.402,medium
+951,Kulob International Airport,airport,14,147.8,2.1,0.402,medium
+101,London Luton Airport,airport,16,115.4,4.2,0.401,medium
+717,Narita International Airport,airport,20,81.5,0.5,0.4,low
+842,Jorge Chávez International Airport,airport,26,44.4,3.0,0.398,low
+257,Amílcar Cabral International Airport,airport,13,155.8,2.1,0.398,low
+58,Brussels Airport,airport,21,68.7,0.1,0.397,low
+517,Esenboğa International Airport,airport,15,116.1,1.4,0.396,low
+483,Pardubice Airport,airport,14,130.5,2.8,0.395,low
+476,Pisa International Airport,airport,15,114.8,0.9,0.395,low
+998,Hong Kong International Airport,airport,8,264.9,3.1,0.395,low
+746,Jeju International Airport,airport,32,22.2,4.6,0.395,low
+783,Val de Cans/Júlio Cezar Ribeiro International Airport,airport,16,103.8,2.1,0.394,low
+366,Pittsburgh International Airport,airport,41,54.8,5.5,0.393,low
+1018,Calicut International Airport,airport,19,77.3,0.2,0.39,low
+67,Cologne Bonn Airport,airport,26,34.5,1.0,0.39,low
+789,Eduardo Gomes International Airport,airport,20,64.5,3.1,0.389,low
+742,Sendai Airport,airport,20,63.9,1.9,0.387,low
+516,Zürich Airport,airport,21,57.4,2.1,0.386,low
+733,Hiroshima Airport,airport,19,71.2,2.8,0.386,low
+732,Mount Fuji Shizuoka Airport,airport,19,69.7,3.3,0.385,low
+495,Cristiano Ronaldo International Airport,airport,13,129.4,1.5,0.385,low
+752,Naha International Airport,airport,18,79.6,1.9,0.385,low
+1071,Kualanamu International Airport,airport,19,68.3,3.7,0.384,low
+771,Aeroparque Jorge Newbery,airport,19,67.6,3.7,0.384,low
+1022,Kannur International Airport,airport,15,94.8,1.8,0.384,low
+430,Lyon Saint-Exupéry Airport,airport,17,82.1,2.6,0.384,low
+1126,Sanya Phoenix International Airport,airport,24,39.8,0.9,0.384,low
+413,Girona-Costa Brava Airport,airport,19,67.3,2.2,0.383,low
+1004,Jaipur International Airport,airport,19,66.0,2.7,0.382,low
+341,John F. Kennedy International Airport,airport,34,58.8,5.9,0.381,low
+307,Bradley International Airport,airport,15,92.4,1.0,0.381,low
+277,Marsa Alam International Airport,airport,10,168.1,2.8,0.381,low
+344,LaGuardia Airport,airport,22,43.7,3.5,0.378,low
+106,Newcastle International Airport,airport,23,36.2,2.5,0.377,low
+617,Wellington International Airport,airport,13,111.4,0.1,0.376,low
+665,Al Maktoum International Airport,airport,21,135.2,6.7,0.376,low
+247,Nador Al Aaroui International Airport,airport,23,35.6,2.0,0.376,low
+324,Dallas Fort Worth International Airport,airport,14,93.5,0.6,0.375,low
+666,Fujairah International Airport,airport,19,164.1,5.1,0.374,low
+371,Raleigh-Durham International Airport,airport,29,70.3,5.4,0.373,low
+120,Dublin Airport,airport,12,118.5,3.5,0.373,low
+355,Oakland San Francisco Bay Airport,airport,13,103.7,3.3,0.372,low
+388,Sarasota Bradenton International Airport,airport,19,55.9,3.0,0.372,low
+441,Strasbourg Airport,airport,19,54.2,3.6,0.37,low
+753,Kadena Air Base,airport,28,70.1,5.7,0.369,low
+762,Zamboanga International Airport,airport,14,82.6,0.9,0.368,low
+348,Chicago Midway International Airport,airport,15,72.1,4.7,0.367,low
+199,Saint-Pierre Pierrefonds Airport,airport,14,81.7,0.9,0.366,low
+1017,Cochin International Airport,airport,14,81.7,1.4,0.366,low
+319,City of Colorado Springs Municipal Airport,airport,5,235.4,2.3,0.361,low
+966,Kazan International Airport,airport,15,64.0,4.8,0.361,low
+595,Owen Roberts International Airport,airport,9,139.9,2.5,0.361,low
+198,Roland Garros Airport,airport,12,94.7,1.4,0.36,low
+109,Glasgow Airport,airport,10,112.6,3.5,0.357,low
+1164,Chengdu Tianfu International Airport,airport,15,58.8,0.3,0.356,low
+1148,Shanghai Pudong International Airport,airport,17,45.0,0.9,0.352,low
+657,King Hussein International Airport,airport,16,49.5,2.5,0.351,low
+614,Auckland International Airport,airport,24,66.1,7.3,0.35,low
+330,Fort Lauderdale Hollywood International Airport,airport,19,31.2,4.3,0.35,low
+870,Princess Juliana International Airport,airport,12,78.5,2.7,0.348,low
+419,Palma de Mallorca Airport,airport,18,36.3,1.5,0.348,low
+197,Dzaoudzi Pamandzi International Airport,airport,12,77.9,1.0,0.347,low
+871,John A. Osborne Airport,airport,13,65.3,2.2,0.347,low
+729,Nagasaki Airport,airport,13,65.4,0.2,0.347,low
+377,San Antonio International Airport,airport,12,73.6,1.2,0.346,low
+488,Graz Airport,airport,14,54.9,1.8,0.345,low
+426,Toulouse-Blagnac Airport,airport,12,73.4,1.3,0.345,low
+532,İstanbul Airport,airport,15,47.2,1.8,0.343,low
+927,Krasnoyarsk International Airport,airport,13,61.0,2.5,0.343,low
+259,Nelson Mandela International Airport,airport,14,52.0,3.1,0.342,low
+244,Dakhla Airport,airport,19,25.3,4.1,0.341,low
+511,Bucharest Henri Coandă International Airport,airport,10,86.8,3.6,0.341,low
+725,Miyazaki Airport,airport,11,72.5,4.9,0.338,low
+745,Yangyang International Airport,airport,4,197.5,2.2,0.338,low
+437,Paris-Orly Airport,airport,14,49.4,2.0,0.338,low
+631,King Abdulaziz International Airport,airport,13,154.2,6.5,0.337,low
+921,Brest International Airport,airport,9,92.7,3.8,0.336,low
+166,Vilnius International Airport,airport,13,53.6,1.0,0.335,low
+634,Qaisumah–Hafar Al-Batin International Airport,airport,12,60.7,2.6,0.334,low
+1085,Gold Coast Airport,airport,13,51.6,2.1,0.333,low
+453,Pécs-Pogány International Airport,airport,10,75.8,3.0,0.333,low
+1118,Zhuhai Jinwan Airport,airport,13,50.9,0.8,0.333,low
+110,Edinburgh Airport,airport,13,49.7,1.2,0.332,low
+29,Batna Mostefa Ben Boulaid Airport,airport,10,73.5,4.0,0.332,low
+297,Kilimanjaro International Airport,airport,9,86.5,0.6,0.332,low
+522,Nevşehir Kapadokya Airport,airport,10,71.6,2.5,0.331,low
+367,Pensacola International Airport,airport,16,95.6,6.1,0.33,low
+245,Laayoune Hassan I International Airport,airport,14,38.6,0.9,0.33,low
+123,Aarhus Airport,airport,7,112.7,4.8,0.33,low
+636,Al-Jawf International Airport,airport,13,49.5,4.7,0.33,low
+448,Chania International Airport,airport,11,63.2,2.8,0.33,low
+434,Beauvais-Tillé airport,airport,4,171.9,4.8,0.329,low
+372,Richmond International Airport,airport,16,27.0,2.9,0.329,low
+14,Montreal / Pierre Elliott Trudeau International Airport,airport,5,151.2,4.7,0.329,low
+97,Manchester Airport,airport,11,60.9,4.0,0.328,low
+310,Boise Air Terminal/Gowen Field,airport,9,78.2,2.7,0.327,low
+696,Seiyun Hadhramaut International Airport,airport,12,52.9,2.3,0.327,low
+112,London Stansted Airport,airport,11,58.4,1.7,0.326,low
+1061,Pattimura International Airport,airport,9,78.0,4.5,0.326,low
+782,Teniente Luis Candelaria International Airport,airport,11,165.3,5.7,0.326,low
+757,Bicol International Airport,airport,18,78.9,6.3,0.325,low
+1086,Cairns International Airport,airport,12,50.9,4.2,0.325,low
+232,César Manrique-Lanzarote Airport,airport,13,42.4,1.7,0.325,low
+707,Roman Tmetuchl International Airport,airport,9,73.6,1.2,0.324,low
+95,Belfast International Airport,airport,11,55.3,1.7,0.323,low
+723,Fukuoka Airport,airport,13,40.1,0.6,0.323,low
+376,San Diego International Airport,airport,12,49.6,0.7,0.323,low
+85,Helsinki Vantaa Airport,airport,14,29.9,2.2,0.322,low
+332,Gerald R. Ford International Airport,airport,13,38.7,0.9,0.322,low
+66,Hamburg Helmut Schmidt Airport,airport,13,39.7,2.0,0.322,low
+563,Loreto International Airport,airport,12,135.4,6.5,0.321,low
+350,Miami International Airport,airport,27,23.3,6.3,0.32,low
+316,Cleveland Hopkins International Airport,airport,12,44.6,1.5,0.319,low
+121,Ireland West Airport Knock,airport,7,93.5,5.0,0.319,low
+84,Lennart Meri Tallinn Airport,airport,11,49.7,2.5,0.317,low
+864,Luis Munoz Marin International Airport,airport,11,141.5,6.3,0.317,low
+74,Bremen Airport,airport,9,64.4,2.1,0.317,low
+962,Golden Ring Yaroslavl International Airport,airport,10,55.3,1.7,0.316,low
+362,Portland International Airport,airport,12,40.5,0.1,0.315,low
+16,Winnipeg / James Armstrong Richardson International Airport,airport,8,70.4,3.6,0.313,low
+159,Stockholm-Arlanda Airport,airport,6,99.0,2.2,0.313,low
+625,Al-Ahsa International Airport,airport,9,60.2,1.9,0.312,low
+831,Gustavo Rojas Pinilla International Airport,airport,9,59.4,0.9,0.312,low
+337,Washington Dulles International Airport,airport,9,59.6,3.4,0.312,low
+241,Oujda Angads Airport,airport,14,22.7,3.7,0.312,low
+25,Aguenar – Hadj Bey Akhamok Airport,airport,13,28.3,2.2,0.311,low
+983,Colombo Ratmalana International Airport,airport,14,22.2,1.1,0.311,low
+278,Mersa Matruh International Airport,airport,11,41.9,4.6,0.31,low
+748,Incheon International Airport,airport,11,41.7,1.2,0.309,low
+320,Cincinnati Northern Kentucky International Airport,airport,12,32.3,2.9,0.309,low
+144,Łódź Władysław Reymont Airport,airport,10,49.4,4.4,0.309,low
+143,Lublin Airport,airport,10,47.5,1.9,0.307,low
+141,Kraków John Paul II International Airport,airport,10,134.5,5.1,0.307,low
+438,Lille Airport,airport,13,24.9,4.5,0.306,low
+318,John Glenn Columbus International Airport,airport,8,62.2,0.9,0.305,low
+761,Laguindingan International Airport,airport,11,34.8,1.2,0.304,low
+425,Bordeaux–Mérignac Airport,airport,11,34.8,3.1,0.304,low
+1079,Penang International Airport,airport,12,28.3,2.2,0.303,low
+160,Linköping City Airport,airport,9,49.7,2.3,0.302,low
+694,Riyan International Airport,airport,10,37.8,3.6,0.299,low
+62,Dresden Airport,airport,7,180.5,7.0,0.298,low
+239,Zagora Airport,airport,8,52.8,3.3,0.297,low
+523,İstanbul Atatürk Airport,airport,10,33.3,2.1,0.296,low
+137,"Sandefjord Airport, Torp",airport,8,52.1,4.0,0.296,low
+21,Toronto Pearson International Airport,airport,5,87.8,4.8,0.296,low
+861,Maryse Condé International Airport,airport,8,51.8,3.0,0.295,low
+730,Chubu Centrair International Airport,airport,14,64.3,5.8,0.295,low
+628,King Abdulaziz Air Base,airport,5,82.7,4.6,0.294,low
+836,Joya Andina International Airport,airport,11,26.7,1.7,0.293,low
+470,Federico Fellini International Airport,airport,10,29.9,1.3,0.292,low
+151,Göteborg Landvetter Airport,airport,7,57.4,0.9,0.291,low
+145,Warsaw Modlin Airport,airport,8,47.6,1.8,0.29,low
+1028,Thiruvananthapuram International Airport,airport,7,56.2,0.8,0.29,low
+744,Muan International Airport,airport,8,46.3,2.2,0.289,low
+131,Bodø Airport,airport,3,101.9,0.2,0.289,low
+713,Penghu Magong Airport,airport,4,86.9,2.0,0.288,low
+164,Kaunas International Airport,airport,6,64.1,2.9,0.288,low
+612,Bauerfield International Airport,airport,9,32.9,2.4,0.287,low
+61,Berlin Brandenburg Airport,airport,9,31.7,1.4,0.286,low
+719,Kansai International Airport,airport,9,31.6,0.7,0.286,low
+298,Mwanza International Airport,airport,10,25.9,2.8,0.286,low
+559,Cozumel International Airport,airport,8,41.9,2.8,0.286,low
+623,Corisco International Airport,airport,3,91.9,0.2,0.282,low
+417,Menorca Airport,airport,9,28.5,3.1,0.282,low
+18,Calgary International Airport,airport,6,57.2,1.4,0.281,low
+862,Maurice Bishop International Airport,airport,6,54.9,1.1,0.279,low
+875,Argyle International Airport,airport,9,26.8,1.8,0.279,low
+627,King Fahd International Airport,airport,15,41.2,6.2,0.279,low
+390,Syracuse Hancock International Airport,airport,9,26.7,4.4,0.278,low
+1103,Ordos Ejin Horo International Airport,airport,8,30.7,1.5,0.276,low
+383,San Francisco International Airport,airport,9,23.5,3.9,0.275,low
+20,St. John's International Airport,airport,7,121.7,6.3,0.275,low
+1065,Kuching International Airport,airport,9,22.9,3.7,0.274,low
+161,Visby Airport,airport,8,28.5,3.2,0.273,low
+1025,Veer Savarkar International Airport / INS Utkrosh,airport,10,16.1,2.2,0.273,low
+621,Mazar-i-Sharif International Airport,airport,9,20.9,1.0,0.272,low
+1039,Samui International Airport,airport,9,20.8,3.2,0.272,low
+213,Seychelles International Airport,airport,5,56.8,3.2,0.272,low
+107,East Midlands Airport,airport,6,47.1,4.6,0.27,low
+1159,Zhoushan Putuoshan International Airport,airport,9,19.1,4.1,0.269,low
+705,Cassidy International Airport,airport,5,52.3,1.7,0.269,low
+148,Solidarity Szczecin–Goleniów Airport,airport,9,18.2,4.4,0.268,low
+410,Asturias Airport,airport,5,50.0,1.8,0.266,low
+650,Birjand International Airport,airport,10,63.9,6.6,0.264,low
+701,Lihue Airport,airport,7,27.8,2.1,0.262,low
+721,New Chitose Airport,airport,7,26.7,0.9,0.26,low
+155,Kiruna Airport,airport,7,26.5,3.1,0.259,low
+481,Karlovy Vary Airport,airport,5,42.2,3.8,0.259,low
+609,Faleolo International Airport,airport,6,30.7,1.9,0.257,low
+140,Gdańsk Lech Wałęsa Airport,airport,7,23.8,0.4,0.257,low
+604,Vava'u International Airport,airport,7,24.6,0.6,0.257,low
+369,Rhode Island T. F. Green International Airport,airport,7,24.8,0.9,0.257,low
+1134,Ulaanbaatar Chinggis Khaan International Airport,airport,3,56.3,0.7,0.256,low
+1128,Dunhuang Mogao International Airport,airport,7,21.4,4.8,0.254,low
+311,Boston Logan International Airport,airport,7,21.2,1.2,0.254,low
+73,Hannover Airport,airport,7,20.4,2.5,0.253,low
+414,Ibiza Airport,airport,4,44.9,1.0,0.253,low
+281,Sharm El Sheikh International Airport,airport,7,20.6,2.1,0.253,low
+1083,Singapore Changi Airport,airport,5,34.6,1.1,0.252,low
+139,"Stavanger Airport, Sola",airport,7,19.4,2.3,0.252,low
+738,Tokushima Awaodori Airport / JMSDF Tokushima Air Base,airport,7,19.4,1.0,0.252,low
+72,Stuttgart Airport,airport,7,18.9,2.8,0.251,low
+649,Qeshm International Airport,airport,6,27.4,1.0,0.251,low
+1119,Shenzhen Bao'an International Airport,airport,6,26.6,4.6,0.25,low
+322,Ronald Reagan Washington National Airport,airport,7,18.2,4.0,0.25,low
+312,Buffalo Niagara International Airport,airport,5,32.0,3.8,0.25,low
+443,Heraklion International Nikos Kazantzakis Airport,airport,6,25.7,1.1,0.249,low
+679,Quetta International Airport,airport,7,16.8,1.4,0.247,low
+479,Ljubljana Jože Pučnik Airport,airport,7,15.7,3.5,0.246,low
+626,Al-Ula International Airport,airport,5,29.2,2.5,0.246,low
+125,Copenhagen Kastrup Airport,airport,7,13.6,1.6,0.245,low
+780,Piloto Civil Norberto Fernández International Airport,airport,5,28.0,1.3,0.244,low
+373,Reno Tahoe International Airport,airport,5,28.1,2.8,0.244,low
+351,General Mitchell International Airport,airport,6,19.3,3.5,0.242,low
+108,Aberdeen International Airport,airport,6,18.1,2.0,0.24,low
+720,Kobe Airport,airport,4,30.4,2.2,0.24,low
+724,Kagoshima Airport,airport,6,13.5,4.1,0.235,low
+132,"Bergen Airport, Flesland",airport,5,20.4,4.2,0.235,low
+428,Figari Sud-Corse Airport,airport,5,19.5,2.9,0.234,low
+381,Seattle–Tacoma International Airport,airport,6,12.6,3.2,0.232,low
+670,Salalah International Airport,airport,6,11.4,3.1,0.231,low
+489,Innsbruck Airport,airport,5,17.2,4.5,0.23,low
+607,Hihifo Airport,airport,3,29.4,3.3,0.23,low
+92,Tampere-Pirkkala Airport,airport,6,7.4,5.0,0.228,low
+440,EuroAirport Basel–Mulhouse–Freiburg,airport,9,33.5,5.8,0.228,low
+465,Genoa Cristoforo Colombo Airport,airport,5,13.8,1.7,0.227,low
+709,Yap International Airport,airport,3,27.7,1.4,0.227,low
+99,Bristol Airport,airport,5,13.3,1.9,0.225,low
+272,Asyut International Airport,airport,8,40.7,7.6,0.225,low
+162,Liepāja International Airport,airport,5,12.5,2.9,0.224,low
+484,Václav Havel Airport Prague,airport,8,38.5,5.4,0.223,low
+156,Umeå Airport,airport,5,11.2,4.2,0.223,low
+221,Walvis Bay International Airport,airport,4,18.0,3.7,0.222,low
+146,Poznań-Ławica Airport,airport,7,49.4,5.4,0.222,low
+821,General Ulpiano Paez International Airport,airport,3,19.7,5.0,0.218,low
+104,Leeds Bradford Airport,airport,7,43.5,8.6,0.218,low
+739,Takamatsu Airport,airport,4,13.6,3.1,0.218,low
+60,Ostend-Bruges International Airport,airport,4,13.4,4.8,0.217,low
+944,Surgut International Airport,airport,4,12.6,3.9,0.216,low
+472,Venice Marco Polo Airport,airport,8,29.6,6.0,0.215,low
+142,Katowice Wojciech Korfanty International Airport,airport,3,18.8,1.8,0.215,low
+15,Vancouver International Airport,airport,5,58.5,5.4,0.214,low
+716,Hualien Chiashan Airport,airport,4,9.9,1.3,0.214,low
+113,Mount Pleasant Airport / RAF Mount Pleasant,airport,3,17.4,0.8,0.213,low
+374,Frederick Douglass Greater Rochester International Airport,airport,8,28.1,6.0,0.212,low
+147,Rzeszów-Jasionka Airport,airport,7,37.0,5.2,0.212,low
+706,Chuuk International Airport,airport,3,15.5,0.9,0.211,low
+82,Kassel Airport,airport,4,7.6,3.1,0.211,low
+885,Hazrat Sultan International Airport,airport,6,48.3,5.9,0.211,low
+1139,Xiamen Gaoqi International Airport,airport,4,5.7,3.1,0.209,low
+490,Klagenfurt Airport,airport,4,5.5,2.0,0.208,low
+117,Groningen Airport Eelde,airport,3,12.8,4.4,0.208,low
+661,Zayed International Airport,airport,3,9.5,1.3,0.205,low
+1162,Lhasa Gonggar International Airport,airport,2,17.1,3.5,0.203,low
+129,Luxembourg-Findel International Airport,airport,4,1.7,0.3,0.202,low
+496,João Paulo II Airport,airport,3,6.9,3.3,0.202,low
+766,Kalibo International Airport,airport,2,13.5,3.5,0.2,low
+791,Hercílio Luz International Airport,airport,3,4.3,2.5,0.199,low
+763,Bohol-Panglao International Airport,airport,3,4.0,0.5,0.198,low
+157,Stockholm Västerås Airport,airport,6,30.4,7.4,0.197,low
+611,Fa'a'ā International Airport,airport,2,8.7,3.0,0.195,low
+449,Santorini International Airport,airport,2,9.0,1.5,0.195,low
+533,Rize–Artvin Airport,airport,2,7.7,4.9,0.194,low
+391,Tampa International Airport,airport,5,32.2,6.6,0.19,low
+700,Ellison Onizuka Kona International Airport at Keāhole,airport,2,4.9,3.1,0.19,low
+55,Djerba Zarzis International Airport,airport,2,4.1,4.0,0.189,low
+722,Hakodate Airport,airport,2,3.6,2.8,0.188,low
+83,Berenice International Airport / Banas Cape Air Base,airport,1,12.0,3.4,0.188,low
+901,Issyk-Kul International Airport,airport,2,3.9,3.8,0.188,low
+1031,Hanimaadhoo International Airport,airport,1,9.7,1.8,0.187,low
+600,Rarotonga International Airport,airport,2,3.4,2.7,0.187,low
+491,Linz-Hörsching Airport,airport,7,14.3,6.3,0.186,low
+576,Felipe Carrillo Puerto International Airport Tulum,airport,5,29.3,5.1,0.186,low
+673,New Gwadar International Airport,airport,1,7.9,4.0,0.185,low
+12,Ottawa Macdonald-Cartier International Airport,airport,7,13.4,5.8,0.184,low
+663,Al Ain International Airport,airport,3,42.0,6.6,0.182,low
+165,Palanga International Airport,airport,1,3.8,4.7,0.179,low
+874,Terrance B. Lettsome International Airport,airport,1,3.0,4.7,0.177,low
+920,Emperor Nicholas II Murmansk Airport,airport,1,3.1,4.9,0.177,low
+6,Akureyri International Airport,airport,1,1.0,4.3,0.174,low
+105,Isle of Man Airport,airport,1,0.3,4.6,0.173,low
+421,Santiago-Rosalía de Castro Airport,airport,3,30.2,7.2,0.171,low
+740,Aomori Airport,airport,4,18.8,7.4,0.164,low
+697,Ted Stevens Anchorage International Airport,airport,3,22.7,6.8,0.161,low
+135,Oslo-Gardermoen International Airport,airport,3,12.7,7.8,0.148,low
+122,Shannon Airport,airport,3,11.1,8.9,0.146,low
+432,Nice-Côte d'Azur Airport,airport,2,17.8,7.8,0.145,low
+152,Stockholm Skavsta Airport,airport,3,6.3,6.4,0.141,low
+361,President Donald J. Trump International Airport,airport,3,6.8,6.8,0.141,low
+360,Norfolk International Airport,airport,3,4.4,5.3,0.139,low
+254,Nouakchott–Oumtounsy International Airport,airport,1,17.2,5.8,0.135,low
+81,Karlsruhe Baden-Baden Airport,airport,2,8.1,5.2,0.135,low
+270,El Alamein International Airport,airport,3,3.0,7.6,0.135,low
+263,Gerad Wilwal International Airport,airport,1,17.0,7.5,0.134,low
+133,Kristiansand Airport,airport,2,7.4,6.3,0.133,low
+94,Vaasa Airport,airport,2,7.4,6.0,0.133,low
+111,Glasgow Prestwick Airport,airport,2,5.4,5.8,0.131,low
+127,Vágar Airport,airport,2,4.3,5.8,0.129,low
+863,Cyril E. King Airport,airport,2,3.5,9.3,0.127,low
+814,Andrés Sabella Gálvez International Airport,airport,2,3.3,8.0,0.126,low
+370,Portland International Jetport,airport,2,2.4,5.9,0.125,low
+13,Quebec Jean Lesage International Airport,airport,2,1.5,5.8,0.124,low
+154,Malmö Sturup Airport,airport,1,6.2,8.8,0.123,low
+289,Sirt International Airport / Ghardabiya Airbase,airport,1,6.0,8.6,0.122,low
+931,Alykel International Airport,airport,1,3.9,7.6,0.119,low
+480,České Budějovice South Bohemian Airport,airport,1,3.5,7.5,0.118,low
+1010,Macau International Airport,airport,1,2.0,9.8,0.116,low
+86,Ivalo Airport,airport,1,2.5,9.1,0.116,low
+610,Pago Pago International Airport,airport,1,1.6,5.1,0.115,low
+445,Corfu Ioannis Kapodistrias International Airport,airport,1,1.2,7.1,0.114,low
+1095,Cocos (Keeling) Islands Airport,airport,1,0.9,7.9,0.114,low
+153,Scandinavian Mountains Airport,airport,1,1.3,9.4,0.114,low
+894,Aktau International Airport,airport,1,0.6,9.2,0.113,low
+88,Kuopio Airport,airport,1,0.6,6.7,0.113,low
+660,Duqm International Airport,airport,0,0.0,10.0,0.099,low
+482,Leoš Janáček Airport Ostrava,airport,0,0.0,11.4,0.054,low
+812,Diego Aracena International Airport,airport,0,0.0,17.6,0.054,low
+119,Cork International Airport,airport,0,0.0,10.3,0.054,low
+130,Ålesund Airport,airport,0,0.0,23.9,0.054,low
+10,Halifax / Stanfield International Airport,airport,0,0.0,18.2,0.054,low
+876,L.F. Wade International Airport,airport,0,0.0,16.2,0.054,low
+633,Neom Bay Airport,airport,0,0.0,14.5,0.054,low
+138,"Trondheim Airport, Værnes",airport,0,0.0,11.6,0.054,low
+90,Oulu Airport,airport,0,0.0,12.9,0.054,low
+1032,Velana International Airport,airport,0,0.0,10.3,0.054,low
+91,Rovaniemi Airport,airport,0,0.0,17.9,0.054,low
+769,Red Sea International Airport,airport,0,0.0,10.5,0.054,low
+1030,Gan International Airport,airport,0,0.0,14.8,0.054,low
+680,Skardu International Airport,airport,0,0.0,17.8,0.054,low
+24,Tiska Djanet Airport,airport,0,0.0,21.8,0.054,low
+598,San Salvador International Airport,airport,0,0.0,,0.009,low
+87,Kittilä International Airport,airport,0,0.0,,0.009,low
+136,Tromsø Airport,airport,0,0.0,,0.009,low
+134,Harstad/Narvik Airport,airport,0,0.0,,0.009,low
+606,Bonriki International Airport,airport,0,0.0,,0.009,low
+704,Marshall Islands International Airport,airport,0,0.0,,0.009,low
+5,Nuuk International Airport,airport,0,0.0,,0.009,low
+708,Kosrae International Airport,airport,0,0.0,,0.009,low

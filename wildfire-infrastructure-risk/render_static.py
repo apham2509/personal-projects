@@ -72,8 +72,10 @@ def merged_data(region: regions.Region, source: str) -> dict:
     print(f"{region.slug}: archive to {archive_end}, "
           f"NRT {nrt_start} -> today: {len(recent):,} detections")
 
+    grid = history.get("grid", 0.05)
+    period = history.get("cell_period", "day")
     if len(recent):
-        for key, part in (("cells", aggregate_cells(recent)),
+        for key, part in (("cells", aggregate_cells(recent, grid=grid, period=period)),
                           ("daily", daily_totals(recent))):
             for column, values in part.items():
                 history[key][column].extend(values)
@@ -329,11 +331,21 @@ function rangeAssets() {
     });
 }
 
+const monthMode = () => DATA.cell_period === "month";
+function monthStartIdx(d) {
+  const date = dayToDate(d);
+  return Math.round(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1) / MS_DAY
+                    - EPOCH_MS / MS_DAY);
+}
+
 function heatTrace() {
   const {from, to} = state;
+  // Month-period cells (world) are keyed by the first day of their month, so
+  // include any month that overlaps the selected range.
+  const lowBound = monthMode() ? monthStartIdx(from) : from;
   const c = DATA.cells, acc = new Map();
   for (let i = 0; i < c.d.length; i++) {
-    if (c.d[i] < from || c.d[i] > to) continue;
+    if (c.d[i] < lowBound || c.d[i] > to) continue;
     const key = c.la[i] + ":" + c.lo[i];
     acc.set(key, (acc.get(key) || 0) + c.n[i]);
   }
@@ -344,11 +356,13 @@ function heatTrace() {
   }
   const zs = [...z].sort((a, b) => a - b);
   const zmax = Math.max(5, zs[Math.floor(zs.length * 0.98)] || 5);
+  const cellLabel = monthMode() ? "Detections<br>per ~110 km cell" : "Detections<br>per ~5 km cell";
   return {
-    type: "densitymap", lat, lon, z, radius: (state.to - state.from) < 45 ? 9 : 7,
+    type: "densitymap", lat, lon, z,
+    radius: monthMode() ? 13 : (state.to - state.from) < 45 ? 9 : 7,
     colorscale: HEAT_SCALE, zmin: 0, zmax, showscale: true,
     hoverinfo: "skip", name: "Detections",
-    colorbar: {title: {text: "Detections<br>per ~5 km cell", font: {size: 11}},
+    colorbar: {title: {text: cellLabel, font: {size: 11}},
                thickness: 12, len: 0.5, y: 0.72, outlinewidth: 0},
   };
 }
@@ -491,7 +505,8 @@ function update(fullRedraw = true) {
   renderTiles(assets);
   renderTable(assets);
   document.getElementById("map-context").textContent =
-    `${human(state.from)} - ${human(state.to)} · ${state.to - state.from + 1} days`;
+    `${human(state.from)} - ${human(state.to)} · ${state.to - state.from + 1} days` +
+    (monthMode() ? " · heat shown at monthly resolution" : "");
   if (fullRedraw) {
     Plotly.react("map", mapTraces(assets), MAP_LAYOUT(), {scrollZoom: true, responsive: true});
     const t = trendFigure();
