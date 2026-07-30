@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wildfire Infrastructure Risk Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>
+<style>
+  :root {
+    --bg: #f6f5f2; --card: #ffffff; --border: #e6e5e1; --strip: #faf9f6;
+    --ink: #0b0b0b; --ink-2: #52514e; --accent: #2a78d6;
+    --high: #d03b3b; --elevated: #b07600; --watch: #8a8983;
+    --radius: 12px; --shadow: 0 1px 3px rgba(20, 18, 12, 0.06);
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); margin: 0;
+         font-family: Inter, system-ui, sans-serif; font-size: 14px; }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 32px 24px 48px; }
+
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+             text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .titlebar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
+  .badge { font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 999px;
+           background: #e8f0fb; color: #1c5cab; }
+  .credit { font-size: 12.5px; color: var(--ink-2); margin-top: 6px; }
+  .credit a { color: var(--accent); text-decoration: none; }
+  .credit a:hover { text-decoration: underline; }
+  .credit button { font: inherit; color: var(--accent); background: none; border: none;
+                   padding: 0; cursor: pointer; }
+  .subtitle { color: var(--ink-2); font-size: 14px; line-height: 1.6;
+              margin: 14px 0 12px; max-width: 900px; }
+  .subtitle .term:hover::after { bottom: auto; top: 135%; }
+
+  .quality { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center;
+             font-size: 12.5px; color: var(--ink-2); background: var(--card);
+             border: 1px solid var(--border); border-radius: 10px;
+             padding: 9px 14px; margin-bottom: 20px; }
+  .quality b { color: var(--ink); font-weight: 600; }
+  .q-warn { color: #8a3d00; background: #fdf2d7; border-radius: 999px;
+            padding: 2px 10px; font-weight: 600; }
+
+  .card { background: var(--card); border: 1px solid var(--border);
+          border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; }
+  .card-strip { display: flex; align-items: baseline; justify-content: space-between;
+                gap: 12px; padding: 12px 18px; background: var(--strip);
+                border-bottom: 1px solid var(--border);
+                border-radius: var(--radius) var(--radius) 0 0; flex-wrap: wrap; }
+  .card-title { font-size: 15px; font-weight: 600; }
+  .card-context { font-size: 12.5px; color: var(--ink-2); }
+  .card-body { padding: 12px; }
+
+  .controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+              padding: 14px 18px; }
+  .control { display: flex; align-items: center; gap: 7px; }
+  .control label { font-size: 12.5px; color: var(--ink-2); font-weight: 500; }
+  select, input[type="date"], input[type="search"] { font: inherit; font-size: 13px;
+    padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--card); color: var(--ink); max-width: 220px; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { font: inherit; font-size: 12.5px; font-weight: 500; padding: 6px 13px;
+          border-radius: 999px; border: 1px solid var(--border); background: var(--card);
+          color: var(--ink-2); cursor: pointer; }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .spacer { flex: 1; }
+
+  h2.section { font-size: 13px; font-weight: 650; letter-spacing: 0.07em;
+               text-transform: uppercase; color: var(--ink-2); margin: 26px 0 10px; }
+  h2.section .term { border-bottom-color: var(--ink-2); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+           gap: 14px; margin-bottom: 20px; }
+  .tile { background: var(--card); border: 1px solid var(--border); min-width: 0;
+          border-radius: var(--radius); box-shadow: var(--shadow); padding: 13px 15px; }
+  .tile.clickable { cursor: pointer; }
+  .tile.clickable:hover { border-color: var(--accent); }
+  .tile-label { font-size: 12px; color: var(--ink-2); margin-bottom: 4px; }
+  .tile-value { font-size: 22px; font-weight: 650; letter-spacing: -0.01em;
+                font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
+  .tile-note { font-size: 11.5px; color: var(--ink-2); margin-top: 3px;
+               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tile-delta-up { color: var(--high); }
+
+  .maprow { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px;
+            margin-bottom: 20px; }
+  .maprow .card { margin-bottom: 0; min-width: 0; }
+  .queue-body { max-height: 560px; overflow-y: auto; padding: 4px 0; }
+  .qrow { padding: 9px 16px; border-bottom: 1px solid var(--strip); cursor: pointer; }
+  .qrow:hover { background: var(--strip); }
+  .qrow-top { display: flex; justify-content: space-between; gap: 8px; font-size: 13px;
+              font-weight: 600; }
+  .qrow-sub { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  .qreason { display: inline-block; font-size: 11px; font-weight: 600; color: #8a3d00;
+             background: #fdf2d7; border-radius: 999px; padding: 1px 8px;
+             margin: 3px 4px 0 0; }
+  .qreason.hot { color: #a52222; background: #fbe4e4; }
+
+  .trendrow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+              margin-bottom: 20px; }
+  .trendrow .card { margin-bottom: 0; min-width: 0; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
+           vertical-align: top; }
+  th { background: var(--strip); cursor: pointer; user-select: none;
+       white-space: nowrap; font-weight: 600; font-size: 12px; }
+  th:hover { color: var(--accent); }
+  tr.row { cursor: pointer; }
+  tr.row:hover td { background: var(--strip); }
+  .sub { font-size: 11.5px; color: var(--ink-2); font-weight: 400; }
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill { font-weight: 600; font-size: 11.5px; padding: 2px 9px; border-radius: 999px;
+          white-space: nowrap; }
+  .pill-high { background: #fbe4e4; color: #a52222; }
+  .pill-elevated { background: #fdf2d7; color: #8a6100; }
+  .pill-watch { background: #efeeeb; color: #52514e; }
+  .pill-none { color: #8a8983; }
+  .pill-chronic { cursor: pointer; border: 1px dashed transparent; }
+  .pill-chronic:hover { border-color: currentColor; }
+  .badge-new { background: var(--high); color: #fff; font-size: 10px; font-weight: 700;
+               border-radius: 999px; padding: 1px 6px; margin-left: 5px; }
+  .rank-up { color: var(--high); font-size: 11px; }
+  .rank-down { color: #0a7a0a; font-size: 11px; }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+             padding: 12px 16px; border-bottom: 1px solid var(--border);
+             background: var(--strip); }
+  .toolbar select { font-size: 12.5px; padding: 6px 9px; }
+  .toolbar input[type="search"] { flex: 1; min-width: 160px; max-width: 300px; }
+
+  .term { border-bottom: 1px dotted var(--ink-2); cursor: help; position: relative; }
+  .term:hover::after { content: attr(data-tip); position: absolute; left: 0; bottom: 135%;
+    z-index: 30; width: min(300px, 78vw); background: #262622; color: #fbfbfa;
+    font-size: 12px; font-weight: 400; line-height: 1.5; padding: 10px 12px;
+    border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.28); white-space: normal;
+    text-transform: none; letter-spacing: normal; }
+  #table-holder { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .empty { color: var(--ink-2); font-size: 13.5px; padding: 14px 6px; }
+  .loading { color: var(--ink-2); padding: 60px 0; text-align: center; }
+  footer { color: var(--ink-2); font-size: 12.5px; line-height: 1.75; margin-top: 8px;
+           border-top: 1px solid var(--border); padding-top: 16px; }
+  footer a { color: var(--accent); }
+
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(430px, 96vw);
+            background: var(--card); border-left: 1px solid var(--border);
+            box-shadow: -8px 0 30px rgba(0,0,0,0.12); z-index: 60; overflow-y: auto;
+            transform: translateX(105%); transition: transform 0.22s ease; padding: 20px; }
+  .drawer.open { transform: translateX(0); }
+  .drawer h3 { margin: 0 0 2px; font-size: 18px; padding-right: 60px; }
+  .drawer .kicker { color: var(--ink-2); font-size: 12.5px; margin-bottom: 10px; }
+  .drawer-close { position: absolute; top: 14px; right: 14px; border: 1px solid var(--border);
+                  background: var(--card); border-radius: 8px; font: inherit; font-size: 12px;
+                  padding: 3px 10px; cursor: pointer; color: var(--ink-2); z-index: 61; }
+  .kv { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0;
+        border-bottom: 1px solid var(--strip); font-size: 13px; }
+  .kv b { font-variant-numeric: tabular-nums; text-align: right; }
+  #drawer-map { margin-bottom: 22px; }
+  .drawer h4 { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+               color: var(--ink-2); margin: 18px 0 6px; }
+  .drawer .expl { font-size: 12.5px; margin: 4px 0 2px; }
+  .bar { height: 8px; border-radius: 4px; background: var(--strip); margin: 3px 0 8px;
+         overflow: hidden; }
+  .bar > div { height: 100%; background: var(--accent); border-radius: 4px; }
+  .scrim { position: fixed; inset: 0; background: rgba(20,18,12,0.25); z-index: 50;
+           opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .scrim.on { opacity: 1; pointer-events: auto; }
+  .howit p { font-size: 13px; line-height: 1.65; }
+  .howit .stat { display: flex; justify-content: space-between; font-size: 13px;
+                 padding: 5px 0; border-bottom: 1px solid var(--strip); }
+
+  @media (max-width: 900px) {
+    .maprow, .trendrow { grid-template-columns: 1fr; }
+    .queue-body { max-height: 340px; }
+  }
+  @media (max-width: 760px) {
+    .wrap { padding: 20px 14px 36px; }
+    h1 { font-size: 22px; }
+    .subtitle { font-size: 13px; }
+    .controls { gap: 10px; padding: 12px 14px; }
+    .control { flex-wrap: wrap; }
+    .control:has(select) { width: 100%; }
+    select { flex: 1; max-width: none; }
+    .spacer { display: none; }
+    .tiles { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .tile { padding: 11px 13px; }
+    .tile-value { font-size: 19px; }
+    .card { margin-bottom: 14px; }
+    .card-strip { padding: 10px 14px; }
+    .card-body { padding: 8px; }
+    #map { height: 420px !important; }
+    th, td { padding: 6px 8px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">NASA FIRMS &middot; VIIRS 375 m active fire</div>
+  <div class="titlebar">
+    <h1>Wildfire Infrastructure Risk Monitor</h1>
+    <span class="badge" id="region-badge">All regions</span>
+  </div>
+  <div class="credit">by <a href="https://github.com/apham2509">Anh Pham</a>
+    &middot; <a href="https://www.linkedin.com/in/minhanh2509/">LinkedIn</a>
+    &middot; <a href="https://github.com/apham2509/personal-projects/tree/main/wildfire-infrastructure-risk">source</a>
+    &middot; <button id="howit-open">how it works</button></div>
+  <div class="subtitle">
+    Daily satellite
+    <span class="term" data-tip="A 'detection' is one ~375 m satellite pixel flagged as a thermal anomaly by the VIIRS instrument - an observation, not necessarily a distinct fire. In the historical archive, static industrial heat sources are filtered out; what remains is presumed vegetation fire.">fire detections</span>
+    versus critical infrastructure, gapless from January 2018 to yesterday
+    (<span class="term" data-tip="2018 to April 2026 comes from the standard-processing archive (consistently calibrated); the most recent weeks come from the near-real-time feed, available within ~3 hours of the satellite overpass but provisional.">archive + near-real-time</span>).
+    Pick a region, a country and any date range. Updated __GENERATED__, refreshed daily.
+  </div>
+
+  <div id="app" class="loading">Loading data (a few MB on first visit)&hellip;</div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="asset-drawer"><button class="drawer-close" data-close>close</button><div id="asset-drawer-body"></div></div>
+<div class="drawer howit" id="howit-drawer"><button class="drawer-close" data-close>close</button>
+  <h3>How it works</h3>
+  <div class="kicker">the engineering underneath this page</div>
+  <div class="stat"><span>Detections processed</span><b>153,000,000+</b></div>
+  <div class="stat"><span>Raw archive to browser payload</span><b>2.8 GB &rarr; 20 MB (140:1)</b></div>
+  <div class="stat"><span>Assets monitored</span><b>1,172 airports + 130 ports</b></div>
+  <div class="stat"><span>Refresh</span><b>daily, automated (GitHub Actions)</b></div>
+  <div class="stat"><span>Any interaction</span><b>&lt; 100 ms, fully client-side</b></div>
+  <div class="stat"><span>Exposure distances</span><b>exact haversine, never gridded</b></div>
+  <h4>Provisional vs confirmed</h4>
+  <p>History up to late April 2026 is the calibrated standard-processing archive, which
+  classifies detection types and filters out static industrial heat. The most recent
+  weeks come from the near-real-time feed: available within ~3 hours of overpass, but
+  provisional - no type classification yet, so industrial sources can appear until the
+  archive catches up.</p>
+  <h4>Why the type filter matters</h4>
+  <p>In early validation the most "exposed" asset in Iberia was the port of Gij&oacute;n,
+  with 180 days of apparent fire exposure. Every one of them was the neighbouring
+  steelworks: a persistent thermal anomaly that looks identical to fire in a single
+  observation. The archive's vegetation-fire classification removes it - the single
+  most consequential data-quality decision in this pipeline.</p>
+  <h4>Current alert tiers</h4>
+  <p>Rule-based and fully explainable: a score from recency of the last detection within
+  10 km, latest distance, latest-day fire radiative power, consecutive active days, and
+  activity versus the asset's own seasonal norm. High is 70+, Elevated 40+, Watch 15+.
+  No black box.</p>
+  <h4>Fire incidents</h4>
+  <p>Detections are clustered into distinct incidents: same ~5 km neighbourhood, active
+  within 3 days of each other. 100 detections can be one persistent fire observed
+  repeatedly - incidents say which.</p>
+  <h4>Chronic exposure</h4>
+  <p>score = 0.5 &times; exposure-day percentile + 0.35 &times; cumulative-FRP percentile
+  + 0.15 &times; proximity factor, computed over the full 2018-now record. It measures
+  how often and how intensely fire has come near an asset - it does not yet include
+  asset criticality or disruption outcomes.</p>
+</div>
+
+<template id="app-template">
+  <div class="quality" id="quality"></div>
+
+  <div class="card">
+    <div class="controls">
+      <div class="control"><label for="region">Region</label><select id="region"></select></div>
+      <div class="control"><label for="country">Country</label><select id="country"></select></div>
+      <div class="control"><label for="kind">Assets</label><select id="kind">
+        <option value="all">All</option><option value="airport">Airports</option>
+        <option value="port">Ports</option></select></div>
+      <div class="spacer"></div>
+      <div class="chips" id="chips"></div>
+      <div class="control"><label for="from">From</label><input type="date" id="from">
+        <label for="to">to</label><input type="date" id="to"></div>
+    </div>
+  </div>
+
+  <h2 class="section"><span class="term" data-tip="The situation on the latest complete satellite day, within the current region/country/asset filters. This row answers: what needs attention right now?">Latest day - operational view</span></h2>
+  <div class="tiles" id="op-tiles"></div>
+
+  <div class="maprow">
+    <div class="card">
+      <div class="card-strip">
+        <span class="card-title term" data-tip="Orange cells aggregate all fire detections inside the selected date range and region (~110 km cells per calendar month). Markers are monitored assets, colored by detection proximity during the range. Hover for details, click for the full asset profile; scroll to zoom.">Fire detections &amp; infrastructure exposure</span>
+        <span class="card-context" id="map-context"></span>
+      </div>
+      <div class="card-body"><div id="map" style="height:560px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-strip">
+        <span class="card-title term" data-tip="What changed on the latest satellite day: assets newly in the 10 km zone, escalating fire radiative power, multi-day persistence, very close detections, and possible static-source false positives. Click a row for the asset profile.">Alert queue</span>
+        <span class="card-context" id="queue-context"></span>
+      </div>
+      <div class="queue-body" id="queue"></div>
+    </div>
+  </div>
+
+  <div class="trendrow">
+    <div class="card">
+      <div class="card-strip">
+        <span class="card-title term" data-tip="Number of monitored assets (in the current filters) with at least one detection within 10 km, per day. The dotted line is the historical median for that day of year, so seasonal context is visible.">Assets with fire within 10 km, per day</span>
+      </div>
+      <div class="card-body"><div id="trend-assets" style="height:230px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-strip">
+        <span class="card-title term" id="trend-title" data-tip="Total detections in the selected region per day (per month for long ranges). Shaded bands mark satellite source gaps - missing data is not zero fire.">Detections over time</span>
+      </div>
+      <div class="card-body"><div id="trend" style="height:230px"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-strip">
+      <span class="card-title term" data-tip="Every filtered asset, positioned by long-run chronic exposure (horizontal) versus current operational severity (vertical). Top-right: act now and plan long-term. Top-left: unusual emerging event. Bottom-right: seasonal planning. Click any point for the asset profile.">Acute vs chronic - where attention belongs</span>
+      <span class="card-context">click any point for the asset profile</span>
+    </div>
+    <div class="card-body"><div id="matrix" style="height:360px"></div></div>
+  </div>
+
+  <h2 class="section"><span class="term" data-tip="Context for the selected date range as a whole - totals and extremes, not current status.">Period summary</span></h2>
+  <div class="tiles" id="period-tiles"></div>
+
+  <div class="card">
+    <div class="card-strip">
+      <span class="card-title term" data-tip="Every monitored asset with at least one fire detection within 25 km during the selected range. Default order is current alert severity; click any column to re-sort, any row for the full asset profile.">Assets with fire activity in this range</span>
+      <span class="card-context" id="table-context"></span>
+    </div>
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Search asset name or country...">
+      <select id="f-alert"><option value="all">Alert: all</option>
+        <option value="active">Any current alert</option><option value="High">High</option>
+        <option value="Elevated">Elevated</option><option value="Watch">Watch</option></select>
+      <select id="f-chronic"><option value="all">Chronic: all</option>
+        <option value="high">High</option><option value="medium">Medium</option>
+        <option value="low">Low</option></select>
+    </div>
+    <div class="card-body" style="padding: 4px 12px 10px;"><div id="table-holder"></div></div>
+  </div>
+
+  <footer>
+    <b>Notes.</b>
+    <span class="term" data-tip="Fire Radiative Power, in megawatts: the radiant heat output of the fire in that pixel at overpass time. Higher FRP = more intense burning. Daily figures here are sums over detections within 10 km.">FRP</span>
+    is the intensity measure. Detections are satellite observations, not distinct fires -
+    the incident counts group them (~5 km / 3 day linkage). Coverage: 1,172 large
+    airports worldwide plus 130 commercial ports in Spain and Portugal (port coverage
+    grows region by region). Regional fire counts attribute detections by bounding box,
+    so region borders are approximate; asset figures always use exact distances and
+    country codes. The heatmap is aggregated to ~110 km cells per calendar month; KPIs,
+    trends, alerts and the table are day-accurate.
+    <span class="term" data-tip="0.5 x exposure-day percentile + 0.35 x cumulative-FRP percentile + 0.15 x proximity factor over the 2018-now record. Click any chronic pill for the full breakdown.">Chronic exposure</span>
+    measures how often and how intensely fire has come near an asset since 2018; it does
+    not include asset criticality or disruption outcomes. Recent weeks are provisional
+    near-real-time data (no industrial-source filter yet); the satellite cannot see
+    through clouds, so absence of detections is not proof of absence of fire. Method and
+    code in the
+    <a href="https://github.com/apham2509/personal-projects/tree/main/wildfire-infrastructure-risk">repository</a>.<br>
+    Data: <a href="https://firms.modaps.eosdis.nasa.gov/">NASA FIRMS</a> (VIIRS 375 m active fire, LANCE/ESDIS),
+    <a href="https://ourairports.com/data/">OurAirports</a>,
+    <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+    Built with Python and Plotly.
+  </footer>
+</template>
+
+<script>
+const GEO = __GEO__;
+const MARKS = {
+  exposed: {label: "Detection within 10 km", color: "#d03b3b", size: 12},
+  nearby:  {label: "Detection within 10-25 km", color: "#fab219", size: 9},
+  clear:   {label: "No nearby detection observed", color: "#8a8983", size: 5},
+};
+const KIND_COLOR = {airport: "#2a78d6", port: "#eb6834"};
+const HEAT_SCALE = [[0,"rgba(255,245,235,0)"],[0.2,"#fdd0a2"],[0.4,"#fdae6b"],
+                    [0.6,"#f16913"],[0.8,"#d94801"],[1,"#7f2704"]];
+const MS_DAY = 86400000;
+const fmt = n => n.toLocaleString("en-US");
+const countryName = code => {
+  if (!code) return "Unknown";
+  try { return new Intl.DisplayNames(["en"], {type: "region"}).of(code) || code; }
+  catch (e) { return code; }
+};
+
+let DATA, META, EPOCH_MS, STATS, POP;
+let state = {region: "all", country: "all", kind: "all", from: 0, to: 0};
+let sortKey = "sev", sortDir = -1;
+let currentAssets = [];
+
+const dayToDate = d => new Date(EPOCH_MS + d * MS_DAY);
+const dateToDay = iso => Math.round((new Date(iso + "T00:00:00Z") - EPOCH_MS) / MS_DAY);
+const isoOf = d => dayToDate(d).toISOString().slice(0, 10);
+const human = d => dayToDate(d).toLocaleDateString("en-GB", {day: "numeric", month: "short", year: "numeric"});
+const humanShort = d => dayToDate(d).toLocaleDateString("en-GB", {day: "numeric", month: "short"});
+const ago = d => { const n = META.max_day - d; return n <= 0 ? "today" : n === 1 ? "1d ago" : n + "d ago"; };
+
+const PRESETS = [
+  ["Last 30 days", () => [META.max_day - 30, META.max_day]],
+  ["Last 12 months", () => [META.max_day - 364, META.max_day]],
+  ["2025", () => [dateToDay("2025-01-01"), dateToDay("2025-12-31")]],
+  ["2022", () => [dateToDay("2022-01-01"), dateToDay("2022-12-31")]],
+  ["All 2018-now", () => [0, META.max_day]],
+];
+
+const assetRegion = a => GEO.countryRegion[a.country] || "other";
+const regionLabel = key => key === "all" ? "All regions" : GEO.defs[key].label;
+const inScope = a => (state.region === "all" || assetRegion(a) === state.region)
+  && (state.country === "all" || a.country === state.country)
+  && (state.kind === "all" || a.kind === state.kind);
+const dailySeries = () => DATA.daily[state.region] || DATA.daily.all;
+
+/* ---------- one-time derivations from the exposure events ---------- */
+
+function buildStats() {
+  STATS = {};
+  POP = {};
+  const monthsCovered = new Array(12).fill(0);
+  let cursor = new Date(EPOCH_MS);
+  const end = dayToDate(META.max_day);
+  while (cursor <= end) {
+    monthsCovered[cursor.getUTCMonth()] += 1;
+    cursor = new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() + 1, 1));
+  }
+  POP.monthsCovered = monthsCovered;
+  for (const a of DATA.assets) {
+    const e = DATA.exposure[a.id];
+    const s = {days10Set: new Set(), lastAny: -1, latestDist: null, minDistEver: null,
+               frpTotal: 0, monthDays: new Array(12).fill(0)};
+    if (e) {
+      for (let i = 0; i < e.d.length; i++) {
+        const d = e.d[i];
+        if (e.n10[i] > 0) {
+          s.days10Set.add(d);
+          s.frpTotal += e.f10[i];
+          s.monthDays[dayToDate(d).getUTCMonth()] += 1;
+        }
+        if (d > s.lastAny) { s.lastAny = d; s.latestDist = e.dm[i]; }
+        if (s.minDistEver === null || e.dm[i] < s.minDistEver) s.minDistEver = e.dm[i];
+      }
+    }
+    s.days10 = s.days10Set.size;
+    s.monthAvg = s.monthDays.map((n, m) => n / Math.max(monthsCovered[m], 1));
+    STATS[a.id] = s;
+  }
+  chronicScores();
+  severityAll();
+}
+
+function pctRank(sortedVals, v) {
+  let lo = 0, hi = sortedVals.length;
+  while (lo < hi) { const mid = (lo + hi) >> 1; if (sortedVals[mid] <= v) lo = mid + 1; else hi = mid; }
+  return Math.round(100 * lo / sortedVals.length);
+}
+
+function chronicScores() {
+  const days = DATA.assets.map(a => STATS[a.id].days10).sort((x, y) => x - y);
+  const frp = DATA.assets.map(a => STATS[a.id].frpTotal).sort((x, y) => x - y);
+  for (const a of DATA.assets) {
+    const s = STATS[a.id];
+    const prox = s.minDistEver === null ? 0 : s.minDistEver < 5 ? 1 : s.minDistEver < 10 ? 0.6 : s.minDistEver <= 25 ? 0.3 : 0;
+    s.pctDays = pctRank(days, s.days10);
+    s.pctFrp = pctRank(frp, s.frpTotal);
+    s.prox = prox;
+    s.chronic = (s.days10 === 0 && s.frpTotal === 0) ? 0
+      : 0.5 * s.pctDays / 100 + 0.35 * s.pctFrp / 100 + 0.15 * prox;
+    s.chronicTier = s.chronic >= 0.70 ? "high" : s.chronic >= 0.40 ? "medium" : "low";
+  }
+  const scoreOf = a => STATS[a.id].chronic;
+  const global = DATA.assets.map(scoreOf).sort((x, y) => x - y);
+  const byRegion = {}, byKind = {};
+  for (const a of DATA.assets) {
+    (byRegion[assetRegion(a)] = byRegion[assetRegion(a)] || []).push(scoreOf(a));
+    (byKind[a.kind] = byKind[a.kind] || []).push(scoreOf(a));
+  }
+  for (const k in byRegion) byRegion[k].sort((x, y) => x - y);
+  for (const k in byKind) byKind[k].sort((x, y) => x - y);
+  for (const a of DATA.assets) {
+    const s = STATS[a.id];
+    s.pctGlobal = pctRank(global, s.chronic);
+    s.pctRegion = pctRank(byRegion[assetRegion(a)], s.chronic);
+    s.pctKind = pctRank(byKind[a.kind], s.chronic);
+  }
+}
+
+/* Rule-based current severity: recency, distance, streak, intensity, anomaly. */
+function severityAt(a, asOf) {
+  const e = DATA.exposure[a.id];
+  const s = STATS[a.id];
+  if (!e) return {score: 0, tier: "None", r: 999, streak: 0, fire7: 0, norm7: 0,
+                  dmLast10: null, f10Last: 0, lastAny: -1};
+  let last10 = -1, lastAny = -1, dmLast10 = null, f10Last = 0;
+  for (let i = 0; i < e.d.length; i++) {
+    const d = e.d[i];
+    if (d > asOf) break;
+    if (e.n10[i] > 0 && d > last10) { last10 = d; dmLast10 = e.dm[i]; f10Last = e.f10[i]; }
+    if (d > lastAny) lastAny = d;
+  }
+  let streak = 0;
+  for (let d = asOf; s.days10Set.has(d); d--) streak++;
+  let fire7 = 0;
+  for (let d = asOf - 6; d <= asOf; d++) if (s.days10Set.has(d)) fire7++;
+  const r = last10 < 0 ? 999 : asOf - last10;
+  let score = r === 0 ? 60 : r <= 2 ? 40 : r <= 6 ? 20 : 0;
+  if (score === 0 && lastAny === asOf) score = 15;
+  if (r === 0 && dmLast10 !== null && dmLast10 <= 5) score += 20;
+  else if (r === 0 && dmLast10 !== null && dmLast10 <= 10) score += 10;
+  if (streak >= 5) score += 15; else if (streak >= 3) score += 10;
+  if (r === 0 && f10Last >= (POP.f10p90 || 50)) score += 10;
+  const norm7 = s.monthAvg[dayToDate(asOf).getUTCMonth()] / 30 * 7;
+  if (fire7 >= 2 && fire7 >= 2 * Math.max(norm7, 0.5)) score += 5;
+  score = Math.min(100, score);
+  return {score, tier: score >= 70 ? "High" : score >= 40 ? "Elevated" : score >= 15 ? "Watch" : "None",
+          r, streak, fire7, norm7, dmLast10, f10Last, lastAny};
+}
+
+function hadRecent10(a, asOf, lookback) {
+  const s = STATS[a.id];
+  for (let d = asOf; d > asOf - lookback; d--) if (s.days10Set.has(d)) return true;
+  return false;
+}
+
+function severityAll() {
+  const f10s = [];
+  for (const a of DATA.assets) {
+    const e = DATA.exposure[a.id];
+    if (!e) continue;
+    const i = e.d.indexOf(META.max_day);
+    if (i >= 0 && e.n10[i] > 0) f10s.push(e.f10[i]);
+  }
+  f10s.sort((x, y) => x - y);
+  POP.f10p90 = f10s.length ? f10s[Math.floor(f10s.length * 0.9)] : 50;
+  const today = [], yesterday = [];
+  for (const a of DATA.assets) {
+    const s = STATS[a.id];
+    s.sevNow = severityAt(a, META.max_day);
+    s.newToday = s.sevNow.r === 0 && !hadRecent10(a, META.max_day - 1, 7);
+    today.push({id: a.id, v: s.sevNow.score});
+    yesterday.push({id: a.id, v: severityAt(a, META.max_day - 1).score});
+  }
+  const rank = list => {
+    list.sort((x, y) => y.v - x.v);
+    const m = new Map();
+    list.forEach((r, i) => m.set(r.id, i + 1));
+    return m;
+  };
+  const rNow = rank(today), rPrev = rank(yesterday);
+  for (const a of DATA.assets) STATS[a.id].rankDelta = rPrev.get(a.id) - rNow.get(a.id);
+}
+
+/* ---------- per-range asset metrics ---------- */
+
+function rangeAssets() {
+  const {from, to} = state;
+  return DATA.assets.filter(inScope).map(a => {
+    const e = DATA.exposure[a.id];
+    let det10 = 0, det25 = 0, frp10 = 0, days10 = 0, nearest = null, nearestDay = null,
+        lastDay = -1, lastDist = null;
+    if (e) {
+      for (let i = 0; i < e.d.length; i++) {
+        const d = e.d[i];
+        if (d < from || d > to) continue;
+        det10 += e.n10[i]; det25 += e.n25[i]; frp10 += e.f10[i];
+        if (e.n10[i] > 0) days10 += 1;
+        if (nearest === null || e.dm[i] < nearest) { nearest = e.dm[i]; nearestDay = d; }
+        if (d > lastDay) { lastDay = d; lastDist = e.dm[i]; }
+      }
+    }
+    const status = det10 > 0 ? "exposed" : det25 > 0 ? "nearby" : "clear";
+    const incidents = (DATA.assetIncidents[a.id] || [])
+      .filter(x => { const inc = DATA.incidents[x.id]; return inc.last >= from && inc.start <= to; });
+    return {...a, det10, det25, frp10, days10, nearest, nearestDay, lastDay, lastDist,
+            status, incidents, s: STATS[a.id]};
+  });
+}
+
+/* ---------- map & charts ---------- */
+
+function monthStartIdx(d) {
+  const date = dayToDate(d);
+  return Math.round(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1) / MS_DAY - EPOCH_MS / MS_DAY);
+}
+function inBoxes(lat, lon, boxes) {
+  for (const [w, s, e, n] of boxes) if (lon >= w && lon <= e && lat >= s && lat <= n) return true;
+  return false;
+}
+
+function heatTrace() {
+  const {from, to, region} = state;
+  const lowBound = monthStartIdx(from);
+  const boxes = region === "all" ? null : GEO.defs[region].bboxes;
+  const c = DATA.cells, acc = new Map();
+  for (let i = 0; i < c.d.length; i++) {
+    if (c.d[i] < lowBound || c.d[i] > to) continue;
+    if (boxes && !inBoxes(c.la[i] * DATA.grid, c.lo[i] * DATA.grid, boxes)) continue;
+    const key = c.la[i] + ":" + c.lo[i];
+    acc.set(key, (acc.get(key) || 0) + c.n[i]);
+  }
+  const lat = [], lon = [], z = [];
+  for (const [key, n] of acc) {
+    const [la, lo] = key.split(":");
+    lat.push(la * DATA.grid); lon.push(lo * DATA.grid); z.push(n);
+  }
+  const zs = [...z].sort((a, b) => a - b);
+  const zmax = Math.max(5, zs[Math.floor(zs.length * 0.98)] || 5);
+  return {type: "densitymap", lat, lon, z, radius: state.region === "all" ? 6 : 13,
+    colorscale: HEAT_SCALE, zmin: 0, zmax, showscale: true, hoverinfo: "skip",
+    name: "Detections",
+    colorbar: {title: {text: "Detections<br>per ~110 km cell", font: {size: 11}},
+               thickness: 12, len: 0.5, y: 0.72, outlinewidth: 0}};
+}
+
+function mapTraces(assets) {
+  const traces = [heatTrace()];
+  for (const [status, style] of Object.entries(MARKS)) {
+    const subset = assets.filter(a => a.status === status);
+    if (!subset.length) continue;
+    traces.push({type: "scattermap", mode: "markers",
+      lat: subset.map(a => a.lat), lon: subset.map(a => a.lon),
+      marker: {size: style.size, color: style.color},
+      name: `${style.label} (${fmt(subset.length)})`,
+      customdata: subset.map(a => [a.name, a.kind, a.det10, Math.round(a.frp10),
+        a.nearest ?? "-", a.days10, a.s.chronicTier, a.s.pctGlobal, a.id]),
+      hovertemplate: "<b>%{customdata[0]}</b> (%{customdata[1]})<br>" +
+        "Detections within 10 km: %{customdata[2]:,}<br>" +
+        "FRP within 10 km: %{customdata[3]:,} MW<br>" +
+        "Days with fire within 10 km: %{customdata[5]:,}<br>" +
+        "Nearest detection: %{customdata[4]} km<br>" +
+        "Chronic exposure: %{customdata[6]} (P%{customdata[7]})" +
+        "<extra>click for profile</extra>"});
+  }
+  return traces;
+}
+
+const mapLayout = () => {
+  const view = state.region === "all" ? META.view : GEO.defs[state.region];
+  return {map: {style: "carto-positron", center: view.center, zoom: view.zoom},
+    margin: {l: 0, r: 0, t: 0, b: 0}, paper_bgcolor: "#ffffff",
+    font: {family: "Inter, system-ui, sans-serif"},
+    legend: {x: 0.01, y: 0.99, bgcolor: "rgba(255,255,255,0.9)", font: {size: 12}}};
+};
+
+function gapShapes(from, to) {
+  return (META.gaps || []).filter(([s, e]) => e >= from && s <= to).map(([s, e]) => ({
+    type: "rect", xref: "x", yref: "paper", x0: isoOf(Math.max(s, from)),
+    x1: isoOf(Math.min(e, to)), y0: 0, y1: 1, fillcolor: "rgba(120,116,108,0.14)",
+    line: {width: 0}, layer: "below"}));
+}
+
+function trendFigure() {
+  const {from, to} = state, span = to - from;
+  const monthly = span > 120, acc = new Map();
+  const daily = dailySeries();
+  for (let i = 0; i < daily.d.length; i++) {
+    const d = daily.d[i];
+    if (d < from || d > to) continue;
+    const key = monthly ? isoOf(d).slice(0, 7) + "-01" : isoOf(d);
+    acc.set(key, (acc.get(key) || 0) + daily.n[i]);
+  }
+  document.getElementById("trend-title").textContent =
+    (monthly ? "Detections per month" : "Detections per day") +
+    (state.region === "all" ? "" : " - " + regionLabel(state.region));
+  return {data: [{type: "bar", x: [...acc.keys()], y: [...acc.values()],
+      marker: {color: "#2a78d6", cornerradius: 3},
+      hovertemplate: "%{x}: %{y:,} detections<extra></extra>"}],
+    layout: {height: 230, margin: {l: 55, r: 10, t: 8, b: 38},
+      paper_bgcolor: "#fff", plot_bgcolor: "#fff", bargap: 0.25,
+      font: {family: "Inter, system-ui, sans-serif"}, shapes: gapShapes(from, to),
+      xaxis: {type: "date", tickfont: {size: 11, color: "#52514e"}, showgrid: false},
+      yaxis: {tickfont: {size: 11, color: "#52514e"}, gridcolor: "#eceae6"}},
+    config: {displayModeBar: false, responsive: true}};
+}
+
+function assetsTrendFigure(assets) {
+  const {from, to} = state;
+  const counts = new Map();
+  for (const a of assets) for (const d of a.s.days10Set) counts.set(d, (counts.get(d) || 0) + 1);
+  const byDoy = new Map();
+  for (let d = 0; d <= META.max_day; d++) {
+    const doy = isoOf(d).slice(5, 10);
+    if (!byDoy.has(doy)) byDoy.set(doy, []);
+    byDoy.get(doy).push(counts.get(d) || 0);
+  }
+  const step = Math.max(1, Math.floor((to - from) / 400));
+  const x = [], y = [], medianY = [];
+  for (let d = from; d <= to; d += step) {
+    x.push(isoOf(d));
+    y.push(counts.get(d) || 0);
+    const vals = (byDoy.get(isoOf(d).slice(5, 10)) || [0]).slice().sort((p, q) => p - q);
+    medianY.push(vals[Math.floor(vals.length / 2)]);
+  }
+  return {data: [
+      {type: "bar", x, y, name: "Assets active", marker: {color: "#d03b3b", cornerradius: 2},
+       hovertemplate: "%{x}: %{y} assets<extra></extra>"},
+      {type: "scatter", x, y: medianY, name: "Historical median (same day of year)",
+       mode: "lines", line: {color: "#52514e", width: 1.5, dash: "dot"},
+       hovertemplate: "median: %{y}<extra></extra>"}],
+    layout: {height: 230, margin: {l: 45, r: 10, t: 24, b: 38}, bargap: 0.2,
+      paper_bgcolor: "#fff", plot_bgcolor: "#fff",
+      font: {family: "Inter, system-ui, sans-serif"}, shapes: gapShapes(from, to),
+      legend: {x: 0, y: 1.18, orientation: "h", font: {size: 11}},
+      xaxis: {type: "date", tickfont: {size: 11, color: "#52514e"}, showgrid: false},
+      yaxis: {tickfont: {size: 11, color: "#52514e"}, gridcolor: "#eceae6"}},
+    config: {displayModeBar: false, responsive: true}};
+}
+
+function matrixFigure(assets) {
+  const traces = [];
+  for (const kind of ["airport", "port"]) {
+    const subset = assets.filter(a => a.kind === kind);
+    if (!subset.length) continue;
+    traces.push({type: "scatter", mode: "markers", name: kind + "s",
+      x: subset.map(a => a.s.pctGlobal),
+      y: subset.map(a => Math.min(100, Math.max(0, a.s.sevNow.score + (Math.random() - 0.5) * 4))),
+      marker: {size: 7, color: KIND_COLOR[kind], opacity: 0.75},
+      customdata: subset.map(a => [a.name, a.s.sevNow.tier, a.s.pctGlobal, a.id]),
+      hovertemplate: "<b>%{customdata[0]}</b><br>Current: %{customdata[1]} · " +
+        "Chronic: P%{customdata[2]}<extra>click for profile</extra>"});
+  }
+  const ann = (x, y, text) => ({x, y, text, showarrow: false,
+    font: {size: 10.5, color: "#8a8983"}, xanchor: x > 50 ? "right" : "left"});
+  return {data: traces,
+    layout: {height: 360, margin: {l: 55, r: 14, t: 26, b: 44},
+      paper_bgcolor: "#fff", plot_bgcolor: "#fff",
+      font: {family: "Inter, system-ui, sans-serif"},
+      legend: {x: 0, y: 1.12, orientation: "h", font: {size: 11}},
+      xaxis: {title: {text: "Chronic exposure percentile (2018-now)", font: {size: 11.5}},
+              range: [-3, 103], tickfont: {size: 11, color: "#52514e"}, gridcolor: "#f1efeb"},
+      yaxis: {title: {text: "Current severity (latest day)", font: {size: 11.5}},
+              range: [-4, 104], tickfont: {size: 11, color: "#52514e"}, gridcolor: "#f1efeb"},
+      shapes: [
+        {type: "line", x0: 70, x1: 70, y0: 0, y1: 100, line: {color: "#d9d7d2", width: 1, dash: "dot"}},
+        {type: "line", x0: 0, x1: 100, y0: 40, y1: 40, line: {color: "#d9d7d2", width: 1, dash: "dot"}}],
+      annotations: [ann(99, 99, "act now + plan long-term"), ann(1, 99, "unusual emerging event"),
+                    ann(99, 3, "seasonal planning"), ann(1, 3, "routine monitoring")]},
+    config: {displayModeBar: false, responsive: true}};
+}
+
+/* ---------- KPI tiles ---------- */
+
+function tile(label, value, note, tip, click) {
+  return `<div class="tile${click ? " clickable" : ""}"${click ? ` data-click="${click}"` : ""}>` +
+    `<div class="tile-label"><span class="term" data-tip="${tip}">${label}</span></div>` +
+    `<div class="tile-value">${value}</div>` +
+    (note ? `<div class="tile-note" title="${note.replace(/<[^>]*>/g, "")}">${note}</div>` : "") + `</div>`;
+}
+
+function renderOpTiles(assets) {
+  const d = META.max_day;
+  const active = assets.filter(a => a.s.days10Set.has(d));
+  const newToday = assets.filter(a => a.s.newToday);
+  const chronicActive = active.filter(a => a.s.chronicTier === "high");
+  const close5 = assets.filter(a => a.s.sevNow.r === 0 && a.s.sevNow.dmLast10 !== null && a.s.sevNow.dmLast10 <= 5);
+  let peak = null;
+  for (const a of active) {
+    const f = a.s.sevNow.f10Last || 0;
+    if (!peak || f > peak.f) peak = {a, f};
+  }
+  const gap = (META.gaps || []).find(([s, e]) => e >= d - 30);
+  const health = gap ? "source gap" : "nominal";
+  document.getElementById("op-tiles").innerHTML = [
+    tile("Assets active", fmt(active.length), `detection &le; 10 km on ${humanShort(d)}`,
+      "Assets with at least one detection within 10 km on the latest complete satellite day, in the current filters. Click to filter the table to current alerts.", "filter-active"),
+    tile("New since yesterday", newToday.length ? `<span class="tile-delta-up">+${fmt(newToday.length)}</span>` : "0",
+      "first activity after 7+ quiet days",
+      "Assets active on the latest day that had no detection within 10 km in the previous 7 days.", "filter-active"),
+    tile("High-chronic active", fmt(chronicActive.length), "long-run hotspots burning now",
+      "Assets in the high chronic-exposure tier of the 2018-now record that are active on the latest day - the act-now-and-plan quadrant.", "filter-active"),
+    tile("Within 5 km", fmt(close5.length), "very close detections",
+      "Assets whose latest-day detection came within 5 kilometres.", "filter-active"),
+    tile("Peak asset FRP", peak && peak.f ? fmt(Math.round(peak.f)) + " MW" : "-",
+      peak ? peak.a.name : "no active assets",
+      "The highest summed fire radiative power within 10 km of any single asset on the latest day. Click to open that asset's profile.",
+      peak ? "open:" + peak.a.id : ""),
+    tile("Data status", health,
+      `through ${humanShort(d)} · built ${(META.built || "").slice(11, 17)} UTC`,
+      "Latest complete satellite day, recent source gaps, and when this page was built. Recent weeks are provisional near-real-time data. Click for how this works.", "howit"),
+  ].join("");
+  wireTiles();
+}
+
+function renderPeriodTiles(assets) {
+  const {from, to} = state;
+  let detections = 0, peakN = 0, peakDay = null, maxFrp = 0, maxFrpDay = null;
+  const daily = dailySeries();
+  for (let i = 0; i < daily.d.length; i++) {
+    const d = daily.d[i];
+    if (d < from || d > to) continue;
+    detections += daily.n[i];
+    if (daily.n[i] > peakN) { peakN = daily.n[i]; peakDay = d; }
+    if (daily.fm[i] > maxFrp) { maxFrp = daily.fm[i]; maxFrpDay = d; }
+  }
+  const affected = assets.filter(a => a.status === "exposed");
+  const countries = new Set(assets.filter(a => a.status !== "clear").map(a => a.country));
+  const airports = assets.filter(a => a.kind === "airport").length;
+  const ports = assets.filter(a => a.kind === "port").length;
+  document.getElementById("period-tiles").innerHTML = [
+    tile("Total detections", fmt(detections), `${human(from)} - ${human(to)}`,
+      "All satellite fire detections in the selected region and range. Regional attribution is by bounding box; the country and asset filters do not change this number."),
+    tile("Peak day", peakDay === null ? "-" : fmt(peakN),
+      peakDay === null ? "" : human(peakDay) + " · click to focus",
+      "The single day with the most detections in the range. Click to zoom the whole dashboard to that day.",
+      peakDay === null ? "" : "day:" + peakDay),
+    tile("Strongest detection", maxFrp ? fmt(Math.round(maxFrp)) + " MW" : "-",
+      maxFrpDay === null ? "" : human(maxFrpDay) + " · click to focus",
+      "The highest fire radiative power of any single detection in the range. Click to zoom the dashboard to that day and see on the map where it burned.",
+      maxFrpDay === null ? "" : "day:" + maxFrpDay),
+    tile("Assets with fire &le; 10 km", fmt(affected.length), "at least one detection in period",
+      "Assets that had at least one detection within 10 km at any point in the selected range - a period total, not a current alert."),
+    tile("Countries affected", fmt(countries.size), "with assets near fire",
+      "Countries with at least one monitored asset that had a detection within 25 km during the range."),
+    tile("Assets monitored", fmt(airports + ports), `${fmt(airports)} large airports · ${fmt(ports)} ports (ES/PT)`,
+      "Coverage in the current filters. Ports are currently limited to the commercial ports of Spain and Portugal; airport coverage is worldwide."),
+  ].join("");
+  wireTiles();
+}
+
+function wireTiles() {
+  document.querySelectorAll(".tile[data-click]").forEach(el => el.onclick = () => {
+    const c = el.dataset.click;
+    if (c === "howit") openDrawer("howit-drawer");
+    else if (c.startsWith("open:")) openAsset(c.slice(5));
+    else if (c.startsWith("day:")) { setRange(+c.slice(4), +c.slice(4)); }
+    else if (c === "filter-active") {
+      document.getElementById("f-alert").value = "active";
+      tableFilters.alert = "active";
+      renderTable(currentAssets);
+      document.getElementById("table-holder").scrollIntoView({behavior: "smooth"});
+    }
+  });
+}
+
+/* ---------- alert queue ---------- */
+
+function buildQueue(assets) {
+  const d = META.max_day, rows = [];
+  for (const a of assets) {
+    const s = a.s, sev = s.sevNow, reasons = [];
+    if (sev.r !== 0 && sev.lastAny !== d) continue;
+    if (s.newToday) reasons.push(["Newly active", true]);
+    else if (sev.r === 0 && !s.days10Set.has(d - 1)) {
+      const e = DATA.exposure[a.id];
+      const yi = e ? e.d.indexOf(d - 1) : -1;
+      if (yi >= 0 && e.n25[yi] > 0) reasons.push(["Moved 25 km &rarr; 10 km", true]);
+    }
+    if (sev.r === 0 && sev.dmLast10 !== null && sev.dmLast10 <= 5) reasons.push(["Within 5 km", true]);
+    if (sev.r === 0 && s.chronicTier === "high") reasons.push(["High-chronic asset active", false]);
+    if (sev.streak >= 3) reasons.push([`Persisted ${sev.streak} days`, false]);
+    if (sev.r === 0 && sev.f10Last >= (POP.f10p90 || 50)) reasons.push(["High FRP", true]);
+    if (sev.streak >= 20 && sev.f10Last < 15) reasons.push(["Possible static source", false]);
+    if (!reasons.length) continue;
+    rows.push({a, sev, reasons});
+  }
+  rows.sort((x, y) => y.sev.score - x.sev.score);
+  const holder = document.getElementById("queue");
+  document.getElementById("queue-context").textContent =
+    `${rows.length} flagged · ${humanShort(d)}`;
+  if (!rows.length) {
+    holder.innerHTML = '<div class="empty" style="padding:14px 16px">Nothing flagged on the latest day in the current filters.</div>';
+    return;
+  }
+  holder.innerHTML = rows.slice(0, 40).map(({a, sev, reasons}) => `
+    <div class="qrow" data-id="${a.id}">
+      <div class="qrow-top"><span>${a.name}</span>
+        <span class="pill pill-${sev.tier.toLowerCase()}">${sev.tier}</span></div>
+      <div class="qrow-sub">${countryName(a.country)} · ${sev.dmLast10 !== null ? sev.dmLast10 + " km" : "-"} ·
+        ${fmt(Math.round(sev.f10Last || 0))} MW · seen ${ago(sev.lastAny)}</div>
+      <div>${reasons.map(([t, hot]) => `<span class="qreason${hot ? " hot" : ""}">${t}</span>`).join("")}</div>
+    </div>`).join("");
+  holder.querySelectorAll(".qrow").forEach(el => el.onclick = () => openAsset(el.dataset.id));
+}
+
+/* ---------- table ---------- */
+
+const tableFilters = {q: "", alert: "all", chronic: "all"};
+
+function vsNormalText(sev) {
+  if (!sev.fire7) return "typical";
+  if (sev.norm7 < 0.15) return "rare here";
+  const pct = Math.round((sev.fire7 / Math.max(sev.norm7, 0.25) - 1) * 100);
+  return (pct >= 0 ? "+" : "") + Math.min(pct, 400) + "%";
+}
+
+function renderTable(assets) {
+  const holder = document.getElementById("table-holder");
+  let rows = assets.filter(r => r.status !== "clear");
+  const totalDet = rows.reduce((s, r) => s + r.det10 + r.det25, 0);
+  const incidentIds = new Set();
+  rows.forEach(r => r.incidents.forEach(x => incidentIds.add(x.id)));
+  document.getElementById("table-context").textContent =
+    `${fmt(totalDet)} detections near assets` +
+    (incidentIds.size ? ` · ${fmt(incidentIds.size)} distinct recent incidents` : "");
+  if (tableFilters.q) {
+    const q = tableFilters.q.toLowerCase();
+    rows = rows.filter(r => r.name.toLowerCase().includes(q) || countryName(r.country).toLowerCase().includes(q));
+  }
+  if (tableFilters.alert === "active") rows = rows.filter(r => r.s.sevNow.tier !== "None");
+  else if (tableFilters.alert !== "all") rows = rows.filter(r => r.s.sevNow.tier === tableFilters.alert);
+  if (tableFilters.chronic !== "all") rows = rows.filter(r => r.s.chronicTier === tableFilters.chronic);
+  if (!rows.length) {
+    holder.innerHTML = '<div class="empty">No assets match the current filters and range.</div>';
+    return;
+  }
+  const val = r => sortKey === "sev" ? r.s.sevNow.score : sortKey === "chronic" ? r.s.chronic
+    : sortKey === "lastDay" ? r.lastDay : sortKey === "lastDist" ? -(r.lastDist ?? 999)
+    : sortKey === "frpLatest" ? (r.s.sevNow.r === 0 ? r.s.sevNow.f10Last : 0)
+    : sortKey === "fire7" ? r.s.sevNow.fire7 : sortKey === "inc" ? r.incidents.length
+    : sortKey === "name" ? r.name : r[sortKey] ?? -1;
+  rows.sort((x, y) => {
+    const vx = val(x), vy = val(y);
+    return (vx < vy ? 1 : vx > vy ? -1 : 0) * (sortDir < 0 ? 1 : -1);
+  });
+  const cols = [
+    ["name", "Asset"], ["sev", "Current alert"], ["lastDay", "Last seen"],
+    ["lastDist", "Latest dist"], ["frpLatest", "FRP latest day"], ["fire7", "Fire days 7d"],
+    ["norm", "Vs normal"], ["inc", "Incidents"], ["det10", "Detections"],
+    ["chronic", "Chronic exposure"], ["conf", "Confidence"],
+  ];
+  const head = cols.map(([id, label]) =>
+    `<th data-key="${id}">${label}${sortKey === id ? (sortDir < 0 ? " &#9662;" : " &#9652;") : ""}</th>`).join("");
+  const body = rows.slice(0, 60).map(r => {
+    const sev = r.s.sevNow;
+    const delta = r.s.rankDelta || 0;
+    const rank = sev.tier === "None" ? "" : delta > 2 ? ` <span class="rank-up">&#9652;${delta}</span>`
+      : delta < -2 ? ` <span class="rank-down">&#9662;${-delta}</span>` : "";
+    const conf = r.lastDay >= META.nrt_start_day ? "Provisional" : "Confirmed";
+    const chronicPillClass = r.s.chronicTier === "high" ? "pill-high" : r.s.chronicTier === "medium" ? "pill-elevated" : "pill-watch";
+    return `<tr class="row" data-id="${r.id}">
+      <td><b>${r.name}</b><br><span class="sub">${r.kind} · ${countryName(r.country)}</span></td>
+      <td><span class="pill pill-${sev.tier.toLowerCase()}">${sev.tier}</span>${r.s.newToday ? '<span class="badge-new">NEW</span>' : ""}${rank}</td>
+      <td class="num">${r.lastDay < 0 ? "-" : ago(r.lastDay)}</td>
+      <td class="num">${r.lastDist ?? "-"} km</td>
+      <td class="num">${sev.r === 0 && sev.f10Last ? fmt(Math.round(sev.f10Last)) + " MW" : "-"}</td>
+      <td class="num">${sev.fire7}</td>
+      <td class="num">${vsNormalText(sev)}</td>
+      <td class="num">${r.incidents.length ? r.incidents.length + " inc" : "-"}</td>
+      <td class="num">${fmt(r.det10)}</td>
+      <td><span class="pill pill-chronic ${chronicPillClass}" data-breakdown="${r.id}">${r.s.chronicTier} · P${r.s.pctGlobal}</span></td>
+      <td><span class="sub">${conf}</span></td></tr>`;
+  }).join("");
+  holder.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>` +
+    (rows.length > 60 ? `<div class="empty">Showing the top 60 of ${fmt(rows.length)} assets - use search or the filters to narrow.</div>` : "");
+  holder.querySelectorAll("th[data-key]").forEach(th => th.onclick = () => {
+    const k = th.dataset.key;
+    if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = -1; }
+    renderTable(currentAssets);
+  });
+  holder.querySelectorAll("tr.row").forEach(tr => tr.onclick = ev => {
+    if (ev.target.dataset && ev.target.dataset.breakdown) openAsset(ev.target.dataset.breakdown, true);
+    else openAsset(tr.dataset.id);
+  });
+}
+
+/* ---------- drawers ---------- */
+
+function openDrawer(id) {
+  document.getElementById(id).classList.add("open");
+  document.getElementById("scrim").classList.add("on");
+}
+function closeDrawers() {
+  document.querySelectorAll(".drawer").forEach(el => el.classList.remove("open"));
+  document.getElementById("scrim").classList.remove("on");
+}
+
+function ringPoints(lat, lon, km) {
+  const pts = {lat: [], lon: []};
+  for (let k = 0; k <= 64; k++) {
+    const t = 2 * Math.PI * k / 64;
+    pts.lat.push(lat + (km / 111) * Math.cos(t));
+    pts.lon.push(lon + (km / (111 * Math.cos(lat * Math.PI / 180))) * Math.sin(t));
+  }
+  return pts;
+}
+
+function openAsset(id, scrollBreakdown = false) {
+  const a = DATA.assets.find(x => x.id === id);
+  if (!a) return;
+  const s = STATS[id], sev = s.sevNow, e = DATA.exposure[id];
+  const {from, to} = state;
+  let nearest = null, nearestDay = null;
+  if (e) for (let i = 0; i < e.d.length; i++) {
+    const d = e.d[i];
+    if (d < from || d > to) continue;
+    if (nearest === null || e.dm[i] < nearest) { nearest = e.dm[i]; nearestDay = d; }
+  }
+  const conf = s.lastAny >= META.nrt_start_day ? "Provisional (near-real-time)" : "Confirmed (archive)";
+  const incidents = (DATA.assetIncidents[id] || []).map(x => ({...x, inc: DATA.incidents[x.id]}))
+    .sort((p, q) => q.inc.last - p.inc.last).slice(0, 4);
+  const chronicPillClass = s.chronicTier === "high" ? "pill-high" : s.chronicTier === "medium" ? "pill-elevated" : "pill-watch";
+  const kv = (k, v) => `<div class="kv"><span>${k}</span><b>${v}</b></div>`;
+  const body = document.getElementById("asset-drawer-body");
+  body.innerHTML = `
+    <h3>${a.name}</h3>
+    <div class="kicker">${countryName(a.country)} · ${a.kind} ·
+      <span class="pill pill-${sev.tier.toLowerCase()}">current: ${sev.tier}</span>
+      <span class="pill ${chronicPillClass}">chronic: ${s.chronicTier}</span></div>
+    ${kv("Last detection nearby", s.lastAny < 0 ? "never" : ago(s.lastAny))}
+    ${kv("Latest distance (newest detection)", s.latestDist !== null ? s.latestDist + " km" : "-")}
+    ${kv("Closest in selected range", nearest !== null ? nearest + " km · " + humanShort(nearestDay) : "-")}
+    ${kv("FRP on latest active day", sev.r === 0 && sev.f10Last ? fmt(Math.round(sev.f10Last)) + " MW" : "-")}
+    ${kv("Fire days, last 7", sev.fire7)}
+    ${kv("Current streak", sev.streak + (sev.streak === 1 ? " day" : " days"))}
+    ${kv("Activity vs normal for this month", vsNormalText(sev))}
+    ${kv("Data confidence", conf)}
+    ${incidents.length ? `<h4>Recent fire incidents nearby</h4>` + incidents.map(x => `
+      <div class="kv"><span>${humanShort(x.inc.start)}${x.inc.last !== x.inc.start ? " - " + humanShort(x.inc.last) : ""}
+        · ${fmt(x.inc.n)} det · peak ${fmt(Math.round(x.inc.peakFrp))} MW · ${x.inc.assets} asset${x.inc.assets === 1 ? "" : "s"}</span>
+        <b>${x.minDist} km · ${x.trend}</b></div>`).join("") : ""}
+    <h4>Location - 10 and 25 km rings</h4>
+    <div id="drawer-map" style="height:220px"></div>
+    <h4>Daily activity in selected range</h4>
+    <div id="drawer-daily" style="height:150px"></div>
+    <h4>Seasonality - fire days per month since 2018</h4>
+    <div id="drawer-season" style="height:190px"></div>
+    <h4 id="breakdown">Chronic exposure - how the score is built</h4>
+    <div class="kv"><span>Score</span><b>${s.chronic.toFixed(2)} - ${s.chronicTier}</b></div>
+    <div class="expl">Exposure frequency: P${s.pctDays} (${fmt(s.days10)} days with fire &le; 10 km)</div>
+    <div class="bar"><div style="width:${s.pctDays}%"></div></div>
+    <div class="expl">Cumulative intensity: P${s.pctFrp} (${fmt(Math.round(s.frpTotal))} MW total)</div>
+    <div class="bar"><div style="width:${s.pctFrp}%"></div></div>
+    <div class="expl">Proximity: ${s.prox === 1 ? "maximum - under 5 km" : s.prox === 0.6 ? "high - under 10 km" : s.prox === 0.3 ? "moderate - under 25 km" : "none"} (closest ever: ${s.minDistEver ?? "-"} km)</div>
+    <div class="bar"><div style="width:${s.prox * 100}%"></div></div>
+    <h4>Peer comparison</h4>
+    ${kv("Global percentile", "P" + s.pctGlobal)}
+    ${kv("Within " + regionLabel(assetRegion(a)), "P" + s.pctRegion)}
+    ${kv("Among " + a.kind + "s", "P" + s.pctKind)}
+    <p class="sub" style="margin-top:10px">Weights: 0.5 frequency + 0.35 intensity + 0.15 proximity.
+    An asset can rank high globally yet be normal for its fire-prone region - both views matter.</p>`;
+  openDrawer("asset-drawer");
+
+  const r10 = ringPoints(a.lat, a.lon, 10), r25 = ringPoints(a.lat, a.lon, 25);
+  const incPts = incidents.map(x => x.inc);
+  Plotly.newPlot("drawer-map", [
+    {type: "scattermap", mode: "lines", lat: r25.lat, lon: r25.lon, name: "25 km",
+     line: {color: "#fab219", width: 1.5}, hoverinfo: "skip"},
+    {type: "scattermap", mode: "lines", lat: r10.lat, lon: r10.lon, name: "10 km",
+     line: {color: "#d03b3b", width: 1.5}, hoverinfo: "skip"},
+    {type: "scattermap", mode: "markers", lat: incPts.map(i => i.lat), lon: incPts.map(i => i.lon),
+     marker: {size: incPts.map(i => Math.min(18, 7 + Math.log2(1 + i.n) * 2)), color: "#f16913", opacity: 0.85},
+     hovertemplate: "recent incident<extra></extra>"},
+    {type: "scattermap", mode: "markers", lat: [a.lat], lon: [a.lon],
+     marker: {size: 11, color: "#0b0b0b"}, hoverinfo: "skip"}],
+    {map: {style: "carto-positron", center: {lat: a.lat, lon: a.lon}, zoom: 7.3},
+     margin: {l: 0, r: 0, t: 0, b: 0}, showlegend: false},
+    {displayModeBar: false, responsive: true});
+
+  const dx = [], d10 = [], d25 = [];
+  if (e) for (let i = 0; i < e.d.length; i++) {
+    const d = e.d[i];
+    if (d < from || d > to) continue;
+    dx.push(isoOf(d)); d10.push(e.n10[i]); d25.push(e.n25[i] - e.n10[i]);
+  }
+  Plotly.newPlot("drawer-daily", [
+    {type: "bar", x: dx, y: d10, name: "within 10 km", marker: {color: "#d03b3b"}},
+    {type: "bar", x: dx, y: d25, name: "10-25 km", marker: {color: "#fab219"}}],
+    {barmode: "stack", height: 150, margin: {l: 30, r: 5, t: 5, b: 30},
+     paper_bgcolor: "#fff", plot_bgcolor: "#fff", showlegend: false,
+     xaxis: {type: "date", tickfont: {size: 10}}, yaxis: {tickfont: {size: 10}, gridcolor: "#eceae6"}},
+    {displayModeBar: false, responsive: true});
+
+  const years = [], z = [];
+  const y0 = 2018, y1 = dayToDate(META.max_day).getUTCFullYear();
+  for (let y = y0; y <= y1; y++) { years.push(String(y)); z.push(new Array(12).fill(0)); }
+  if (e) for (let i = 0; i < e.d.length; i++) {
+    if (e.n10[i] <= 0) continue;
+    const dte = dayToDate(e.d[i]);
+    z[dte.getUTCFullYear() - y0][dte.getUTCMonth()] += 1;
+  }
+  Plotly.newPlot("drawer-season", [{type: "heatmap", z, y: years,
+    x: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    colorscale: [[0, "#fdf7f0"], [0.4, "#fdae6b"], [1, "#7f2704"]], showscale: false,
+    hovertemplate: "%{x} %{y}: %{z} fire days<extra></extra>"}],
+    {height: 190, margin: {l: 40, r: 5, t: 5, b: 26}, paper_bgcolor: "#fff",
+     xaxis: {tickfont: {size: 9.5}}, yaxis: {tickfont: {size: 10}, autorange: "reversed"}},
+    {displayModeBar: false, responsive: true});
+  if (scrollBreakdown) {
+    const el = document.getElementById("breakdown");
+    if (el) el.scrollIntoView();
+  }
+}
+
+/* ---------- quality strip ---------- */
+
+function renderQuality() {
+  const gaps = (META.gaps || []).filter(([s, e]) => e >= META.max_day - 90);
+  const gapText = gaps.length
+    ? `<span class="q-warn">source gap ${gaps.map(([s, e]) => humanShort(s) + " - " + humanShort(e)).join(", ")}</span>`
+    : "";
+  document.getElementById("quality").innerHTML =
+    `<span>Data through <b>${human(META.max_day)}</b></span>` +
+    `<span>Near-real-time (provisional) since <b>${human(META.nrt_start_day)}</b></span>` +
+    (META.freshest ? `<span>Newest observation <b>${META.freshest}</b></span>` : "") +
+    gapText +
+    `<span>Page built <b>${META.built}</b></span>`;
+}
+
+/* ---------- update loop ---------- */
+
+function update(fullRedraw = true) {
+  currentAssets = rangeAssets();
+  renderOpTiles(currentAssets);
+  renderPeriodTiles(currentAssets);
+  renderTable(currentAssets);
+  buildQueue(currentAssets);
+  document.getElementById("region-badge").textContent = regionLabel(state.region);
+  document.getElementById("map-context").textContent =
+    `${regionLabel(state.region)} · ${human(state.from)} - ${human(state.to)} · ` +
+    `${state.to - state.from + 1} days · heat at monthly resolution`;
+  if (fullRedraw) {
+    Plotly.react("map", mapTraces(currentAssets), mapLayout(), {scrollZoom: true, responsive: true});
+    const t = trendFigure();
+    Plotly.react("trend", t.data, t.layout, t.config);
+    const at = assetsTrendFigure(currentAssets);
+    Plotly.react("trend-assets", at.data, at.layout, at.config);
+    const mx = matrixFigure(currentAssets);
+    Plotly.react("matrix", mx.data, mx.layout, mx.config);
+  }
+  document.querySelectorAll(".chip").forEach(chip => {
+    const [f, t] = PRESETS[chip.dataset.idx][1]();
+    chip.classList.toggle("active",
+      Math.max(0, f) === state.from && Math.min(t, META.max_day) === state.to);
+  });
+  document.getElementById("from").value = isoOf(state.from);
+  document.getElementById("to").value = isoOf(state.to);
+}
+
+function setRange(from, to) {
+  state.from = Math.max(0, Math.min(from, META.max_day));
+  state.to = Math.max(state.from, Math.min(to, META.max_day));
+  update();
+}
+
+function populateCountries() {
+  const select = document.getElementById("country");
+  select.innerHTML = "";
+  const all = document.createElement("option");
+  all.value = "all"; all.textContent = "All";
+  select.appendChild(all);
+  const codes = [...new Set(DATA.assets
+    .filter(a => state.region === "all" || assetRegion(a) === state.region)
+    .map(a => a.country).filter(Boolean))];
+  codes.sort((a, b) => countryName(a).localeCompare(countryName(b)));
+  for (const code of codes) {
+    const opt = document.createElement("option");
+    opt.value = code; opt.textContent = countryName(code);
+    select.appendChild(opt);
+  }
+  select.value = "all";
+  state.country = "all";
+}
+
+fetch("data_world.json").then(r => r.json()).then(payload => {
+  DATA = payload; META = payload.meta;
+  DATA.assetIncidents = DATA.assetIncidents || {};
+  DATA.incidents = DATA.incidents || [];
+  EPOCH_MS = new Date(META.epoch + "T00:00:00Z").getTime();
+  buildStats();
+
+  const app = document.getElementById("app");
+  app.classList.remove("loading");
+  app.innerHTML = "";
+  app.appendChild(document.getElementById("app-template").content);
+  renderQuality();
+
+  const regionSelect = document.getElementById("region");
+  const allOpt = document.createElement("option");
+  allOpt.value = "all"; allOpt.textContent = "All";
+  regionSelect.appendChild(allOpt);
+  for (const key of GEO.order) {
+    const opt = document.createElement("option");
+    opt.value = key; opt.textContent = GEO.defs[key].label;
+    regionSelect.appendChild(opt);
+  }
+  regionSelect.addEventListener("change", () => {
+    state.region = regionSelect.value;
+    populateCountries();
+    update();
+  });
+  document.getElementById("country").addEventListener("change", e => { state.country = e.target.value; update(); });
+  document.getElementById("kind").addEventListener("change", e => { state.kind = e.target.value; update(); });
+  const chips = document.getElementById("chips");
+  PRESETS.forEach(([label], idx) => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = label; b.dataset.idx = idx;
+    b.onclick = () => setRange(...PRESETS[idx][1]());
+    chips.appendChild(b);
+  });
+  const clampInput = () => setRange(dateToDay(document.getElementById("from").value),
+                                    dateToDay(document.getElementById("to").value));
+  for (const id of ["from", "to"]) {
+    const input = document.getElementById(id);
+    input.min = META.epoch; input.max = isoOf(META.max_day);
+    input.addEventListener("change", clampInput);
+  }
+  document.getElementById("search").addEventListener("input", e => {
+    tableFilters.q = e.target.value; renderTable(currentAssets);
+  });
+  document.getElementById("f-alert").addEventListener("change", e => {
+    tableFilters.alert = e.target.value; renderTable(currentAssets);
+  });
+  document.getElementById("f-chronic").addEventListener("change", e => {
+    tableFilters.chronic = e.target.value; renderTable(currentAssets);
+  });
+
+  populateCountries();
+  state.from = META.max_day - 30;
+  state.to = META.max_day;
+  currentAssets = rangeAssets();
+  Plotly.newPlot("map", mapTraces(currentAssets), mapLayout(), {scrollZoom: true, responsive: true});
+  document.getElementById("map").on("plotly_click", ev => {
+    const cd = ev.points && ev.points[0] && ev.points[0].customdata;
+    if (cd) openAsset(cd[8]);
+  });
+  const t = trendFigure();
+  Plotly.newPlot("trend", t.data, t.layout, t.config);
+  const at = assetsTrendFigure(currentAssets);
+  Plotly.newPlot("trend-assets", at.data, at.layout, at.config);
+  const mx = matrixFigure(currentAssets);
+  Plotly.newPlot("matrix", mx.data, mx.layout, mx.config);
+  document.getElementById("matrix").on("plotly_click", ev => {
+    const cd = ev.points && ev.points[0] && ev.points[0].customdata;
+    if (cd) openAsset(cd[3]);
+  });
+  update(false);
+}).catch(err => {
+  document.getElementById("app").textContent = "Failed to load data: " + err;
+});
+
+document.getElementById("howit-open").addEventListener("click", () => openDrawer("howit-drawer"));
+document.getElementById("scrim").addEventListener("click", closeDrawers);
+document.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeDrawers));
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawers(); });
+</script>
+</body>
+</html>

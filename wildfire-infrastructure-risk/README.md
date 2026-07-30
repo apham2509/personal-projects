@@ -55,6 +55,10 @@ with classification $R_a \ge 0.70 \Rightarrow$ high, $R_a \ge 0.40 \Rightarrow$ 
 
 **Spatial reduction.** The heatmap quantizes detections to grid cells $g(\mathbf{x}) = (\lfloor \phi/\delta \rceil, \lfloor \lambda/\delta \rceil)$ with $\delta = 1°$ per calendar month at world scale (0.05° per day for regional studies), storing counts per (cell, period). Exposure metrics are never quantized - they are computed from exact distances and stored per (asset, day) - so KPIs and the asset table stay day-accurate while the map trades resolution for shippability.
 
+**Incident clustering.** Detections are observations, not fires: one persistent fire is re-observed twice daily. Near-asset detections are therefore grouped into distinct incidents as connected components over $0.05°$ cells (8-neighbourhood) split wherever consecutive activity is more than 3 days apart - so the dashboard can state "330 detections from 2 distinct incidents" and report per-incident duration, peak FRP, closest approach and approach/recede direction.
+
+**Operational severity.** Alongside the chronic score, each asset carries a rule-based current-severity tier (High/Elevated/Watch) built from five explainable inputs: recency of the last detection within 10 km, its distance, latest-day FRP, consecutive active days, and activity relative to the asset's own seasonal norm. The acute-versus-chronic quadrant view plots this against the chronic percentile, separating "act now" from "plan long-term" without a single opaque score.
+
 ### 2. System Architecture & Pipeline Logic
 
 ```
