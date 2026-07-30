@@ -460,7 +460,8 @@ function renderTiles(assets) {
   document.getElementById("tiles").innerHTML = kpis(assets).map(([label, value, note]) =>
     `<div class="tile"><div class="tile-label"><span class="term" data-tip="${TILE_TIPS[label] || ""}">${label}</span></div>` +
     `<div class="tile-value">${value}</div>` +
-    (note ? `<div class="tile-note">${note}</div>` : "")).join("");
+    (note ? `<div class="tile-note">${note}</div>` : "") +
+    `</div>`).join("");
 }
 
 function renderTable(assets) {
