@@ -10,11 +10,14 @@ One unified world dataset. Build-time work:
     ends up to today, so the record is gapless from 2018-01-01 to now
   - writes site/: index.html and data_world.json
 
-Viewer-side: cascading Region -> Country dropdowns (region = geographic
-division: Europe, South Asia, ... - country options follow the region),
-a from-to date range picker defaulting to the 30 days up to yesterday,
-hoverable definitions, a heatmap with colorbar, KPI tiles, trend chart
-and a sortable exposure table. Deploys to GitHub Pages as-is.
+Viewer-side (all client-side over the shipped daily exposure events):
+cascading Region -> Country -> Asset filters, a from-to date range picker
+defaulting to the 30 days up to yesterday, an operational KPI row and alert
+queue for the latest satellite day, rule-based current-severity tiers, an
+acute-vs-chronic quadrant, explainable chronic-exposure scores with peer
+percentiles, per-asset drilldown drawers (rings map, daily activity,
+seasonality), incident summaries, source-gap shading and a data-quality
+strip. Deploys to GitHub Pages as-is.
 
 Usage:
     python render_static.py

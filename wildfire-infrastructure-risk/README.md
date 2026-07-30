@@ -136,7 +136,9 @@ wildfire-infrastructure-risk/
   risk_analysis.py            exposure metrics + risk scoring (regional studies)
   prepare_history.py          regional daily aggregates -> results/history_<region>.json
   prepare_world.py            world aggregates + baseline -> results/history_world.json
-  render_static.py            NRT stitch + dashboard build -> site/
+  render_static.py            NRT stitch, incident clustering, gap detection -> site/
+  template.html               the dashboard page: layout, styles and all client-side logic
+  assets/                     README media (dashboard preview screenshot)
   bin/                        retired code kept for reference (original local Dash app)
   results/                    committed aggregates and risk baselines (CI inputs)
   data/infrastructure/        committed asset lists
