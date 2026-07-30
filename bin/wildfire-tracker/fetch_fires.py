@@ -54,7 +54,7 @@ def plot(df, path: str, region: str, days: int) -> None:
         fig.colorbar(scatter, ax=ax, label="Fire radiative power (MW)")
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
-    ax.set_title(f"FIRMS fire detections — {region}, last {days} day(s) ({len(df):,} points)")
+    ax.set_title(f"FIRMS fire detections - {region}, last {days} day(s) ({len(df):,} points)")
     ax.grid(alpha=0.3)
     fig.tight_layout()
     fig.savefig(path, dpi=150)

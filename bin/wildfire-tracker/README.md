@@ -1,6 +1,6 @@
 # Wildfire Tracker
 
-Pull near-real-time satellite fire detections from the [NASA FIRMS API](https://firms.modaps.eosdis.nasa.gov/api/) — as a pandas DataFrame, a CSV export, or a quick map.
+Pull near-real-time satellite fire detections from the [NASA FIRMS API](https://firms.modaps.eosdis.nasa.gov/api/) - as a pandas DataFrame, a CSV export, or a quick map.
 
 FIRMS (Fire Information for Resource Management System) publishes hotspot detections from the VIIRS, MODIS, Landsat and GOES instruments, updated multiple times per day, with archives going back to 2000.
 
@@ -46,10 +46,10 @@ firms.key_status()          # quota usage
 
 ## Output columns
 
-Each row is one satellite detection: `latitude`/`longitude`, `acq_datetime` (UTC), `frp` (fire radiative power, MW — a proxy for fire intensity), `confidence` (l/n/h), `brightness`, `satellite`, `daynight`.
+Each row is one satellite detection: `latitude`/`longitude`, `acq_datetime` (UTC), `frp` (fire radiative power, MW - a proxy for fire intensity), `confidence` (l/n/h), `brightness`, `satellite`, `daynight`.
 
 ## Notes
 
-- `*_NRT` datasets are near-real-time (last ~2 months); `*_SP` are the calibrated standard-processing archives (MODIS back to 2000, VIIRS to 2012) — better for historical analysis.
+- `*_NRT` datasets are near-real-time (last ~2 months); `*_SP` are the calibrated standard-processing archives (MODIS back to 2000, VIIRS to 2012) - better for historical analysis.
 - The API's country endpoints are currently disabled server-side; this tool uses the area endpoint with bounding boxes instead.
-- A detection is a satellite pixel flagged as thermal anomaly — usually wildfire, but also industrial flares, volcanoes, or agricultural burns.
+- A detection is a satellite pixel flagged as thermal anomaly - usually wildfire, but also industrial flares, volcanoes, or agricultural burns.
