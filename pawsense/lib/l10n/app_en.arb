@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "appTitle": "PawSense",
+  "@appTitle": {
+    "description": "Application display name."
+  },
+  "appTagline": "Play smarter. Learn your cat.",
+  "@appTagline": {
+    "description": "Marketing tagline shown on the intro screen."
+  }
+}

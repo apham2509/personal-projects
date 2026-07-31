@@ -1,0 +1,70 @@
+name: PawSense CI
+
+on:
+  pull_request:
+    paths:
+      - "pawsense/**"
+      - ".github/workflows/pawsense-ci.yml"
+  push:
+    branches:
+      - "feature/**"
+    paths:
+      - "pawsense/**"
+      - ".github/workflows/pawsense-ci.yml"
+
+concurrency:
+  group: pawsense-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: pawsense
+
+jobs:
+  build-and-test:
+    name: Analyse, test, and build (Android debug)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install sqlite3 dev library (host-side Drift tests)
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+        working-directory: .
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.8
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Generate code (Drift + localisations)
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          flutter gen-l10n
+
+      - name: Format check
+        run: dart format --set-exit-if-changed .
+
+      - name: Analyse
+        run: flutter analyze
+
+      - name: Tests
+        run: flutter test
+
+      - name: Android debug build
+        run: flutter build apk --debug
