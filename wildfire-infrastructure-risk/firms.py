@@ -17,6 +17,11 @@ from pathlib import Path
 
 import pandas as pd
 import requests
+import urllib3.util.connection
+
+# CI runners intermittently resolve NASA's host to IPv6 without having an
+# IPv6 route ([Errno 101] Network is unreachable); force IPv4.
+urllib3.util.connection.HAS_IPV6 = False
 
 API_BASE = "https://firms.modaps.eosdis.nasa.gov"
 
@@ -25,7 +30,7 @@ class FirmsError(RuntimeError):
     """Raised when the FIRMS API rejects a request."""
 
 
-def _get(url: str, tries: int = 4, **kwargs) -> requests.Response:
+def _get(url: str, tries: int = 7, **kwargs) -> requests.Response:
     """GET with retry on transient network failures (CI runners hiccup)."""
     for attempt in range(tries):
         try:
@@ -33,7 +38,7 @@ def _get(url: str, tries: int = 4, **kwargs) -> requests.Response:
         except (requests.ConnectionError, requests.Timeout) as error:
             if attempt == tries - 1:
                 raise
-            wait = 20 * (attempt + 1)
+            wait = min(120, 20 * (attempt + 1))
             print(f"Network error ({error.__class__.__name__}), retrying in {wait}s...")
             time.sleep(wait)
 
