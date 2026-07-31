@@ -155,7 +155,8 @@
   .kv { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0;
         border-bottom: 1px solid var(--strip); font-size: 13px; }
   .kv b { font-variant-numeric: tabular-nums; text-align: right; }
-  #drawer-map { margin-bottom: 22px; }
+  #map { margin-bottom: 10px; }
+  #drawer-map { margin-bottom: 36px; }
   .drawer h4 { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
                color: var(--ink-2); margin: 18px 0 6px; }
   .drawer .expl { font-size: 12.5px; margin: 4px 0 2px; }
@@ -188,7 +189,7 @@
     .card { margin-bottom: 14px; }
     .card-strip { padding: 10px 14px; }
     .card-body { padding: 8px; }
-    #map { height: 420px !important; }
+    #map { height: 420px !important; margin-bottom: 28px; }
     th, td { padding: 6px 8px; font-size: 12px; }
   }
 </style>
@@ -1106,7 +1107,7 @@ function update(fullRedraw = true) {
     `${regionLabel(state.region)} · ${human(state.from)} - ${human(state.to)} · ` +
     `${state.to - state.from + 1} days · heat at monthly resolution`;
   if (fullRedraw) {
-    Plotly.react("map", mapTraces(currentAssets), mapLayout(), {scrollZoom: true, responsive: true});
+    Plotly.react("map", mapTraces(currentAssets), mapLayout(), {scrollZoom: true, responsive: true, displayModeBar: false});
     const t = trendFigure();
     Plotly.react("trend", t.data, t.layout, t.config);
     const at = assetsTrendFigure(currentAssets);
@@ -1205,7 +1206,7 @@ fetch("data_world.json").then(r => r.json()).then(payload => {
   state.from = META.max_day - 30;
   state.to = META.max_day;
   currentAssets = rangeAssets();
-  Plotly.newPlot("map", mapTraces(currentAssets), mapLayout(), {scrollZoom: true, responsive: true});
+  Plotly.newPlot("map", mapTraces(currentAssets), mapLayout(), {scrollZoom: true, responsive: true, displayModeBar: false});
   document.getElementById("map").on("plotly_click", ev => {
     const cd = ev.points && ev.points[0] && ev.points[0].customdata;
     if (cd) openAsset(cd[8]);
