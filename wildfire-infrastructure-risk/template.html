@@ -1075,9 +1075,14 @@ function openAsset(id, scrollBreakdown = false) {
 /* ---------- quality strip ---------- */
 
 function renderQuality() {
-  const gaps = (META.gaps || []).filter(([s, e]) => e >= META.max_day - 90);
+  // Gap chip follows the selected window, like the shaded bands in the charts.
+  const gaps = (META.gaps || []).filter(([s, e]) => e >= state.from && s <= state.to);
+  const label = ([s, e]) => humanShort(s) + " - " + human(e);
+  const shown = gaps.slice(0, 2).map(label).join(", ") +
+    (gaps.length > 2 ? ` +${gaps.length - 2} more` : "");
+  const all = gaps.map(label).join(", ");
   const gapText = gaps.length
-    ? `<span class="q-warn">source gap ${gaps.map(([s, e]) => humanShort(s) + " - " + humanShort(e)).join(", ")}</span>`
+    ? `<span class="q-warn" title="Satellite source outages inside the selected date range: ${all}. Missing data is not zero fire.">source gap in view: ${shown}</span>`
     : "";
   document.getElementById("quality").innerHTML =
     `<span>Data through <b>${human(META.max_day)}</b></span>` +
@@ -1091,6 +1096,7 @@ function renderQuality() {
 
 function update(fullRedraw = true) {
   currentAssets = rangeAssets();
+  renderQuality();
   renderOpTiles(currentAssets);
   renderPeriodTiles(currentAssets);
   renderTable(currentAssets);
