@@ -146,6 +146,30 @@ wildfire-infrastructure-risk/
   map_key.txt                 FIRMS API key (free; get yours at firms.modaps.eosdis.nasa.gov/api/map_key)
 ```
 
+### What each module does
+
+**`firms.py`** - the only file that talks to NASA. Wraps the FIRMS area API with everything the raw endpoint lacks: MAP_KEY loading, transaction-quota awareness (world-scale responses cost ~200 of the 5,000-per-10-min budget, so it blocks and resumes instead of failing), retry with backoff on transient network errors, and forced IPv4 (CI runners intermittently resolve NASA's host to an unroutable IPv6 address). Also exposes `data_availability()` and `key_status()`. Every downloader and the renderer import from here; nothing else does HTTP to FIRMS.
+
+**`regions.py`** - the named study regions for the data pipeline: bounding boxes plus optional ISO country filters (iberia = ES+PT, etc.). `resolve()` accepts a name or any raw `"west,south,east,north"` string, so every CLI below works for arbitrary geographies.
+
+**`world_regions.py`** - the geography of the dashboard itself: the 11 divisions in the Region dropdown. Two mappings with different jobs: `COUNTRY_REGION` (ISO code to region) is authoritative for assets, and `REGION_DEFS` bounding boxes attribute fire detections, which carry no country. `client_payload()` ships both to the browser.
+
+**`download_fires.py`** - archive ingestion. Fetches a region's detection history year by year in 5-day chunks (the API maximum), deduplicates, and writes one `csv.gz` per year. Resumable: years whose file exists are skipped, so a crashed multi-hour world download continues where it stopped.
+
+**`download_infrastructure.py`** - asset lists. Airports come from the OurAirports open dataset (all large airports for the world scope, large + medium for regional studies); ports come from per-country OSM Overpass queries with leisure marinas filtered out and a mirror fallback for Overpass outages. Writes `assets.csv` with a country code per asset.
+
+**`risk_analysis.py`** - the regional study scorer. Computes exact haversine distances from every asset to every detection, per-radius exposure metrics (5/10/25 km counts, FRP, exposure days, consecutive-day streaks, nearest approach), and the percentile-based chronic-exposure score described above. Also the home of `haversine_km`, which every other module reuses.
+
+**`prepare_history.py`** - regional aggregation for the web dashboard. Reduces a regional archive to three compact structures at daily resolution: detections per (day, ~5 km cell), daily totals, and per-asset exposure days. Its helpers (`aggregate_cells`, `exposure_events`, `day_index`) are reused by the world pipeline and the renderer.
+
+**`prepare_world.py`** - the heavy reduction. Streams the 2.8 GB world archive one year at a time (it never fits in memory whole), filters to vegetation fires, aggregates monthly 1-degree heat cells and per-geographic-region daily series, and computes exposure days for all 1,172 large airports using a sorted-latitude window search - binary search per asset instead of scanning 20M rows. Writes `history_world.json` and the world risk baseline.
+
+**`render_static.py`** - the daily build, run by CI every morning. Loads the committed world aggregates, folds in the Iberian ports from the regional study, checks the live availability endpoint, pulls near-real-time detections from the archive boundary to today (making the record gapless), clusters near-asset detections into distinct fire incidents (~5 km / 3-day linkage), detects source gaps, and writes `site/index.html` plus `data_world.json`. A strict-JSON tripwire fails the build rather than ship a broken payload.
+
+**`template.html`** - the application the visitor runs. All layout and styling plus the client-side logic: current-severity tiers, chronic scores with peer percentiles, the alert queue, the acute-vs-chronic matrix, asset drilldown drawers, filters, and the date-range engine - all computed in the browser from the shipped daily exposure events, which is why every interaction is instant and the hosting bill is zero.
+
+**`bin/dashboard.py`** - the original local Dash prototype, retired when the static dashboard surpassed it; kept for reference.
+
 ```bash
 git clone https://github.com/apham2509/personal-projects.git
 cd personal-projects/wildfire-infrastructure-risk
