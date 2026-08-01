@@ -1125,6 +1125,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PawSense is local-first: no account, no cloud, no analytics.'**
   String get settingsLocalFirstNote;
+
+  /// No description provided for @setupTitlePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play session'**
+  String get setupTitlePlay;
+
+  /// No description provided for @setupTitleTrain.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch training'**
+  String get setupTitleTrain;
+
+  /// No description provided for @setupTitleCalibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Calibration'**
+  String get setupTitleCalibration;
+
+  /// No description provided for @setupCalibrationInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat\'s starting preferences. You can stop at any time and continue later.'**
+  String get setupCalibrationInfo;
+
+  /// No description provided for @setupDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Session length'**
+  String get setupDuration;
+
+  /// No description provided for @setupSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound for this session'**
+  String get setupSound;
+
+  /// No description provided for @setupSoundBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft prey and capture sounds.'**
+  String get setupSoundBody;
+
+  /// No description provided for @setupSoundLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: this cat is marked as easily startled.'**
+  String get setupSoundLocked;
+
+  /// No description provided for @setupManualToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the target myself'**
+  String get setupManualToggle;
+
+  /// No description provided for @setupManualBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix the prey, movement, speed, and size instead of letting PawSense adapt.'**
+  String get setupManualBody;
+
+  /// No description provided for @setupManualPrey.
+  ///
+  /// In en, this message translates to:
+  /// **'Prey'**
+  String get setupManualPrey;
+
+  /// No description provided for @setupManualMovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Movement'**
+  String get setupManualMovement;
+
+  /// No description provided for @setupManualSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get setupManualSpeed;
+
+  /// No description provided for @setupManualSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get setupManualSize;
+
+  /// No description provided for @setupSafetyReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay nearby while your cat plays. Use a stable stand, keep sessions short, and finish with a physical toy your cat can really catch.'**
+  String get setupSafetyReminder;
+
+  /// No description provided for @setupStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start session'**
+  String get setupStart;
+
+  /// No description provided for @movementSmooth.
+  ///
+  /// In en, this message translates to:
+  /// **'Smooth'**
+  String get movementSmooth;
+
+  /// No description provided for @movementStopGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop and go'**
+  String get movementStopGo;
+
+  /// No description provided for @movementUnpredictable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpredictable'**
+  String get movementUnpredictable;
+
+  /// No description provided for @speedSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get speedSlow;
+
+  /// No description provided for @speedMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get speedMedium;
+
+  /// No description provided for @speedFast.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get speedFast;
+
+  /// No description provided for @ownerGateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner check'**
+  String get ownerGateTitle;
+
+  /// No description provided for @ownerGateHoldBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Press and hold the circle to end the session. Tap outside or choose resume to keep playing.'**
+  String get ownerGateHoldBody;
+
+  /// No description provided for @ownerGatePinBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your 4-digit owner PIN to end the session.'**
+  String get ownerGatePinBody;
+
+  /// No description provided for @ownerGatePinError.
+  ///
+  /// In en, this message translates to:
+  /// **'That PIN does not match.'**
+  String get ownerGatePinError;
+
+  /// No description provided for @ownerGateHoldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to end'**
+  String get ownerGateHoldLabel;
+
+  /// No description provided for @ownerGateEndSession.
+  ///
+  /// In en, this message translates to:
+  /// **'End session'**
+  String get ownerGateEndSession;
+
+  /// No description provided for @ownerGateResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume play'**
+  String get ownerGateResume;
+
+  /// No description provided for @resultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Session results'**
+  String get resultsTitle;
+
+  /// No description provided for @resultsDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes of play'**
+  String resultsDuration(String minutes);
+
+  /// No description provided for @resultsCatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Catches'**
+  String get resultsCatches;
+
+  /// No description provided for @resultsCatchRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch rate'**
+  String get resultsCatchRate;
+
+  /// No description provided for @resultsMedianReaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Median reaction'**
+  String get resultsMedianReaction;
+
+  /// No description provided for @resultsSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s'**
+  String resultsSeconds(String seconds);
+
+  /// No description provided for @resultsMisses.
+  ///
+  /// In en, this message translates to:
+  /// **'Misses'**
+  String get resultsMisses;
+
+  /// No description provided for @resultsTimeouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed-out targets'**
+  String get resultsTimeouts;
+
+  /// No description provided for @resultsFrustrationNote.
+  ///
+  /// In en, this message translates to:
+  /// **'PawSense noticed some unsuccessful interaction patterns and made the session easier. Consider a slightly shorter or slower session next time.'**
+  String get resultsFrustrationNote;
+
+  /// No description provided for @resultsFeedbackPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'How did it look from where you sat?'**
+  String get resultsFeedbackPrompt;
+
+  /// No description provided for @resultsFeedbackBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional. Your impression is stored separately from the observed play data and never changes what PawSense learned.'**
+  String get resultsFeedbackBody;
+
+  /// No description provided for @feedbackEngaged.
+  ///
+  /// In en, this message translates to:
+  /// **'Engaged'**
+  String get feedbackEngaged;
+
+  /// No description provided for @feedbackNeutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get feedbackNeutral;
+
+  /// No description provided for @feedbackFrustrated.
+  ///
+  /// In en, this message translates to:
+  /// **'Frustrated'**
+  String get feedbackFrustrated;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// No description provided for @statusOwnerStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended by you'**
+  String get statusOwnerStopped;
+
+  /// No description provided for @statusDisengaged.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended early: lost interest'**
+  String get statusDisengaged;
+
+  /// No description provided for @statusFrustrated.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended gently: repeated frustration'**
+  String get statusFrustrated;
+
+  /// No description provided for @statusBackgrounded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended: app went to background'**
+  String get statusBackgrounded;
+
+  /// No description provided for @statusInterrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'Interrupted'**
+  String get statusInterrupted;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get statusInProgress;
 }
 
 class _AppLocalizationsDelegate

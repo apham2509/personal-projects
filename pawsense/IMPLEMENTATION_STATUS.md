@@ -2,7 +2,7 @@
 
 Single source of truth for resuming work. Updated after every phase.
 
-Last updated: 2026-08-01 (Phase 3 complete)
+Last updated: 2026-08-01 (Phases 4 and 5 complete)
 
 ## Environment (verified)
 
@@ -60,10 +60,25 @@ Last updated: 2026-08-01 (Phase 3 complete)
         spawn/expire animations, high-contrast palettes)
   - [x] Tests: +79 (58 unit + 21 controller/game); found and fixed a real
         zombie-session bug (phase clobber after frustrated end)
-- [ ] Phase 4: Event pipeline and session analytics
+- [x] Phase 4: Event pipeline and session analytics
   - Note: Phases 4 and 5 were committed in swapped order (dependencies
     first): the pipeline consumes the trial sources, which are built on the
     personalisation domain.
+  - [x] SessionRepository: inProgress insert, trial+touch batches anchored
+        to session start UTC, transactional finalisation (aggregates +
+        preference stats + cue progress + profile difficulty)
+  - [x] Crash recovery on launch (stale inProgress -> interrupted,
+        aggregates from persisted trials, model untouched, idempotent)
+  - [x] PreferenceRepository (snapshot load, prior seeding, decayed
+        upserts), CueProgressRepository, VoiceCueRepository (data layer)
+  - [x] Trial sources: calibration / adaptive / mixed / manual / replay
+  - [x] SessionRunnerFactory + AudioService (audioplayers pools + cue
+        player) + play screen (Listener pipeline, owner gate, countdown,
+        reward hint, system UI restore), setup screen, results screen with
+        owner subjective note
+  - [x] Router wired end-to-end; docs/EVENT_SCHEMA.md
+  - [x] Tests: +11 (repo pipeline incl. recovery + mixed isolation; widget
+        setup/mixed/results; 30-minute soak) — 157 total
 - [x] Phase 5: Calibration and personalisation
   - [x] PreferenceScorer (spec formulas exactly), TrialRewardCalculator,
         confidence tiers + favourite gap
@@ -108,3 +123,4 @@ docs/ARCHITECTURE.md specs — no unique state lives there.
 | Phase 2 | clean | clean | pass (17 tests) | not yet run |
 | Phase 3 | clean | clean | pass (96 tests) | not yet run |
 | Phase 5 | clean | clean | pass (146 tests) | not yet run |
+| Phase 4 | clean | clean | pass (157 tests) | not yet run |

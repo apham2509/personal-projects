@@ -561,4 +561,165 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsLocalFirstNote =>
       'PawSense is local-first: no account, no cloud, no analytics.';
+
+  @override
+  String get setupTitlePlay => 'Play session';
+
+  @override
+  String get setupTitleTrain => 'Touch training';
+
+  @override
+  String get setupTitleCalibration => 'Calibration';
+
+  @override
+  String get setupCalibrationInfo =>
+      'A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat\'s starting preferences. You can stop at any time and continue later.';
+
+  @override
+  String get setupDuration => 'Session length';
+
+  @override
+  String get setupSound => 'Sound for this session';
+
+  @override
+  String get setupSoundBody => 'Soft prey and capture sounds.';
+
+  @override
+  String get setupSoundLocked => 'Off: this cat is marked as easily startled.';
+
+  @override
+  String get setupManualToggle => 'Choose the target myself';
+
+  @override
+  String get setupManualBody =>
+      'Fix the prey, movement, speed, and size instead of letting PawSense adapt.';
+
+  @override
+  String get setupManualPrey => 'Prey';
+
+  @override
+  String get setupManualMovement => 'Movement';
+
+  @override
+  String get setupManualSpeed => 'Speed';
+
+  @override
+  String get setupManualSize => 'Size';
+
+  @override
+  String get setupSafetyReminder =>
+      'Stay nearby while your cat plays. Use a stable stand, keep sessions short, and finish with a physical toy your cat can really catch.';
+
+  @override
+  String get setupStart => 'Start session';
+
+  @override
+  String get movementSmooth => 'Smooth';
+
+  @override
+  String get movementStopGo => 'Stop and go';
+
+  @override
+  String get movementUnpredictable => 'Unpredictable';
+
+  @override
+  String get speedSlow => 'Slow';
+
+  @override
+  String get speedMedium => 'Medium';
+
+  @override
+  String get speedFast => 'Fast';
+
+  @override
+  String get ownerGateTitle => 'Owner check';
+
+  @override
+  String get ownerGateHoldBody =>
+      'Press and hold the circle to end the session. Tap outside or choose resume to keep playing.';
+
+  @override
+  String get ownerGatePinBody =>
+      'Enter your 4-digit owner PIN to end the session.';
+
+  @override
+  String get ownerGatePinError => 'That PIN does not match.';
+
+  @override
+  String get ownerGateHoldLabel => 'Hold to end';
+
+  @override
+  String get ownerGateEndSession => 'End session';
+
+  @override
+  String get ownerGateResume => 'Resume play';
+
+  @override
+  String get resultsTitle => 'Session results';
+
+  @override
+  String resultsDuration(String minutes) {
+    return '$minutes minutes of play';
+  }
+
+  @override
+  String get resultsCatches => 'Catches';
+
+  @override
+  String get resultsCatchRate => 'Catch rate';
+
+  @override
+  String get resultsMedianReaction => 'Median reaction';
+
+  @override
+  String resultsSeconds(String seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get resultsMisses => 'Misses';
+
+  @override
+  String get resultsTimeouts => 'Timed-out targets';
+
+  @override
+  String get resultsFrustrationNote =>
+      'PawSense noticed some unsuccessful interaction patterns and made the session easier. Consider a slightly shorter or slower session next time.';
+
+  @override
+  String get resultsFeedbackPrompt => 'How did it look from where you sat?';
+
+  @override
+  String get resultsFeedbackBody =>
+      'Optional. Your impression is stored separately from the observed play data and never changes what PawSense learned.';
+
+  @override
+  String get feedbackEngaged => 'Engaged';
+
+  @override
+  String get feedbackNeutral => 'Neutral';
+
+  @override
+  String get feedbackFrustrated => 'Frustrated';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get statusOwnerStopped => 'Ended by you';
+
+  @override
+  String get statusDisengaged => 'Ended early: lost interest';
+
+  @override
+  String get statusFrustrated => 'Ended gently: repeated frustration';
+
+  @override
+  String get statusBackgrounded => 'Ended: app went to background';
+
+  @override
+  String get statusInterrupted => 'Interrupted';
+
+  @override
+  String get statusInProgress => 'In progress';
 }

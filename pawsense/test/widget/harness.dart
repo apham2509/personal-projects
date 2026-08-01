@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pawsense/app/app.dart';
 import 'package:pawsense/core/database/app_database.dart';
 import 'package:pawsense/core/files/file_service.dart';
@@ -81,6 +82,14 @@ class TestApp {
 Future<T> dbCall<T>(WidgetTester tester, Future<T> Function() action) async {
   final result = await tester.runAsync(action);
   return result as T;
+}
+
+/// Navigates the running app's router directly (for screens deep in the
+/// hierarchy) and settles.
+Future<void> goTo(WidgetTester tester, String location) async {
+  final context = tester.element(find.byType(Scaffold).first);
+  GoRouter.of(context).go(location);
+  await tester.pumpAndSettle();
 }
 
 /// Unmounts the app and fires drift's zero-duration `markAsClosed` timer so

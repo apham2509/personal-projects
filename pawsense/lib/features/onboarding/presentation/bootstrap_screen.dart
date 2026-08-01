@@ -16,10 +16,18 @@ class BootstrapScreen extends ConsumerStatefulWidget {
 
 class _BootstrapScreenState extends ConsumerState<BootstrapScreen> {
   bool _navigated = false;
+  bool _recoveryStarted = false;
 
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
+
+    if (!_recoveryStarted) {
+      _recoveryStarted = true;
+      // Crash recovery: finalise any session left inProgress by a previous
+      // run before the owner can reach history/insights.
+      ref.read(sessionRepositoryProvider).recoverInterruptedSessions().ignore();
+    }
 
     final value = settings.value;
     if (value != null && !_navigated) {

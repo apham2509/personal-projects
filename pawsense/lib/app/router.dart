@@ -6,8 +6,13 @@ import '../features/cat_profiles/presentation/manage_profiles_screen.dart';
 import '../features/cat_profiles/presentation/profile_wizard_screen.dart';
 import '../features/onboarding/presentation/bootstrap_screen.dart';
 import '../features/onboarding/presentation/intro_screen.dart';
+import '../features/play/presentation/play_screen.dart';
+import '../features/play/presentation/session_launch.dart';
+import '../features/play/presentation/session_setup_screen.dart';
 import '../features/profile_picker/presentation/profile_picker_screen.dart';
+import '../features/session_results/presentation/session_results_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../shared/models/enums.dart';
 import '../shared/widgets/placeholder_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -40,7 +45,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (_, state) =>
                 ProfileWizardScreen(catId: state.pathParameters['catId']),
           ),
-          GoRoute(path: 'setup', builder: (_, _) => const PlaceholderScreen()),
+          GoRoute(
+            path: 'setup',
+            builder: (_, state) => SessionSetupScreen(
+              catId: state.pathParameters['catId']!,
+              mode: SessionMode.values.byName(
+                state.uri.queryParameters['mode'] ?? 'freePlay',
+              ),
+            ),
+          ),
           GoRoute(
             path: 'insights',
             builder: (_, _) => const PlaceholderScreen(),
@@ -52,7 +65,21 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: 'voice', builder: (_, _) => const PlaceholderScreen()),
         ],
       ),
-      GoRoute(path: '/mixed', builder: (_, _) => const PlaceholderScreen()),
+      GoRoute(
+        path: '/mixed',
+        builder: (_, _) =>
+            const SessionSetupScreen(catId: null, mode: SessionMode.mixed),
+      ),
+      GoRoute(
+        path: '/play',
+        builder: (_, state) =>
+            PlayScreen(launch: state.extra! as SessionLaunch),
+      ),
+      GoRoute(
+        path: '/results/:sessionId',
+        builder: (_, state) =>
+            SessionResultsScreen(sessionId: state.pathParameters['sessionId']!),
+      ),
       GoRoute(path: '/dev', builder: (_, _) => const PlaceholderScreen()),
       GoRoute(
         path: '/settings',
