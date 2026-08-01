@@ -140,7 +140,32 @@ Last updated: 2026-08-01 (Phase 8 complete)
   - [x] CHANGELOG for 0.1.0; l10n.yaml deprecation cleaned
   - Note: iOS compile check remains blocked (no Xcode on this machine);
         config authored (bundle id, mic usage string, orientations)
-- [ ] Phase 9: Repository integration (root README, PR)
+- [x] Phase 9: Repository integration (root README row, final gates, PR)
+
+## Definition of done — V1
+
+- [x] PawSense exists in personal-projects/pawsense; existing projects
+      untouched; root README lists PawSense
+- [x] Android debug build succeeds; iOS configured (bundle id, mic usage
+      string, orientations) — local compile check blocked: no Xcode on the
+      dev machine (owner action, RELEASE_GUIDE)
+- [x] Profiles: create/edit/archive/restore/reorder/delete work; multiple
+      profiles independent; mixed sessions never update individual models
+      (unit + repo tests)
+- [x] Calibration (balanced/seeded/skippable), three prey, three movement
+      styles, paw dedup with one-catch-per-target, Free Play, Touch
+      Training, local voice recording
+- [x] Session persistence, crash recovery, personalisation rules +
+      simulations, difficulty + frustration adaptation
+- [x] Dashboard with confidence labels, heatmap, JSON/CSV export,
+      granular deletion
+- [x] No network/backend/account; no third-party analytics (tripwire test)
+- [x] Privacy/safety/store docs; CI workflow (validated on push once PR
+      opens)
+- [x] flutter analyze clean; 181 tests pass; format clean
+- [ ] Physical-device checks (documented in QA_PLAN; require hardware)
+- [ ] `flutter test integration_test` on a device (authored; no
+      emulator/simulator on the dev machine)
 
 ## Staged work not yet in the tree
 
