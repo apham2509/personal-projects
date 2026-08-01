@@ -2,7 +2,7 @@
 
 Single source of truth for resuming work. Updated after every phase.
 
-Last updated: 2026-08-01 (Phase 2 complete)
+Last updated: 2026-08-01 (Phase 3 complete)
 
 ## Environment (verified)
 
@@ -43,7 +43,23 @@ Last updated: 2026-08-01 (Phase 2 complete)
   - Note: widget-test learnings — drift awaits need tester.runAsync
     (harness dbCall), teardown unmount before db.close, dialog controllers
     owned by dialog state
-- [ ] Phase 3: Core game engine
+- [x] Phase 3: Core game engine
+  - [x] PlayTuning (all gameplay constants, device-independent)
+  - [x] Movement strategies: smooth / stop-and-go / unpredictable (bounded,
+        non-teleporting, seed-deterministic)
+  - [x] Touch pipeline: clusterer (180 ms / 4% shortest-dim), classifier
+        (hit > ownerGesture precedence, edge, postCapture, dedup), hold
+        tracking
+  - [x] OwnerExitTracker (two-corner 2 s simultaneous hold)
+  - [x] FrustrationDetector (7 flags, severity 0-3) +
+        DisengagementTracker (12/20/30 s ladder)
+  - [x] GameSessionController: full state machine (countdown, cue, spawn,
+        catch/timeout, inter-trial, typed ends), reward reminders, safety
+        wiring, learning-valid trial semantics
+  - [x] PawSenseGame + procedural mouse/moth/fish (Canvas vector, capture/
+        spawn/expire animations, high-contrast palettes)
+  - [x] Tests: +79 (58 unit + 21 controller/game); found and fixed a real
+        zombie-session bug (phase clobber after frustrated end)
 - [ ] Phase 4: Event pipeline and session analytics
 - [ ] Phase 5: Calibration and personalisation
 - [ ] Phase 6: Voice cues and Touch Training
@@ -74,3 +90,4 @@ docs/ARCHITECTURE.md specs — no unique state lives there.
 | scaffold baseline | n/a | 3 issues (template lints + missing assets dir, all since fixed) | pass (1 test) | not yet run |
 | Phase 1 | clean | clean | pass (1 test) | not yet run |
 | Phase 2 | clean | clean | pass (17 tests) | not yet run |
+| Phase 3 | clean | clean | pass (96 tests) | not yet run |
