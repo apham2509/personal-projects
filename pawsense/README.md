@@ -2,6 +2,8 @@
 
 Play smarter. Learn your cat.
 
+**Status: in development.** V1 is feature-complete with 181 passing tests and a green Android build; physical-device QA (real cats included) and store preparation are still outstanding — see [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+
 PawSense is a personalised digital enrichment and positive-reinforcement training app for cats, built with Flutter and Flame. Each cat gets its own profile. The app observes how that cat plays on screen, learns which prey types, movement styles, speeds, and sizes work best for that individual, adapts future sessions, and helps owners pair spoken cues such as "Touch", "Good", and "All done" with successful play.
 
 Everything is local. There is no account, no cloud, no advertising, and no analytics. Behavioural data, photos, and voice recordings never leave the device.
