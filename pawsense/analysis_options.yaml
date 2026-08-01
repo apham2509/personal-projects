@@ -1,0 +1,39 @@
+# PawSense static analysis configuration.
+#
+# Baseline: flutter_lints (the maintained Flutter-team ruleset), tightened
+# with additional rules that matter for a local-first app with a real-time
+# game loop: no prints, awaited futures, cancelled subscriptions, and strict
+# type inference. User-visible strings must live in ARB files; that is
+# enforced by review and widget tests since no lint exists for it.
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - lib/l10n/generated/**
+    - "**/*.g.dart"
+    - "**/*.drift.dart"
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_print
+    - avoid_slow_async_io
+    - cancel_subscriptions
+    - directives_ordering
+    - only_throw_errors
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_single_quotes
+    - require_trailing_commas
+    - sort_pub_dependencies
+    - test_types_in_equals
+    - throw_in_finally
+    - unawaited_futures
+    - unnecessary_await_in_return
+    - unnecessary_parenthesis
+    - use_super_parameters
