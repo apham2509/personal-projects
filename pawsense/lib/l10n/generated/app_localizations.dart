@@ -1516,6 +1516,449 @@ abstract class AppLocalizations {
   /// **'Recordings are stored only inside PawSense on this device, are never uploaded, and are deleted with the cue or the profile.'**
   String get voicePrivacyNote;
 
+  /// No description provided for @insightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s insights'**
+  String insightsTitle(String name);
+
+  /// No description provided for @insightsTitleGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get insightsTitleGeneric;
+
+  /// No description provided for @insightsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to show yet'**
+  String get insightsEmptyTitle;
+
+  /// No description provided for @insightsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a session or run calibration with {name} and the first observations will appear here.'**
+  String insightsEmptyBody(String name);
+
+  /// No description provided for @insightsSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get insightsSessions;
+
+  /// No description provided for @insightsSessionsWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} in the last 7 days'**
+  String insightsSessionsWeek(int count);
+
+  /// No description provided for @insightsCatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Catches'**
+  String get insightsCatches;
+
+  /// No description provided for @insightsOfTrials.
+  ///
+  /// In en, this message translates to:
+  /// **'of {count} concluded targets'**
+  String insightsOfTrials(int count);
+
+  /// No description provided for @insightsComparableOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'concluded targets only'**
+  String get insightsComparableOnly;
+
+  /// No description provided for @insightsPlayTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min of play in total'**
+  String insightsPlayTime(String minutes);
+
+  /// No description provided for @insightsFavouritesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'What works for this cat'**
+  String get insightsFavouritesSection;
+
+  /// No description provided for @insightsDimensionPrey.
+  ///
+  /// In en, this message translates to:
+  /// **'Prey'**
+  String get insightsDimensionPrey;
+
+  /// No description provided for @insightsDimensionMovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Movement'**
+  String get insightsDimensionMovement;
+
+  /// No description provided for @insightsDimensionSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get insightsDimensionSpeed;
+
+  /// No description provided for @insightsDimensionSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get insightsDimensionSize;
+
+  /// No description provided for @insightsNoConclusion.
+  ///
+  /// In en, this message translates to:
+  /// **'No conclusion yet - only {count} comparable targets so far.'**
+  String insightsNoConclusion(int count);
+
+  /// No description provided for @insightsFavouriteEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has caught {value} targets in {successes} of {total} recent comparable trials.'**
+  String insightsFavouriteEvidence(
+    String name,
+    String value,
+    int successes,
+    int total,
+  );
+
+  /// No description provided for @confidenceEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'Early observation'**
+  String get confidenceEarly;
+
+  /// No description provided for @confidenceDeveloping.
+  ///
+  /// In en, this message translates to:
+  /// **'Developing pattern'**
+  String get confidenceDeveloping;
+
+  /// No description provided for @confidenceStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong pattern'**
+  String get confidenceStrong;
+
+  /// No description provided for @insightsTrendsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Trends (recent sessions)'**
+  String get insightsTrendsSection;
+
+  /// No description provided for @insightsCatchRateTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch rate per session'**
+  String get insightsCatchRateTrend;
+
+  /// No description provided for @insightsReactionTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Median reaction per session'**
+  String get insightsReactionTrend;
+
+  /// No description provided for @insightsDifficultyTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty over recent targets'**
+  String get insightsDifficultyTrend;
+
+  /// No description provided for @insightsHeatmapSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the paws land'**
+  String get insightsHeatmapSection;
+
+  /// No description provided for @insightsHeatmapEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No touch data yet.'**
+  String get insightsHeatmapEmpty;
+
+  /// No description provided for @insightsHeatmapHits.
+  ///
+  /// In en, this message translates to:
+  /// **'Catches'**
+  String get insightsHeatmapHits;
+
+  /// No description provided for @insightsHeatmapOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Misses and edge touches'**
+  String get insightsHeatmapOther;
+
+  /// No description provided for @insightsHeatmapSample.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on {count} touches.'**
+  String insightsHeatmapSample(int count);
+
+  /// No description provided for @insightsCueSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Cue training'**
+  String get insightsCueSection;
+
+  /// No description provided for @insightsCueName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name greeting'**
+  String get insightsCueName;
+
+  /// No description provided for @insightsCueStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{successes} of {exposures} cued targets caught, typical reaction {seconds} s'**
+  String insightsCueStats(int successes, int exposures, String seconds);
+
+  /// No description provided for @insightsCueCaveat.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch rate in cued trials describes play at home, not proven word understanding.'**
+  String get insightsCueCaveat;
+
+  /// No description provided for @insightsDayPartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Best time so far: {part}'**
+  String insightsDayPartTitle(String part);
+
+  /// No description provided for @insightsDayPartBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{rate}% catch rate across {count} of {total} sessions. Patterns this early can change.'**
+  String insightsDayPartBody(int rate, int count, int total);
+
+  /// No description provided for @dayPartMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'morning'**
+  String get dayPartMorning;
+
+  /// No description provided for @dayPartAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'afternoon'**
+  String get dayPartAfternoon;
+
+  /// No description provided for @dayPartEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'evening'**
+  String get dayPartEvening;
+
+  /// No description provided for @dayPartNight.
+  ///
+  /// In en, this message translates to:
+  /// **'night'**
+  String get dayPartNight;
+
+  /// No description provided for @insightsCompletionSection.
+  ///
+  /// In en, this message translates to:
+  /// **'How sessions ended'**
+  String get insightsCompletionSection;
+
+  /// No description provided for @insightsFrustrationNote.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} targets showed unsuccessful-interaction patterns; PawSense eased those sessions.'**
+  String insightsFrustrationNote(int count);
+
+  /// No description provided for @insightsMethodNote.
+  ///
+  /// In en, this message translates to:
+  /// **'All insights are computed on this device from observed play only. Sample sizes are shown with every claim; small samples show no conclusion at all.'**
+  String get insightsMethodNote;
+
+  /// No description provided for @insightsPersonalityCaveat.
+  ///
+  /// In en, this message translates to:
+  /// **'A playful nickname from observed play preferences - not a scientific assessment. Long-press any insight for its numbers.'**
+  String get insightsPersonalityCaveat;
+
+  /// No description provided for @personalityMouseSmooth.
+  ///
+  /// In en, this message translates to:
+  /// **'The Calm Ground Hunter'**
+  String get personalityMouseSmooth;
+
+  /// No description provided for @personalityMouseStopGo.
+  ///
+  /// In en, this message translates to:
+  /// **'The Patient Ambusher'**
+  String get personalityMouseStopGo;
+
+  /// No description provided for @personalityMouseUnpredictable.
+  ///
+  /// In en, this message translates to:
+  /// **'The Scurry Chaser'**
+  String get personalityMouseUnpredictable;
+
+  /// No description provided for @personalityMothSmooth.
+  ///
+  /// In en, this message translates to:
+  /// **'The Gliding Watcher'**
+  String get personalityMothSmooth;
+
+  /// No description provided for @personalityMothStopGo.
+  ///
+  /// In en, this message translates to:
+  /// **'The Flutter Stalker'**
+  String get personalityMothStopGo;
+
+  /// No description provided for @personalityMothUnpredictable.
+  ///
+  /// In en, this message translates to:
+  /// **'The Aerial Acrobat'**
+  String get personalityMothUnpredictable;
+
+  /// No description provided for @personalityFishSmooth.
+  ///
+  /// In en, this message translates to:
+  /// **'The Stream Gazer'**
+  String get personalityFishSmooth;
+
+  /// No description provided for @personalityFishStopGo.
+  ///
+  /// In en, this message translates to:
+  /// **'The Tidepool Tactician'**
+  String get personalityFishStopGo;
+
+  /// No description provided for @personalityFishUnpredictable.
+  ///
+  /// In en, this message translates to:
+  /// **'The Splash Sprinter'**
+  String get personalityFishUnpredictable;
+
+  /// No description provided for @personalityFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'The Curious Explorer'**
+  String get personalityFallback;
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Session history'**
+  String get historyTitle;
+
+  /// No description provided for @historyEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions yet.'**
+  String get historyEmpty;
+
+  /// No description provided for @historyStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{catches} catches, {misses} misses, {timeouts} timed out'**
+  String historyStats(int catches, int misses, int timeouts);
+
+  /// No description provided for @historyDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this session?'**
+  String get historyDeleteTitle;
+
+  /// No description provided for @historyDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This removes the session and all of its trials and touch data. Learned preferences are a running summary and are not rolled back.'**
+  String get historyDeleteBody;
+
+  /// No description provided for @dataExportSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get dataExportSection;
+
+  /// No description provided for @dataExportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a copy of the behavioural data on this device and share it wherever you choose. Nothing is uploaded by PawSense itself.'**
+  String get dataExportBody;
+
+  /// No description provided for @dataExportScope.
+  ///
+  /// In en, this message translates to:
+  /// **'What to export'**
+  String get dataExportScope;
+
+  /// No description provided for @dataExportAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All cats and mixed sessions'**
+  String get dataExportAll;
+
+  /// No description provided for @dataExportJson.
+  ///
+  /// In en, this message translates to:
+  /// **'Export JSON'**
+  String get dataExportJson;
+
+  /// No description provided for @dataExportCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Export CSV'**
+  String get dataExportCsv;
+
+  /// No description provided for @dataExportMediaNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Exports include play data, profiles, learned preferences, and voice cue details - never the photo or audio files themselves.'**
+  String get dataExportMediaNote;
+
+  /// No description provided for @dataDeleteSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get dataDeleteSection;
+
+  /// No description provided for @dataDeleteHistoryFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}\'s history'**
+  String dataDeleteHistoryFor(String name);
+
+  /// No description provided for @dataDeleteHistoryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes every session, trial, and touch event. The profile and voice recordings stay.'**
+  String get dataDeleteHistoryBody;
+
+  /// No description provided for @dataDeleteHistoryConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'All of {name}\'s sessions, trials, and touch events will be permanently removed. The profile, photo, voice recordings, and learned preference summary stay. This cannot be undone.'**
+  String dataDeleteHistoryConfirm(String name);
+
+  /// No description provided for @dataDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted.'**
+  String get dataDeleted;
+
+  /// No description provided for @dataDeleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all application data'**
+  String get dataDeleteAll;
+
+  /// No description provided for @dataDeleteAllBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every profile, photo, recording, session, and setting.'**
+  String get dataDeleteAllBody;
+
+  /// No description provided for @dataDeleteAllConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently removes every cat profile, photo, voice recording, play session, learned preference, and setting, and returns PawSense to its first-launch state. This cannot be undone.'**
+  String get dataDeleteAllConfirm;
+
   /// No description provided for @statusCompleted.
   ///
   /// In en, this message translates to:

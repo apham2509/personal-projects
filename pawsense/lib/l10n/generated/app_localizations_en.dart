@@ -780,6 +780,269 @@ class AppLocalizationsEn extends AppLocalizations {
       'Recordings are stored only inside PawSense on this device, are never uploaded, and are deleted with the cue or the profile.';
 
   @override
+  String insightsTitle(String name) {
+    return '$name\'s insights';
+  }
+
+  @override
+  String get insightsTitleGeneric => 'Insights';
+
+  @override
+  String get insightsEmptyTitle => 'Nothing to show yet';
+
+  @override
+  String insightsEmptyBody(String name) {
+    return 'Play a session or run calibration with $name and the first observations will appear here.';
+  }
+
+  @override
+  String get insightsSessions => 'Sessions';
+
+  @override
+  String insightsSessionsWeek(int count) {
+    return '$count in the last 7 days';
+  }
+
+  @override
+  String get insightsCatches => 'Catches';
+
+  @override
+  String insightsOfTrials(int count) {
+    return 'of $count concluded targets';
+  }
+
+  @override
+  String get insightsComparableOnly => 'concluded targets only';
+
+  @override
+  String insightsPlayTime(String minutes) {
+    return '$minutes min of play in total';
+  }
+
+  @override
+  String get insightsFavouritesSection => 'What works for this cat';
+
+  @override
+  String get insightsDimensionPrey => 'Prey';
+
+  @override
+  String get insightsDimensionMovement => 'Movement';
+
+  @override
+  String get insightsDimensionSpeed => 'Speed';
+
+  @override
+  String get insightsDimensionSize => 'Size';
+
+  @override
+  String insightsNoConclusion(int count) {
+    return 'No conclusion yet - only $count comparable targets so far.';
+  }
+
+  @override
+  String insightsFavouriteEvidence(
+    String name,
+    String value,
+    int successes,
+    int total,
+  ) {
+    return '$name has caught $value targets in $successes of $total recent comparable trials.';
+  }
+
+  @override
+  String get confidenceEarly => 'Early observation';
+
+  @override
+  String get confidenceDeveloping => 'Developing pattern';
+
+  @override
+  String get confidenceStrong => 'Strong pattern';
+
+  @override
+  String get insightsTrendsSection => 'Trends (recent sessions)';
+
+  @override
+  String get insightsCatchRateTrend => 'Catch rate per session';
+
+  @override
+  String get insightsReactionTrend => 'Median reaction per session';
+
+  @override
+  String get insightsDifficultyTrend => 'Difficulty over recent targets';
+
+  @override
+  String get insightsHeatmapSection => 'Where the paws land';
+
+  @override
+  String get insightsHeatmapEmpty => 'No touch data yet.';
+
+  @override
+  String get insightsHeatmapHits => 'Catches';
+
+  @override
+  String get insightsHeatmapOther => 'Misses and edge touches';
+
+  @override
+  String insightsHeatmapSample(int count) {
+    return 'Based on $count touches.';
+  }
+
+  @override
+  String get insightsCueSection => 'Cue training';
+
+  @override
+  String get insightsCueName => 'Name greeting';
+
+  @override
+  String insightsCueStats(int successes, int exposures, String seconds) {
+    return '$successes of $exposures cued targets caught, typical reaction $seconds s';
+  }
+
+  @override
+  String get insightsCueCaveat =>
+      'Catch rate in cued trials describes play at home, not proven word understanding.';
+
+  @override
+  String insightsDayPartTitle(String part) {
+    return 'Best time so far: $part';
+  }
+
+  @override
+  String insightsDayPartBody(int rate, int count, int total) {
+    return '$rate% catch rate across $count of $total sessions. Patterns this early can change.';
+  }
+
+  @override
+  String get dayPartMorning => 'morning';
+
+  @override
+  String get dayPartAfternoon => 'afternoon';
+
+  @override
+  String get dayPartEvening => 'evening';
+
+  @override
+  String get dayPartNight => 'night';
+
+  @override
+  String get insightsCompletionSection => 'How sessions ended';
+
+  @override
+  String insightsFrustrationNote(int count) {
+    return '$count targets showed unsuccessful-interaction patterns; PawSense eased those sessions.';
+  }
+
+  @override
+  String get insightsMethodNote =>
+      'All insights are computed on this device from observed play only. Sample sizes are shown with every claim; small samples show no conclusion at all.';
+
+  @override
+  String get insightsPersonalityCaveat =>
+      'A playful nickname from observed play preferences - not a scientific assessment. Long-press any insight for its numbers.';
+
+  @override
+  String get personalityMouseSmooth => 'The Calm Ground Hunter';
+
+  @override
+  String get personalityMouseStopGo => 'The Patient Ambusher';
+
+  @override
+  String get personalityMouseUnpredictable => 'The Scurry Chaser';
+
+  @override
+  String get personalityMothSmooth => 'The Gliding Watcher';
+
+  @override
+  String get personalityMothStopGo => 'The Flutter Stalker';
+
+  @override
+  String get personalityMothUnpredictable => 'The Aerial Acrobat';
+
+  @override
+  String get personalityFishSmooth => 'The Stream Gazer';
+
+  @override
+  String get personalityFishStopGo => 'The Tidepool Tactician';
+
+  @override
+  String get personalityFishUnpredictable => 'The Splash Sprinter';
+
+  @override
+  String get personalityFallback => 'The Curious Explorer';
+
+  @override
+  String get historyTitle => 'Session history';
+
+  @override
+  String get historyEmpty => 'No sessions yet.';
+
+  @override
+  String historyStats(int catches, int misses, int timeouts) {
+    return '$catches catches, $misses misses, $timeouts timed out';
+  }
+
+  @override
+  String get historyDeleteTitle => 'Delete this session?';
+
+  @override
+  String get historyDeleteBody =>
+      'This removes the session and all of its trials and touch data. Learned preferences are a running summary and are not rolled back.';
+
+  @override
+  String get dataExportSection => 'Export';
+
+  @override
+  String get dataExportBody =>
+      'Create a copy of the behavioural data on this device and share it wherever you choose. Nothing is uploaded by PawSense itself.';
+
+  @override
+  String get dataExportScope => 'What to export';
+
+  @override
+  String get dataExportAll => 'All cats and mixed sessions';
+
+  @override
+  String get dataExportJson => 'Export JSON';
+
+  @override
+  String get dataExportCsv => 'Export CSV';
+
+  @override
+  String get dataExportMediaNote =>
+      'Exports include play data, profiles, learned preferences, and voice cue details - never the photo or audio files themselves.';
+
+  @override
+  String get dataDeleteSection => 'Delete';
+
+  @override
+  String dataDeleteHistoryFor(String name) {
+    return 'Delete $name\'s history';
+  }
+
+  @override
+  String get dataDeleteHistoryBody =>
+      'Removes every session, trial, and touch event. The profile and voice recordings stay.';
+
+  @override
+  String dataDeleteHistoryConfirm(String name) {
+    return 'All of $name\'s sessions, trials, and touch events will be permanently removed. The profile, photo, voice recordings, and learned preference summary stay. This cannot be undone.';
+  }
+
+  @override
+  String get dataDeleted => 'Deleted.';
+
+  @override
+  String get dataDeleteAll => 'Delete all application data';
+
+  @override
+  String get dataDeleteAllBody =>
+      'Every profile, photo, recording, session, and setting.';
+
+  @override
+  String get dataDeleteAllConfirm =>
+      'This permanently removes every cat profile, photo, voice recording, play session, learned preference, and setting, and returns PawSense to its first-launch state. This cannot be undone.';
+
+  @override
   String get statusCompleted => 'Completed';
 
   @override

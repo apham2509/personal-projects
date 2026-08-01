@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
-
 /// Owns the app-managed file tree:
 ///
 /// ```
@@ -23,11 +21,6 @@ class FileService {
   FileService(this._documentsDir);
 
   final Directory _documentsDir;
-
-  static Future<FileService> create() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return FileService(dir);
-  }
 
   Directory get documentsDir => _documentsDir;
 

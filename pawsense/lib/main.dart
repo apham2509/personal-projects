@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app.dart';
 import 'core/errors/no_network_http_overrides.dart';
-import 'core/files/file_service.dart';
+import 'core/files/file_service_locator.dart';
 import 'shared/providers/core_providers.dart';
 
 Future<void> main() async {
@@ -17,7 +17,7 @@ Future<void> main() async {
     HttpOverrides.global = NoNetworkHttpOverrides();
   }
 
-  final fileService = await FileService.create();
+  final fileService = await createFileService();
 
   runApp(
     ProviderScope(

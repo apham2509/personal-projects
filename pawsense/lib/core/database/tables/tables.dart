@@ -146,6 +146,9 @@ class TargetTrials extends Table {
   TextColumn get frustrationFlags =>
       text().map(const FrustrationFlagSetConverter())();
   RealColumn get trialReward => real()();
+
+  /// The cat's difficulty when this trial ran (for trend insights).
+  IntColumn get difficultyAtTrial => integer()();
   TextColumn get algorithmVersion => text()();
 
   @override

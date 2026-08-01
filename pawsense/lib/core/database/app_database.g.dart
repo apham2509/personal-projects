@@ -3548,6 +3548,17 @@ class $TargetTrialsTable extends TargetTrials
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _difficultyAtTrialMeta = const VerificationMeta(
+    'difficultyAtTrial',
+  );
+  @override
+  late final GeneratedColumn<int> difficultyAtTrial = GeneratedColumn<int>(
+    'difficulty_at_trial',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _algorithmVersionMeta = const VerificationMeta(
     'algorithmVersion',
   );
@@ -3587,6 +3598,7 @@ class $TargetTrialsTable extends TargetTrials
     frustrationSeverity,
     frustrationFlags,
     trialReward,
+    difficultyAtTrial,
     algorithmVersion,
   ];
   @override
@@ -3761,6 +3773,17 @@ class $TargetTrialsTable extends TargetTrials
     } else if (isInserting) {
       context.missing(_trialRewardMeta);
     }
+    if (data.containsKey('difficulty_at_trial')) {
+      context.handle(
+        _difficultyAtTrialMeta,
+        difficultyAtTrial.isAcceptableOrUnknown(
+          data['difficulty_at_trial']!,
+          _difficultyAtTrialMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_difficultyAtTrialMeta);
+    }
     if (data.containsKey('algorithm_version')) {
       context.handle(
         _algorithmVersionMeta,
@@ -3903,6 +3926,10 @@ class $TargetTrialsTable extends TargetTrials
         DriftSqlType.double,
         data['${effectivePrefix}trial_reward'],
       )!,
+      difficultyAtTrial: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}difficulty_at_trial'],
+      )!,
       algorithmVersion: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}algorithm_version'],
@@ -3972,6 +3999,9 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
   final int frustrationSeverity;
   final Set<FrustrationFlag> frustrationFlags;
   final double trialReward;
+
+  /// The cat's difficulty when this trial ran (for trend insights).
+  final int difficultyAtTrial;
   final String algorithmVersion;
   const TargetTrial({
     required this.id,
@@ -4000,6 +4030,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
     required this.frustrationSeverity,
     required this.frustrationFlags,
     required this.trialReward,
+    required this.difficultyAtTrial,
     required this.algorithmVersion,
   });
   @override
@@ -4075,6 +4106,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
       );
     }
     map['trial_reward'] = Variable<double>(trialReward);
+    map['difficulty_at_trial'] = Variable<int>(difficultyAtTrial);
     map['algorithm_version'] = Variable<String>(algorithmVersion);
     return map;
   }
@@ -4118,6 +4150,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
       frustrationSeverity: Value(frustrationSeverity),
       frustrationFlags: Value(frustrationFlags),
       trialReward: Value(trialReward),
+      difficultyAtTrial: Value(difficultyAtTrial),
       algorithmVersion: Value(algorithmVersion),
     );
   }
@@ -4180,6 +4213,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
         json['frustrationFlags'],
       ),
       trialReward: serializer.fromJson<double>(json['trialReward']),
+      difficultyAtTrial: serializer.fromJson<int>(json['difficultyAtTrial']),
       algorithmVersion: serializer.fromJson<String>(json['algorithmVersion']),
     );
   }
@@ -4233,6 +4267,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
         frustrationFlags,
       ),
       'trialReward': serializer.toJson<double>(trialReward),
+      'difficultyAtTrial': serializer.toJson<int>(difficultyAtTrial),
       'algorithmVersion': serializer.toJson<String>(algorithmVersion),
     };
   }
@@ -4264,6 +4299,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
     int? frustrationSeverity,
     Set<FrustrationFlag>? frustrationFlags,
     double? trialReward,
+    int? difficultyAtTrial,
     String? algorithmVersion,
   }) => TargetTrial(
     id: id ?? this.id,
@@ -4298,6 +4334,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
     frustrationSeverity: frustrationSeverity ?? this.frustrationSeverity,
     frustrationFlags: frustrationFlags ?? this.frustrationFlags,
     trialReward: trialReward ?? this.trialReward,
+    difficultyAtTrial: difficultyAtTrial ?? this.difficultyAtTrial,
     algorithmVersion: algorithmVersion ?? this.algorithmVersion,
   );
   TargetTrial copyWithCompanion(TargetTrialsCompanion data) {
@@ -4362,6 +4399,9 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
       trialReward: data.trialReward.present
           ? data.trialReward.value
           : this.trialReward,
+      difficultyAtTrial: data.difficultyAtTrial.present
+          ? data.difficultyAtTrial.value
+          : this.difficultyAtTrial,
       algorithmVersion: data.algorithmVersion.present
           ? data.algorithmVersion.value
           : this.algorithmVersion,
@@ -4397,6 +4437,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
           ..write('frustrationSeverity: $frustrationSeverity, ')
           ..write('frustrationFlags: $frustrationFlags, ')
           ..write('trialReward: $trialReward, ')
+          ..write('difficultyAtTrial: $difficultyAtTrial, ')
           ..write('algorithmVersion: $algorithmVersion')
           ..write(')'))
         .toString();
@@ -4430,6 +4471,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
     frustrationSeverity,
     frustrationFlags,
     trialReward,
+    difficultyAtTrial,
     algorithmVersion,
   ]);
   @override
@@ -4462,6 +4504,7 @@ class TargetTrial extends DataClass implements Insertable<TargetTrial> {
           other.frustrationSeverity == this.frustrationSeverity &&
           other.frustrationFlags == this.frustrationFlags &&
           other.trialReward == this.trialReward &&
+          other.difficultyAtTrial == this.difficultyAtTrial &&
           other.algorithmVersion == this.algorithmVersion);
 }
 
@@ -4492,6 +4535,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
   final Value<int> frustrationSeverity;
   final Value<Set<FrustrationFlag>> frustrationFlags;
   final Value<double> trialReward;
+  final Value<int> difficultyAtTrial;
   final Value<String> algorithmVersion;
   final Value<int> rowid;
   const TargetTrialsCompanion({
@@ -4521,6 +4565,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
     this.frustrationSeverity = const Value.absent(),
     this.frustrationFlags = const Value.absent(),
     this.trialReward = const Value.absent(),
+    this.difficultyAtTrial = const Value.absent(),
     this.algorithmVersion = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4551,6 +4596,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
     required int frustrationSeverity,
     required Set<FrustrationFlag> frustrationFlags,
     required double trialReward,
+    required int difficultyAtTrial,
     required String algorithmVersion,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -4574,6 +4620,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
        frustrationSeverity = Value(frustrationSeverity),
        frustrationFlags = Value(frustrationFlags),
        trialReward = Value(trialReward),
+       difficultyAtTrial = Value(difficultyAtTrial),
        algorithmVersion = Value(algorithmVersion);
   static Insertable<TargetTrial> custom({
     Expression<String>? id,
@@ -4602,6 +4649,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
     Expression<int>? frustrationSeverity,
     Expression<String>? frustrationFlags,
     Expression<double>? trialReward,
+    Expression<int>? difficultyAtTrial,
     Expression<String>? algorithmVersion,
     Expression<int>? rowid,
   }) {
@@ -4636,6 +4684,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
         'frustration_severity': frustrationSeverity,
       if (frustrationFlags != null) 'frustration_flags': frustrationFlags,
       if (trialReward != null) 'trial_reward': trialReward,
+      if (difficultyAtTrial != null) 'difficulty_at_trial': difficultyAtTrial,
       if (algorithmVersion != null) 'algorithm_version': algorithmVersion,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4668,6 +4717,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
     Value<int>? frustrationSeverity,
     Value<Set<FrustrationFlag>>? frustrationFlags,
     Value<double>? trialReward,
+    Value<int>? difficultyAtTrial,
     Value<String>? algorithmVersion,
     Value<int>? rowid,
   }) {
@@ -4699,6 +4749,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
       frustrationSeverity: frustrationSeverity ?? this.frustrationSeverity,
       frustrationFlags: frustrationFlags ?? this.frustrationFlags,
       trialReward: trialReward ?? this.trialReward,
+      difficultyAtTrial: difficultyAtTrial ?? this.difficultyAtTrial,
       algorithmVersion: algorithmVersion ?? this.algorithmVersion,
       rowid: rowid ?? this.rowid,
     );
@@ -4809,6 +4860,9 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
     if (trialReward.present) {
       map['trial_reward'] = Variable<double>(trialReward.value);
     }
+    if (difficultyAtTrial.present) {
+      map['difficulty_at_trial'] = Variable<int>(difficultyAtTrial.value);
+    }
     if (algorithmVersion.present) {
       map['algorithm_version'] = Variable<String>(algorithmVersion.value);
     }
@@ -4847,6 +4901,7 @@ class TargetTrialsCompanion extends UpdateCompanion<TargetTrial> {
           ..write('frustrationSeverity: $frustrationSeverity, ')
           ..write('frustrationFlags: $frustrationFlags, ')
           ..write('trialReward: $trialReward, ')
+          ..write('difficultyAtTrial: $difficultyAtTrial, ')
           ..write('algorithmVersion: $algorithmVersion, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -10193,6 +10248,7 @@ typedef $$TargetTrialsTableCreateCompanionBuilder =
       required int frustrationSeverity,
       required Set<FrustrationFlag> frustrationFlags,
       required double trialReward,
+      required int difficultyAtTrial,
       required String algorithmVersion,
       Value<int> rowid,
     });
@@ -10224,6 +10280,7 @@ typedef $$TargetTrialsTableUpdateCompanionBuilder =
       Value<int> frustrationSeverity,
       Value<Set<FrustrationFlag>> frustrationFlags,
       Value<double> trialReward,
+      Value<int> difficultyAtTrial,
       Value<String> algorithmVersion,
       Value<int> rowid,
     });
@@ -10415,6 +10472,11 @@ class $$TargetTrialsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get difficultyAtTrial => $composableBuilder(
+    column: $table.difficultyAtTrial,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get algorithmVersion => $composableBuilder(
     column: $table.algorithmVersion,
     builder: (column) => ColumnFilters(column),
@@ -10603,6 +10665,11 @@ class $$TargetTrialsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get difficultyAtTrial => $composableBuilder(
+    column: $table.difficultyAtTrial,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get algorithmVersion => $composableBuilder(
     column: $table.algorithmVersion,
     builder: (column) => ColumnOrderings(column),
@@ -10755,6 +10822,11 @@ class $$TargetTrialsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get difficultyAtTrial => $composableBuilder(
+    column: $table.difficultyAtTrial,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get algorithmVersion => $composableBuilder(
     column: $table.algorithmVersion,
     builder: (column) => column,
@@ -10865,6 +10937,7 @@ class $$TargetTrialsTableTableManager
                 Value<Set<FrustrationFlag>> frustrationFlags =
                     const Value.absent(),
                 Value<double> trialReward = const Value.absent(),
+                Value<int> difficultyAtTrial = const Value.absent(),
                 Value<String> algorithmVersion = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TargetTrialsCompanion(
@@ -10894,6 +10967,7 @@ class $$TargetTrialsTableTableManager
                 frustrationSeverity: frustrationSeverity,
                 frustrationFlags: frustrationFlags,
                 trialReward: trialReward,
+                difficultyAtTrial: difficultyAtTrial,
                 algorithmVersion: algorithmVersion,
                 rowid: rowid,
               ),
@@ -10926,6 +11000,7 @@ class $$TargetTrialsTableTableManager
                 required int frustrationSeverity,
                 required Set<FrustrationFlag> frustrationFlags,
                 required double trialReward,
+                required int difficultyAtTrial,
                 required String algorithmVersion,
                 Value<int> rowid = const Value.absent(),
               }) => TargetTrialsCompanion.insert(
@@ -10955,6 +11030,7 @@ class $$TargetTrialsTableTableManager
                 frustrationSeverity: frustrationSeverity,
                 frustrationFlags: frustrationFlags,
                 trialReward: trialReward,
+                difficultyAtTrial: difficultyAtTrial,
                 algorithmVersion: algorithmVersion,
                 rowid: rowid,
               ),

@@ -106,7 +106,24 @@ Last updated: 2026-08-01 (Phases 4 and 5 complete)
         widget tests; lint-preferred; small local files)
   - [x] Tests: +6 (repo save/replace/delete/missing-file/cascade; widget
         record flow + permission denial) — 163 total
-- [ ] Phase 7: Insights and data management
+- [x] Phase 7: Insights and data management
+  - [x] Pure InsightsCalculator (favourite gating: <8 no conclusion, 0.08
+        utility gap; medians; 12x8 heatmap; day-part needs >= 10 sessions;
+        trends over last 20 sessions; personality key gating)
+  - [x] Insights screen: stat tiles, confidence-chipped favourites with
+        evidence sentences, fl_chart trends, CustomPainter heatmap with
+        hit/other legend, cue stats with honest caveat, completion reasons,
+        playful personality card (with disclaimer)
+  - [x] History screen (open/delete sessions with scope-explaining confirm)
+  - [x] ExportService: versioned JSON, per-table CSVs, media excluded
+        (D-007); share seam; delete-all-data reset to first launch
+  - [x] Developer screen (kDebugMode route only): demo seeding, model
+        reset, stats inspection, config replay + DemoDataService
+  - [x] tool/generate_demo_data.dart + tool/validate_exports.dart run
+        headless (AppDatabase and FileService made dart:ui-free; platform
+        openers split out)
+  - [x] no_network_dependencies tripwire test
+  - [x] Tests: +18 - 181 total
 - [ ] Phase 8: Safety, accessibility, release hardening
 - [ ] Phase 9: Repository integration (root README, PR)
 
@@ -137,3 +154,4 @@ docs/ARCHITECTURE.md specs — no unique state lives there.
 | Phase 5 | clean | clean | pass (146 tests) | not yet run |
 | Phase 4 | clean | clean | pass (157 tests) | not yet run |
 | Phase 6 | clean | clean | pass (163 tests) | not yet run |
+| Phase 7 | clean | clean | pass (181 tests) | not yet run |

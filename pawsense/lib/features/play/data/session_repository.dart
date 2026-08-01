@@ -113,6 +113,7 @@ class SessionRepository {
               frustrationSeverity: trial.frustrationSeverity,
               frustrationFlags: trial.frustrationFlags,
               trialReward: PreferenceRepository.rewardFor(trial),
+              difficultyAtTrial: trial.difficultyAtTrial,
               algorithmVersion: algorithmVersion,
             ),
           );

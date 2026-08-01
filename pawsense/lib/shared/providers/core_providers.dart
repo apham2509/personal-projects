@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../core/audio/audio_service.dart';
 import '../../core/database/app_database.dart';
+import '../../core/database/open.dart';
 import '../../core/files/file_service.dart';
 import '../../core/time/clock.dart';
 import '../../features/cat_profiles/data/cat_profile_repository.dart';
@@ -20,7 +21,7 @@ final clockProvider = Provider<Clock>((ref) => const SystemClock());
 final uuidProvider = Provider<Uuid>((ref) => const Uuid());
 
 final databaseProvider = Provider<AppDatabase>((ref) {
-  final db = AppDatabase.open();
+  final db = openAppDatabase();
   ref.onDispose(db.close);
   return db;
 });

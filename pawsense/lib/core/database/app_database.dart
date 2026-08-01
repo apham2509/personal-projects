@@ -1,5 +1,7 @@
+// Pure Dart on purpose: no drift_flutter/dart:ui imports here, so headless
+// tooling (tool/generate_demo_data.dart) can construct the database with an
+// in-memory executor. The platform opener lives in open.dart.
 import 'package:drift/drift.dart';
-import 'package:drift_flutter/drift_flutter.dart';
 
 import '../../shared/models/enums.dart';
 import 'converters.dart';
@@ -23,17 +25,7 @@ part 'app_database.g.dart';
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
-  /// Production database, stored as `pawsense.sqlite` in the app's data
-  /// directory (managed by drift_flutter).
-  AppDatabase.open()
-    : super(
-        driftDatabase(
-          name: 'pawsense',
-          native: const DriftNativeOptions(shareAcrossIsolates: true),
-        ),
-      );
-
-  /// In-memory database for tests.
+  /// In-memory database for tests and headless tooling.
   AppDatabase.forTesting(super.e);
 
   @override
