@@ -703,6 +703,83 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedbackFrustrated => 'Frustrated';
 
   @override
+  String voiceTitle(String name) {
+    return '$name\'s voice cues';
+  }
+
+  @override
+  String get voiceIntro =>
+      'Record short, calm cues in your own voice. PawSense plays them during Touch Training: the Touch cue before each target, praise after a catch, and All done at the end. Keep each one under a couple of seconds.';
+
+  @override
+  String cueCatName(String name) {
+    return '$name\'s name';
+  }
+
+  @override
+  String get cueTouch => 'Touch';
+
+  @override
+  String get cueGood => 'Good';
+
+  @override
+  String get cueGoodJob => 'Good job';
+
+  @override
+  String get cueAllDone => 'All done';
+
+  @override
+  String get cueCatNameHint =>
+      'A friendly greeting played at the start of training.';
+
+  @override
+  String get cueTouchHint => 'The cue that a target is about to appear.';
+
+  @override
+  String get cueGoodHint => 'Short praise played after a catch.';
+
+  @override
+  String get cueGoodJobHint =>
+      'Alternative praise; PawSense varies between the two.';
+
+  @override
+  String get cueAllDoneHint => 'The calm sign-off at the end of every session.';
+
+  @override
+  String get voiceMicDeniedTitle => 'Microphone access is off';
+
+  @override
+  String get voiceMicDeniedBody =>
+      'PawSense needs the microphone only while you record a cue. Recordings stay on this device. You can allow access in system settings.';
+
+  @override
+  String get voiceOpenSettings => 'Open system settings';
+
+  @override
+  String get voiceRecord => 'Record';
+
+  @override
+  String get voiceReRecord => 'Re-record';
+
+  @override
+  String get voiceStop => 'Stop';
+
+  @override
+  String get voiceRecordingNow => 'Recording... speak your cue, then stop.';
+
+  @override
+  String voiceDuration(String seconds) {
+    return '$seconds s recorded';
+  }
+
+  @override
+  String get voicePreview => 'Play recording';
+
+  @override
+  String get voicePrivacyNote =>
+      'Recordings are stored only inside PawSense on this device, are never uploaded, and are deleted with the cue or the profile.';
+
+  @override
   String get statusCompleted => 'Completed';
 
   @override

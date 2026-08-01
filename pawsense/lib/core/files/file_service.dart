@@ -13,6 +13,12 @@ import 'package:path_provider/path_provider.dart';
 ///
 /// The database stores paths *relative* to the documents directory so
 /// backups/restores and iOS container moves cannot break references.
+///
+/// Internals are synchronous on purpose: every file here is small (photos
+/// around 1 MB, cues a few hundred KB), sync IO is deterministic under
+/// widget tests' fake-async zone, and `avoid_slow_async_io` prefers it.
+/// Signatures stay Future-returning so a move to an isolate later would not
+/// ripple through callers.
 class FileService {
   FileService(this._documentsDir);
 
@@ -41,14 +47,14 @@ class FileService {
   /// photo change; any previous photo files for the cat are removed.
   Future<String> savePhoto(String catId, File source, int nowMillis) async {
     final dir = profileDir(catId);
-    await dir.create(recursive: true);
-    await for (final entity in dir.list()) {
+    dir.createSync(recursive: true);
+    for (final entity in dir.listSync()) {
       if (entity is File && _isPhotoFile(entity.path)) {
-        await entity.delete();
+        entity.deleteSync();
       }
     }
     final target = File('${dir.path}/photo_$nowMillis.jpg');
-    await source.copy(target.path);
+    source.copySync(target.path);
     return 'profiles/$catId/photo_$nowMillis.jpg';
   }
 
@@ -60,34 +66,34 @@ class FileService {
     File source,
   ) async {
     final dir = cueDir(catId);
-    await dir.create(recursive: true);
+    dir.createSync(recursive: true);
     final target = File('${dir.path}/$cueTypeName.m4a');
-    if (target.existsSync()) await target.delete();
-    await source.copy(target.path);
+    if (target.existsSync()) target.deleteSync();
+    source.copySync(target.path);
     return 'profiles/$catId/cues/$cueTypeName.m4a';
   }
 
   Future<void> deleteRelative(String relativePath) async {
     final file = resolve(relativePath);
-    if (file.existsSync()) await file.delete();
+    if (file.existsSync()) file.deleteSync();
   }
 
   /// Removes every file belonging to a cat (photos and cue recordings).
   Future<void> deleteProfileTree(String catId) async {
     final dir = profileDir(catId);
-    if (dir.existsSync()) await dir.delete(recursive: true);
+    if (dir.existsSync()) dir.deleteSync(recursive: true);
   }
 
   /// Removes all profile media (used by "delete all application data").
   Future<void> deleteAllProfileTrees() async {
     final dir = Directory('${_documentsDir.path}/profiles');
-    if (dir.existsSync()) await dir.delete(recursive: true);
+    if (dir.existsSync()) dir.deleteSync(recursive: true);
   }
 
   /// Clears transient export artefacts after sharing completes.
   Future<void> clearExportDir() async {
     final dir = exportDir();
-    if (dir.existsSync()) await dir.delete(recursive: true);
+    if (dir.existsSync()) dir.deleteSync(recursive: true);
   }
 
   bool _isPhotoFile(String path) {

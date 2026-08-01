@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Microphone: only while the owner records a voice cue; recordings
+         never leave the device (docs/PRIVACY.md). No storage permissions:
+         photos use the modern system photo picker. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
-        android:label="pawsense"
+        android:label="PawSense"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

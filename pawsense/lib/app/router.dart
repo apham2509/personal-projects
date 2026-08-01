@@ -12,6 +12,7 @@ import '../features/play/presentation/session_setup_screen.dart';
 import '../features/profile_picker/presentation/profile_picker_screen.dart';
 import '../features/session_results/presentation/session_results_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/voice_cues/presentation/voice_cues_screen.dart';
 import '../shared/models/enums.dart';
 import '../shared/widgets/placeholder_screen.dart';
 
@@ -62,7 +63,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'history',
             builder: (_, _) => const PlaceholderScreen(),
           ),
-          GoRoute(path: 'voice', builder: (_, _) => const PlaceholderScreen()),
+          GoRoute(
+            path: 'voice',
+            builder: (_, state) =>
+                VoiceCuesScreen(catId: state.pathParameters['catId']!),
+          ),
         ],
       ),
       GoRoute(

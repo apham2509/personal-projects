@@ -7,7 +7,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Pawsense</string>
+	<string>PawSense</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>PawSense uses the microphone only while you record a voice cue for your cat (such as "Touch" or "Good"). Recordings stay on this device and are never uploaded.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

@@ -93,7 +93,19 @@ Last updated: 2026-08-01 (Phases 4 and 5 complete)
         property test; 5000-selection safety property; simulations:
         convergence, exploration persistence, struggling cat, gradual
         difficulty, lucky-trial gating, priors overpowered)
-- [ ] Phase 6: Voice cues and Touch Training
+- [x] Phase 6: Voice cues and Touch Training
+  - [x] CueRecorder seam over package:record (AAC m4a mono) with fake for
+        tests; recordings via temp file -> profile tree move
+  - [x] Voice cues screen: record/stop/preview/re-record/delete for all 5
+        cue slots, mic-denied guidance with open-settings
+  - [x] Touch Training sequencing already live in the controller (cue ->
+        jittered delay -> spawn -> praise -> All done, Phase 3/4); cue
+        progress persistence via finalisation (Phase 4)
+  - [x] Platform mic config: NSMicrophoneUsageDescription + RECORD_AUDIO
+  - [x] FileService switched to sync IO internals (deterministic under
+        widget tests; lint-preferred; small local files)
+  - [x] Tests: +6 (repo save/replace/delete/missing-file/cascade; widget
+        record flow + permission denial) — 163 total
 - [ ] Phase 7: Insights and data management
 - [ ] Phase 8: Safety, accessibility, release hardening
 - [ ] Phase 9: Repository integration (root README, PR)
@@ -124,3 +136,4 @@ docs/ARCHITECTURE.md specs — no unique state lives there.
 | Phase 3 | clean | clean | pass (96 tests) | not yet run |
 | Phase 5 | clean | clean | pass (146 tests) | not yet run |
 | Phase 4 | clean | clean | pass (157 tests) | not yet run |
+| Phase 6 | clean | clean | pass (163 tests) | not yet run |

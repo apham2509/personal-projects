@@ -1384,6 +1384,138 @@ abstract class AppLocalizations {
   /// **'Frustrated'**
   String get feedbackFrustrated;
 
+  /// No description provided for @voiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s voice cues'**
+  String voiceTitle(String name);
+
+  /// No description provided for @voiceIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Record short, calm cues in your own voice. PawSense plays them during Touch Training: the Touch cue before each target, praise after a catch, and All done at the end. Keep each one under a couple of seconds.'**
+  String get voiceIntro;
+
+  /// No description provided for @cueCatName.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s name'**
+  String cueCatName(String name);
+
+  /// No description provided for @cueTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch'**
+  String get cueTouch;
+
+  /// No description provided for @cueGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get cueGood;
+
+  /// No description provided for @cueGoodJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Good job'**
+  String get cueGoodJob;
+
+  /// No description provided for @cueAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All done'**
+  String get cueAllDone;
+
+  /// No description provided for @cueCatNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A friendly greeting played at the start of training.'**
+  String get cueCatNameHint;
+
+  /// No description provided for @cueTouchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The cue that a target is about to appear.'**
+  String get cueTouchHint;
+
+  /// No description provided for @cueGoodHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Short praise played after a catch.'**
+  String get cueGoodHint;
+
+  /// No description provided for @cueGoodJobHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative praise; PawSense varies between the two.'**
+  String get cueGoodJobHint;
+
+  /// No description provided for @cueAllDoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The calm sign-off at the end of every session.'**
+  String get cueAllDoneHint;
+
+  /// No description provided for @voiceMicDeniedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone access is off'**
+  String get voiceMicDeniedTitle;
+
+  /// No description provided for @voiceMicDeniedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'PawSense needs the microphone only while you record a cue. Recordings stay on this device. You can allow access in system settings.'**
+  String get voiceMicDeniedBody;
+
+  /// No description provided for @voiceOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open system settings'**
+  String get voiceOpenSettings;
+
+  /// No description provided for @voiceRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get voiceRecord;
+
+  /// No description provided for @voiceReRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-record'**
+  String get voiceReRecord;
+
+  /// No description provided for @voiceStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get voiceStop;
+
+  /// No description provided for @voiceRecordingNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording... speak your cue, then stop.'**
+  String get voiceRecordingNow;
+
+  /// No description provided for @voiceDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s recorded'**
+  String voiceDuration(String seconds);
+
+  /// No description provided for @voicePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Play recording'**
+  String get voicePreview;
+
+  /// No description provided for @voicePrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Recordings are stored only inside PawSense on this device, are never uploaded, and are deleted with the cue or the profile.'**
+  String get voicePrivacyNote;
+
   /// No description provided for @statusCompleted.
   ///
   /// In en, this message translates to:

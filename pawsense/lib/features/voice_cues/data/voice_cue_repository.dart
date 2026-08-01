@@ -51,7 +51,7 @@ class VoiceCueRepository {
       temporaryRecording,
     );
     if (temporaryRecording.existsSync()) {
-      await temporaryRecording.delete();
+      temporaryRecording.deleteSync();
     }
     final now = _clock.nowUtc();
     final existingQuery = _db.select(_db.voiceCues)
