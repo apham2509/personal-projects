@@ -1,0 +1,11 @@
+# Drift build configuration.
+#
+# DateTimes are stored as ISO-8601 text (UTC, millisecond precision) instead
+# of drift's default unix *seconds*, because reaction-time bookkeeping needs
+# sub-second precision and the schema contract is "UTC timestamps in storage".
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          store_date_time_values_as_text: true

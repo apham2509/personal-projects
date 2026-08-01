@@ -2,7 +2,7 @@
 
 Single source of truth for resuming work. Updated after every phase.
 
-Last updated: 2026-08-01 (Phase 1 complete)
+Last updated: 2026-08-01 (Phase 2 complete)
 
 ## Environment (verified)
 
@@ -25,7 +25,24 @@ Last updated: 2026-08-01 (Phase 1 complete)
   - [x] Docs: README, CLAUDE.md, DECISIONS, CHANGELOG, PRD, ARCHITECTURE, ROADMAP
   - [x] CI workflow (.github/workflows/pawsense-ci.yml)
   - [x] Committed
-- [ ] Phase 2: Database and profile system
+- [x] Phase 2: Database and profile system
+  - [x] Drift schema v1 (8 tables, FK cascades, UTC ISO text datetimes)
+  - [x] Migration strategy + settings-row seeding
+  - [x] CatProfileRepository (create/update/archive/restore/reorder/delete
+        cascade incl. media) + SettingsRepository (PIN hashing)
+  - [x] App shell: router, theme, bootstrap, intro flow
+  - [x] Profile picker (grid + mixed session), manage screen (drag reorder,
+        archive/restore, delete with scope confirmation)
+  - [x] 7-step questionnaire wizard (create + edit, photo picking)
+  - [x] Cat home hub; functional settings screen (durations, sound, rewards,
+        PIN, accessibility)
+  - [x] docs/DATABASE_SCHEMA.md
+  - [x] Tests: 17 (repositories incl. cascade + mixed-session survival,
+        PIN hashing; app-level widget tests for first-launch/picker/manage/
+        settings)
+  - Note: widget-test learnings — drift awaits need tester.runAsync
+    (harness dbCall), teardown unmount before db.close, dialog controllers
+    owned by dialog state
 - [ ] Phase 3: Core game engine
 - [ ] Phase 4: Event pipeline and session analytics
 - [ ] Phase 5: Calibration and personalisation
@@ -56,3 +73,4 @@ docs/ARCHITECTURE.md specs — no unique state lives there.
 |-------|--------|---------|------|-----------|
 | scaffold baseline | n/a | 3 issues (template lints + missing assets dir, all since fixed) | pass (1 test) | not yet run |
 | Phase 1 | clean | clean | pass (1 test) | not yet run |
+| Phase 2 | clean | clean | pass (17 tests) | not yet run |
