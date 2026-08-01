@@ -61,7 +61,23 @@ Last updated: 2026-08-01 (Phase 3 complete)
   - [x] Tests: +79 (58 unit + 21 controller/game); found and fixed a real
         zombie-session bug (phase clobber after frustrated end)
 - [ ] Phase 4: Event pipeline and session analytics
-- [ ] Phase 5: Calibration and personalisation
+  - Note: Phases 4 and 5 were committed in swapped order (dependencies
+    first): the pipeline consumes the trial sources, which are built on the
+    personalisation domain.
+- [x] Phase 5: Calibration and personalisation
+  - [x] PreferenceScorer (spec formulas exactly), TrialRewardCalculator,
+        confidence tiers + favourite gap
+  - [x] ConfigurationSelector (UCB bonus with per-factor totals, 80/20,
+        top-band exploitation, repetition rules, difficulty bands x safety)
+  - [x] DifficultyController (evidence gates, cooldown, immediate safety
+        reductions, -2 on repeated high frustration)
+  - [x] CalibrationScheduler (balanced 12 trials, seeded, safety waivers)
+  - [x] Priors seeding + decayed stats update (D-005)
+  - [x] docs/PERSONALISATION.md (complete formulas, pseudocode, limits)
+  - [x] Tests: +50 (formula-exact unit tests; 2000-seed calibration
+        property test; 5000-selection safety property; simulations:
+        convergence, exploration persistence, struggling cat, gradual
+        difficulty, lucky-trial gating, priors overpowered)
 - [ ] Phase 6: Voice cues and Touch Training
 - [ ] Phase 7: Insights and data management
 - [ ] Phase 8: Safety, accessibility, release hardening
@@ -91,3 +107,4 @@ docs/ARCHITECTURE.md specs — no unique state lives there.
 | Phase 1 | clean | clean | pass (1 test) | not yet run |
 | Phase 2 | clean | clean | pass (17 tests) | not yet run |
 | Phase 3 | clean | clean | pass (96 tests) | not yet run |
+| Phase 5 | clean | clean | pass (146 tests) | not yet run |
