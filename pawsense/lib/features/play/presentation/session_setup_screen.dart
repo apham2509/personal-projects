@@ -84,6 +84,22 @@ class _SetupState extends ConsumerState<SessionSetupScreen> {
                     child: Text(l10n.setupCalibrationInfo),
                   ),
                 ),
+                if (widget.catId != null)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () async {
+                        await ref
+                            .read(catProfileRepositoryProvider)
+                            .setCalibrationState(
+                              widget.catId!,
+                              CalibrationState.skipped,
+                            );
+                        if (context.mounted) context.pop();
+                      },
+                      child: Text(l10n.setupSkipCalibration),
+                    ),
+                  ),
                 const SizedBox(height: 16),
               ],
               Text(

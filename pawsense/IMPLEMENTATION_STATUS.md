@@ -2,7 +2,7 @@
 
 Single source of truth for resuming work. Updated after every phase.
 
-Last updated: 2026-08-01 (Phases 4 and 5 complete)
+Last updated: 2026-08-01 (Phase 8 complete)
 
 ## Environment (verified)
 
@@ -124,7 +124,22 @@ Last updated: 2026-08-01 (Phases 4 and 5 complete)
         openers split out)
   - [x] no_network_dependencies tripwire test
   - [x] Tests: +18 - 181 total
-- [ ] Phase 8: Safety, accessibility, release hardening
+- [x] Phase 8: Safety, accessibility, release hardening
+  - [x] Real Safety screen (incl. Guided Access + app pinning guidance,
+        honest "cannot lock the OS" framing) and Privacy screen; last
+        placeholder screens removed
+  - [x] Docs: SAFETY, PRIVACY, QA_PLAN, RELEASE_GUIDE, STORE_LISTING,
+        legal/ (privacy policy, terms, support)
+  - [x] Skip-calibration affordance (CalibrationState.skipped now settable)
+  - [x] Reduce-motion honoured in wizard transitions
+  - [x] Integration tests authored (5 device flows: first launch, insights,
+        export, delete cascade, crash recovery) - need hardware to run
+  - [x] permission_handler removed (required compileSdk 37 vs AGP 9.0.1
+        cap of 36; record owns the mic permission) - D-002 updated
+  - [x] ANDROID DEBUG BUILD SUCCEEDS (app-debug.apk, 51.8 s incremental)
+  - [x] CHANGELOG for 0.1.0; l10n.yaml deprecation cleaned
+  - Note: iOS compile check remains blocked (no Xcode on this machine);
+        config authored (bundle id, mic usage string, orientations)
 - [ ] Phase 9: Repository integration (root README, PR)
 
 ## Staged work not yet in the tree
@@ -155,3 +170,4 @@ docs/ARCHITECTURE.md specs — no unique state lives there.
 | Phase 4 | clean | clean | pass (157 tests) | not yet run |
 | Phase 6 | clean | clean | pass (163 tests) | not yet run |
 | Phase 7 | clean | clean | pass (181 tests) | not yet run |
+| Phase 8 | clean | clean | pass (181 tests) | SUCCESS (app-debug.apk) |

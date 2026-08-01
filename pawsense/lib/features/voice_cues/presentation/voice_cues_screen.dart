@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart'
-    as permission_handler;
 
 import '../../../core/database/app_database.dart';
 import '../../../core/utils/l10n_ext.dart';
@@ -17,12 +15,6 @@ final cueRecorderProvider = Provider<CueRecorder>((ref) {
   ref.onDispose(recorder.dispose);
   return recorder;
 });
-
-/// Opens the OS settings app (for permanently denied microphone access).
-/// Wrapped in a provider so widget tests can fake it.
-final openAppSettingsProvider = Provider<Future<bool> Function()>(
-  (ref) => permission_handler.openAppSettings,
-);
 
 /// Record, preview, re-record, and delete the five owner voice cues for one
 /// cat. Recordings stay in the app's profile directory and never leave the
@@ -156,11 +148,6 @@ class _VoiceCuesScreenState extends ConsumerState<VoiceCuesScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(l10n.voiceMicDeniedBody),
-                        const SizedBox(height: 10),
-                        OutlinedButton(
-                          onPressed: () => ref.read(openAppSettingsProvider)(),
-                          child: Text(l10n.voiceOpenSettings),
-                        ),
                       ],
                     ),
                   ),

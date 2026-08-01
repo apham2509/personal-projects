@@ -435,13 +435,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Mixed sessions are for several cats playing together. PawSense keeps the data separate and never updates any individual cat\'s preferences from a mixed session.';
 
   @override
-  String get placeholderComingTitle => 'Not built yet';
-
-  @override
-  String get placeholderComingBody =>
-      'This part of PawSense arrives in a later build phase.';
-
-  @override
   String get settingsTitle => 'Settings';
 
   @override
@@ -750,10 +743,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voiceMicDeniedBody =>
-      'PawSense needs the microphone only while you record a cue. Recordings stay on this device. You can allow access in system settings.';
-
-  @override
-  String get voiceOpenSettings => 'Open system settings';
+      'PawSense needs the microphone only while you record a cue, and recordings stay on this device. To allow it, open your device\'s Settings, find PawSense, and enable Microphone.';
 
   @override
   String get voiceRecord => 'Record';
@@ -778,6 +768,106 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get voicePrivacyNote =>
       'Recordings are stored only inside PawSense on this device, are never uploaded, and are deleted with the cue or the profile.';
+
+  @override
+  String get safetyIntro =>
+      'PawSense is built for short, calm, successful play. A few habits keep it that way:';
+
+  @override
+  String get safetySupervise =>
+      'Stay nearby and watch your cat while it plays.';
+
+  @override
+  String get safetyStand =>
+      'Use a stable stand or lay the tablet flat so a pounce cannot knock it over.';
+
+  @override
+  String get safetyProtector =>
+      'Consider a screen protector; claws and screens are an uneasy pair.';
+
+  @override
+  String get safetyShort =>
+      'Keep sessions short. PawSense caps them at five minutes and ends earlier when interest fades.';
+
+  @override
+  String get safetyStop =>
+      'Stop if your cat seems uncomfortable, overly wound up, or frustrated.';
+
+  @override
+  String get safetyPhysicalToy =>
+      'Finish with a physical toy your cat can really catch and hold - it completes the hunt.';
+
+  @override
+  String get safetyTreats =>
+      'Treat rewards are optional and should fit within your cat\'s normal daily diet.';
+
+  @override
+  String get safetyNotVet =>
+      'PawSense is enrichment, not veterinary or medical advice. Cats that react aggressively to screens should not play unsupervised.';
+
+  @override
+  String get safetyLockTitle => 'Keeping paws inside the app';
+
+  @override
+  String get safetyLockIntro =>
+      'The play screen already requires a two-corner hold plus an owner check to leave. For full protection, your device can pin PawSense on screen - PawSense itself cannot lock the operating system, but these built-in features can:';
+
+  @override
+  String get safetyGuidedAccessTitle => 'iPad and iPhone: Guided Access';
+
+  @override
+  String get safetyGuidedAccessBody =>
+      'Settings > Accessibility > Guided Access, turn it on and set a passcode. Then open PawSense and triple-click the side or home button to start. Triple-click again and enter your passcode to end.';
+
+  @override
+  String get safetyPinningTitle => 'Android: app pinning';
+
+  @override
+  String get safetyPinningBody =>
+      'Settings > Security > App pinning (wording varies by device), turn it on. Open PawSense, open the recent-apps view, tap the app icon, and choose Pin. Unpinning uses your normal screen lock.';
+
+  @override
+  String get safetyDesignNote =>
+      'By design PawSense contains no flashing effects, no sudden loud sounds, no endless play loops, and no streaks or guilt mechanics. It optimises for successful, calm, short engagement - never for screen time.';
+
+  @override
+  String get privacyHeadline =>
+      'Everything PawSense knows lives on this device. No account, no cloud, no advertising, no analytics.';
+
+  @override
+  String get privacyStoredTitle => 'What is stored';
+
+  @override
+  String get privacyStoredBody =>
+      'Cat profiles and questionnaire answers, session and trial history, paw-touch positions (as screen fractions), learned play preferences, optional photos, optional voice-cue recordings, and your settings.';
+
+  @override
+  String get privacyWhereTitle => 'Where it is stored';
+
+  @override
+  String get privacyWhereBody =>
+      'In PawSense\'s private app storage on this device: a local database plus a folder per cat for the photo and voice recordings. Nothing is transmitted anywhere by PawSense. Deleting the app deletes all of it.';
+
+  @override
+  String get privacyPermissionsTitle => 'Permissions';
+
+  @override
+  String get privacyPermissionsBody =>
+      'Microphone: only while you record a voice cue; recordings stay on the device. Photos: chosen through the system photo picker, so PawSense never sees your library - only the picture you select. There are no other permissions, and no network permission is used for app features.';
+
+  @override
+  String get privacyControlTitle => 'Your controls';
+
+  @override
+  String get privacyControlBody =>
+      'Export any cat\'s data (or everything) as JSON or CSV from Settings > Data management. Delete one session, one cat\'s history, a whole profile, or all app data at any time. Deletions are immediate and permanent.';
+
+  @override
+  String get privacyFutureTitle => 'If this ever changes';
+
+  @override
+  String get privacyFutureBody =>
+      'Any future optional cloud feature would be opt-in, off by default, and announced with an updated privacy explanation before it ships. The app currently fails a build check if a networking dependency is added.';
 
   @override
   String insightsTitle(String name) {
@@ -1062,4 +1152,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusInProgress => 'In progress';
+
+  @override
+  String get setupSkipCalibration => 'Skip calibration for now';
+
+  @override
+  String get setupSkipCalibrationNote =>
+      'You can run it any time from the cat\'s home screen. Adaptive play works without it, starting from your questionnaire answers only.';
 }

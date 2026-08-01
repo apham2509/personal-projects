@@ -124,7 +124,6 @@ void main() {
       tester,
       () => app.db.select(app.db.catProfiles).get(),
     )).single.id;
-    var openedSettings = 0;
 
     await tester.pumpWidget(
       ProviderScope(
@@ -133,10 +132,6 @@ void main() {
           fileServiceProvider.overrideWithValue(app.files),
           clockProvider.overrideWithValue(app.clock),
           cueRecorderProvider.overrideWithValue(recorder),
-          openAppSettingsProvider.overrideWithValue(() async {
-            openedSettings++;
-            return true;
-          }),
         ],
         child: const PawSenseApp(),
       ),
@@ -148,10 +143,7 @@ void main() {
     await tester.tap(find.text('Record').first);
     await pumpUntilFound(tester, find.text('Microphone access is off'));
     expect(find.text('Recording... speak your cue, then stop.'), findsNothing);
-
-    await tester.tap(find.text('Open system settings'));
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(openedSettings, 1);
+    expect(find.textContaining('enable Microphone'), findsOneWidget);
 
     await tearDownApp(tester);
   });

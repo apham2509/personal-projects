@@ -14,12 +14,13 @@ import '../features/play/presentation/play_screen.dart';
 import '../features/play/presentation/session_launch.dart';
 import '../features/play/presentation/session_setup_screen.dart';
 import '../features/profile_picker/presentation/profile_picker_screen.dart';
+import '../features/safety/presentation/safety_screen.dart';
 import '../features/session_results/presentation/history_screen.dart';
 import '../features/session_results/presentation/session_results_screen.dart';
+import '../features/settings/presentation/privacy_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/voice_cues/presentation/voice_cues_screen.dart';
 import '../shared/models/enums.dart';
-import '../shared/widgets/placeholder_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -98,11 +99,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         builder: (_, _) => const SettingsScreen(),
         routes: [
-          GoRoute(
-            path: 'privacy',
-            builder: (_, _) => const PlaceholderScreen(),
-          ),
-          GoRoute(path: 'safety', builder: (_, _) => const PlaceholderScreen()),
+          GoRoute(path: 'privacy', builder: (_, _) => const PrivacyScreen()),
+          GoRoute(path: 'safety', builder: (_, _) => const SafetyScreen()),
           GoRoute(
             path: 'data',
             builder: (_, _) => const DataManagementScreen(),

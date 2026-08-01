@@ -148,6 +148,14 @@ class _WizardState extends ConsumerState<ProfileWizardScreen> {
     }
   }
 
+  Duration get _pageTurn {
+    final reduceMotion =
+        ref.read(settingsProvider).value?.reduceMotion ?? false;
+    return reduceMotion
+        ? const Duration(milliseconds: 1)
+        : const Duration(milliseconds: 250);
+  }
+
   void _next() {
     if (_step == 0 && !_draft.isValid) {
       setState(() => _nameTouched = true);
@@ -157,10 +165,7 @@ class _WizardState extends ConsumerState<ProfileWizardScreen> {
       _save();
       return;
     }
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOutCubic,
-    );
+    _pageController.nextPage(duration: _pageTurn, curve: Curves.easeOutCubic);
   }
 
   void _back() {
@@ -169,7 +174,7 @@ class _WizardState extends ConsumerState<ProfileWizardScreen> {
       return;
     }
     _pageController.previousPage(
-      duration: const Duration(milliseconds: 250),
+      duration: _pageTurn,
       curve: Curves.easeOutCubic,
     );
   }

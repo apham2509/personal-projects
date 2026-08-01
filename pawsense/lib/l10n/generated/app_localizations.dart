@@ -904,18 +904,6 @@ abstract class AppLocalizations {
   /// **'Mixed sessions are for several cats playing together. PawSense keeps the data separate and never updates any individual cat\'s preferences from a mixed session.'**
   String get mixedInfoBody;
 
-  /// No description provided for @placeholderComingTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Not built yet'**
-  String get placeholderComingTitle;
-
-  /// No description provided for @placeholderComingBody.
-  ///
-  /// In en, this message translates to:
-  /// **'This part of PawSense arrives in a later build phase.'**
-  String get placeholderComingBody;
-
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:
@@ -1465,14 +1453,8 @@ abstract class AppLocalizations {
   /// No description provided for @voiceMicDeniedBody.
   ///
   /// In en, this message translates to:
-  /// **'PawSense needs the microphone only while you record a cue. Recordings stay on this device. You can allow access in system settings.'**
+  /// **'PawSense needs the microphone only while you record a cue, and recordings stay on this device. To allow it, open your device\'s Settings, find PawSense, and enable Microphone.'**
   String get voiceMicDeniedBody;
-
-  /// No description provided for @voiceOpenSettings.
-  ///
-  /// In en, this message translates to:
-  /// **'Open system settings'**
-  String get voiceOpenSettings;
 
   /// No description provided for @voiceRecord.
   ///
@@ -1515,6 +1497,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recordings are stored only inside PawSense on this device, are never uploaded, and are deleted with the cue or the profile.'**
   String get voicePrivacyNote;
+
+  /// No description provided for @safetyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'PawSense is built for short, calm, successful play. A few habits keep it that way:'**
+  String get safetyIntro;
+
+  /// No description provided for @safetySupervise.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay nearby and watch your cat while it plays.'**
+  String get safetySupervise;
+
+  /// No description provided for @safetyStand.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a stable stand or lay the tablet flat so a pounce cannot knock it over.'**
+  String get safetyStand;
+
+  /// No description provided for @safetyProtector.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider a screen protector; claws and screens are an uneasy pair.'**
+  String get safetyProtector;
+
+  /// No description provided for @safetyShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep sessions short. PawSense caps them at five minutes and ends earlier when interest fades.'**
+  String get safetyShort;
+
+  /// No description provided for @safetyStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop if your cat seems uncomfortable, overly wound up, or frustrated.'**
+  String get safetyStop;
+
+  /// No description provided for @safetyPhysicalToy.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish with a physical toy your cat can really catch and hold - it completes the hunt.'**
+  String get safetyPhysicalToy;
+
+  /// No description provided for @safetyTreats.
+  ///
+  /// In en, this message translates to:
+  /// **'Treat rewards are optional and should fit within your cat\'s normal daily diet.'**
+  String get safetyTreats;
+
+  /// No description provided for @safetyNotVet.
+  ///
+  /// In en, this message translates to:
+  /// **'PawSense is enrichment, not veterinary or medical advice. Cats that react aggressively to screens should not play unsupervised.'**
+  String get safetyNotVet;
+
+  /// No description provided for @safetyLockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeping paws inside the app'**
+  String get safetyLockTitle;
+
+  /// No description provided for @safetyLockIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'The play screen already requires a two-corner hold plus an owner check to leave. For full protection, your device can pin PawSense on screen - PawSense itself cannot lock the operating system, but these built-in features can:'**
+  String get safetyLockIntro;
+
+  /// No description provided for @safetyGuidedAccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'iPad and iPhone: Guided Access'**
+  String get safetyGuidedAccessTitle;
+
+  /// No description provided for @safetyGuidedAccessBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings > Accessibility > Guided Access, turn it on and set a passcode. Then open PawSense and triple-click the side or home button to start. Triple-click again and enter your passcode to end.'**
+  String get safetyGuidedAccessBody;
+
+  /// No description provided for @safetyPinningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Android: app pinning'**
+  String get safetyPinningTitle;
+
+  /// No description provided for @safetyPinningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings > Security > App pinning (wording varies by device), turn it on. Open PawSense, open the recent-apps view, tap the app icon, and choose Pin. Unpinning uses your normal screen lock.'**
+  String get safetyPinningBody;
+
+  /// No description provided for @safetyDesignNote.
+  ///
+  /// In en, this message translates to:
+  /// **'By design PawSense contains no flashing effects, no sudden loud sounds, no endless play loops, and no streaks or guilt mechanics. It optimises for successful, calm, short engagement - never for screen time.'**
+  String get safetyDesignNote;
+
+  /// No description provided for @privacyHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything PawSense knows lives on this device. No account, no cloud, no advertising, no analytics.'**
+  String get privacyHeadline;
+
+  /// No description provided for @privacyStoredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What is stored'**
+  String get privacyStoredTitle;
+
+  /// No description provided for @privacyStoredBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Cat profiles and questionnaire answers, session and trial history, paw-touch positions (as screen fractions), learned play preferences, optional photos, optional voice-cue recordings, and your settings.'**
+  String get privacyStoredBody;
+
+  /// No description provided for @privacyWhereTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where it is stored'**
+  String get privacyWhereTitle;
+
+  /// No description provided for @privacyWhereBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In PawSense\'s private app storage on this device: a local database plus a folder per cat for the photo and voice recordings. Nothing is transmitted anywhere by PawSense. Deleting the app deletes all of it.'**
+  String get privacyWhereBody;
+
+  /// No description provided for @privacyPermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get privacyPermissionsTitle;
+
+  /// No description provided for @privacyPermissionsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone: only while you record a voice cue; recordings stay on the device. Photos: chosen through the system photo picker, so PawSense never sees your library - only the picture you select. There are no other permissions, and no network permission is used for app features.'**
+  String get privacyPermissionsBody;
+
+  /// No description provided for @privacyControlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your controls'**
+  String get privacyControlTitle;
+
+  /// No description provided for @privacyControlBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Export any cat\'s data (or everything) as JSON or CSV from Settings > Data management. Delete one session, one cat\'s history, a whole profile, or all app data at any time. Deletions are immediate and permanent.'**
+  String get privacyControlBody;
+
+  /// No description provided for @privacyFutureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'If this ever changes'**
+  String get privacyFutureTitle;
+
+  /// No description provided for @privacyFutureBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Any future optional cloud feature would be opt-in, off by default, and announced with an updated privacy explanation before it ships. The app currently fails a build check if a networking dependency is added.'**
+  String get privacyFutureBody;
 
   /// No description provided for @insightsTitle.
   ///
@@ -2000,6 +2144,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In progress'**
   String get statusInProgress;
+
+  /// No description provided for @setupSkipCalibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip calibration for now'**
+  String get setupSkipCalibration;
+
+  /// No description provided for @setupSkipCalibrationNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You can run it any time from the cat\'s home screen. Adaptive play works without it, starting from your questionnaire answers only.'**
+  String get setupSkipCalibrationNote;
 }
 
 class _AppLocalizationsDelegate

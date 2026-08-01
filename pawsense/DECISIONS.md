@@ -29,9 +29,11 @@ Chosen (resolved versions in `pubspec.lock`):
   wrapper over audioplayers anyway. Documented equivalent, maintained.
 - `image_picker` 1.2 — uses PHPicker (iOS) and the Android system photo
   picker; no broad storage permissions needed.
-- `permission_handler` 13 — microphone status + `openAppSettings()` for the
-  denied-permission UX. iOS Podfile configured with only
-  `PERMISSION_MICROPHONE=1`.
+- ~~`permission_handler`~~ — initially included for `openAppSettings()`,
+  removed in Phase 8: `permission_handler_android` 13.x requires
+  compileSdk 37 while AGP 9.0.1 caps at 36, and `record` already owns the
+  microphone permission request. The mic-denied state now shows textual
+  guidance to system settings instead of a deep link.
 - `share_plus`, `csv`, `uuid`, `crypto` (PIN hashing), `fl_chart` (trend
   charts; heatmap is a CustomPainter), `path_provider`, `intl` +
   `flutter_localizations` (ARB), `collection`.
