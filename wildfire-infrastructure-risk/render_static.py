@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -341,7 +342,12 @@ def main() -> None:
                         help="NRT source used to extend the archive to today")
     parser.add_argument("--out", default="site/index.html")
     args = parser.parse_args()
-    render(args.source, Path(args.out))
+    try:
+        render(args.source, Path(args.out))
+    except firms.FirmsUnavailable as error:
+        # EX_TEMPFAIL lets CI retry only source/network outages on another runner.
+        print(str(error), file=sys.stderr)
+        sys.exit(75)
 
 
 if __name__ == "__main__":
