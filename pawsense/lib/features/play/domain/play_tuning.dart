@@ -25,6 +25,7 @@ class PlayTuning {
     this.longHoldMs = 2000,
     this.trialTimeoutMs = 12000,
     this.interTrialDelayMs = 1100,
+    this.rewardPauseMs = 5000,
     this.targetSpawnInMs = 250,
     this.attentionNudgeAfterMs = 12000,
     this.easierTargetAfterMs = 20000,
@@ -86,6 +87,10 @@ class PlayTuning {
   /// Pause between a trial ending and the next target spawning (capture
   /// celebration plays during this window).
   final int interTrialDelayMs;
+
+  /// Inter-trial pause after an optional physical-reward reminder actually
+  /// fires. Gives the owner time to deliver the reward before the next cue.
+  final int rewardPauseMs;
 
   /// Spawn-in animation length; the target becomes touchable when it ends
   /// (reaction time anchors here).

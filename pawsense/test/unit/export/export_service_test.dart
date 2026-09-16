@@ -9,6 +9,7 @@ import 'package:pawsense/core/time/clock.dart';
 import 'package:pawsense/features/cat_profiles/data/cat_profile_repository.dart';
 import 'package:pawsense/features/developer_tools/data/demo_data_service.dart';
 import 'package:pawsense/features/personalisation/data/preference_repository.dart';
+import 'package:pawsense/features/personalisation/domain/algorithm_version.dart';
 import 'package:pawsense/features/play/data/session_repository.dart';
 import 'package:pawsense/features/training/data/cue_progress_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -52,7 +53,7 @@ void main() {
     final header = json['export'] as Map<String, dynamic>;
     expect(header['formatVersion'], 1);
     expect(header['includesMedia'], isFalse);
-    expect(header['algorithmVersion'], 'pawsense-personalisation-v1');
+    expect(header['algorithmVersion'], algorithmVersion);
     expect(header['scope'], 'all');
 
     final cats = json['cats'] as List;

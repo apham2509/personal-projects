@@ -69,12 +69,26 @@ abstract class PreyComponent extends PositionComponent {
   /// Continuous animation phase offset so two spawns never look identical.
   final double _animationPhase;
 
+  /// Shared, seeded offset for each animal's continuous idle animation.
+  double get animationPhase => _animationPhase;
+
+  double _travelledPixels = 0;
+  double _movementAmount = 0;
+
+  /// A stride advances with distance travelled, so a resting mouse cannot
+  /// run on the spot. Three small strides cover one target diameter.
+  double get gaitPhase =>
+      _animationPhase + _travelledPixels / diameterPx * math.pi * 6;
+
+  /// Actual speed relative to the movement strategy's nominal speed, capped
+  /// at one. Pauses immediately settle the feet and body, not the idle tail.
+  double get movementAmount => _movementAmount;
+
   _PreyState _state = _PreyState.spawningIn;
   double _stateElapsed = 0;
 
   /// Direction the prey visually faces (radians), smoothed.
   double _heading = 0;
-  Vector2 _lastPosition = Vector2.zero();
 
   /// Attention nudge (disengagement stage 1): brief scale wobble.
   double _nudgeRemaining = 0;
@@ -91,28 +105,25 @@ abstract class PreyComponent extends PositionComponent {
   }
 
   @override
-  void onMount() {
-    super.onMount();
-    _lastPosition = position.clone();
-  }
-
-  @override
   void update(double dt) {
     super.update(dt);
     elapsed += dt;
     _stateElapsed += dt;
     if (_nudgeRemaining > 0) _nudgeRemaining -= dt;
+    _movementAmount = 0;
 
     switch (_state) {
       case _PreyState.spawningIn:
         if (_stateElapsed >= spawnInSeconds) _setState(_PreyState.active);
       case _PreyState.active:
+        final previousX = position.x;
+        final previousY = position.y;
         strategy.update(dt);
         position.setValues(
           strategy.position.x * unitPx,
           strategy.position.y * unitPx,
         );
-        _updateHeading(dt);
+        _updateMotion(dt, previousX, previousY);
       case _PreyState.captured:
         if (_stateElapsed >= captureSeconds) {
           _setState(_PreyState.removedPending);
@@ -126,9 +137,15 @@ abstract class PreyComponent extends PositionComponent {
     }
   }
 
-  void _updateHeading(double dt) {
-    final dx = position.x - _lastPosition.x;
-    final dy = position.y - _lastPosition.y;
+  void _updateMotion(double dt, double previousX, double previousY) {
+    final dx = position.x - previousX;
+    final dy = position.y - previousY;
+    final distance = math.sqrt(dx * dx + dy * dy);
+    _travelledPixels += distance;
+    final nominalDistance = strategy.speed * unitPx * dt;
+    if (nominalDistance > 0) {
+      _movementAmount = (distance / nominalDistance).clamp(0.0, 1.0);
+    }
     if (dx * dx + dy * dy > 0.01) {
       final target = math.atan2(dy, dx);
       var delta = target - _heading;
@@ -140,7 +157,6 @@ abstract class PreyComponent extends PositionComponent {
       }
       _heading += delta * (6 * dt).clamp(0.0, 1.0);
     }
-    _lastPosition.setFrom(position);
   }
 
   /// Marks the prey caught: freezes movement, plays the capture animation.
@@ -209,8 +225,11 @@ abstract class PreyComponent extends PositionComponent {
   /// Subclasses may damp or ignore heading (moths stay mostly upright).
   double headingForRender() => _heading;
 
-  /// Draws the prey centred at the origin within [radius], applying
-  /// [opacity] to all paints.
+  /// Draws the prey centred at the origin, applying [opacity] to all paints.
+  /// Anatomy stays within 1.05 * [radius]. Even the largest lifecycle scale
+  /// (1.35) therefore fits the unchanged catch radius:
+  /// 0.86 * 1.05 * 1.35 = 1.21905 < 1.25 nominal radii. Rotation preserves
+  /// that circular envelope. The capture ripple is separate feedback.
   void renderPrey(Canvas canvas, double radius, double opacity);
 
   void _renderCaptureBurst(Canvas canvas, Offset centre, double r) {

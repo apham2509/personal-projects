@@ -17,6 +17,26 @@ spirit of the app.
 
 ## Android
 
+### Install a beta from CI
+
+1. Open the repository's **Actions → PawSense CI** and select a successful
+   run for the commit being tested (or use **Run workflow**).
+2. Download `pawsense-android-debug-<commit>` from the run's artifacts,
+   extract `app-debug.apk`, and transfer it to the Android phone/tablet.
+3. Open the APK and allow installation from that browser/file manager when
+   Android prompts. Alternatively, use `adb install -r app-debug.apk` from
+   a computer with an attached device.
+4. Run the physical QA checklist, especially the hunt, owner exit, and real
+   voice recording. The APK is a debug beta, not a Play Store release.
+
+Artifacts expire after 14 days. CI-generated debug signing keys can change
+between runs; Android may reject an update with a signature mismatch. Export
+any play data you want to retain before uninstalling the earlier beta; an
+uninstall removes local profiles and audio, and exports do not include audio
+files. Use a stable private signing key when distributing ongoing betas.
+
+### Prepare a store build
+
 1. Create an upload keystore (never commit it):
    ```bash
    keytool -genkey -v -keystore ~/keys/pawsense-upload.jks \
@@ -32,6 +52,13 @@ spirit of the app.
    questionnaire: no user-generated content shared, no ads.
 
 ## iOS/iPadOS
+
+CI runs `flutter build ios --release --no-codesign` on macOS to check the
+app and its native plugins compile. That produces no installable iPhone/iPad
+beta and does not sign or publish anything. Installing on a physical Apple
+device requires Xcode signing; distributing via TestFlight requires the
+Apple Developer Programme setup below. CI uses no Apple account, certificate,
+or provisioning-profile secrets.
 
 1. Requires a Mac with full Xcode and CocoaPods
    (`brew install cocoapods`), plus an Apple Developer Programme

@@ -148,4 +148,178 @@ void main() {
     expect(processor.registerPointerUp(7, 4000), 3000);
     expect(processor.activePointerCount, 0);
   });
+
+  test('later pad promotes the same paw to one hit', () {
+    final processor = build();
+    final first = processor.process(
+      raw(1, 1000, 660, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    final second = processor.process(
+      raw(2, 1060, 650, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    final third = processor.process(
+      raw(3, 1100, 645, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    expect(first.classification, TouchClassification.miss);
+    expect(second.logicalId, first.logicalId);
+    expect(second.classification, TouchClassification.hit);
+    expect(second.isDuplicate, isFalse);
+    expect(third.classification, TouchClassification.ignoredDuplicate);
+  });
+
+  test('sweep catches between sampled endpoints without repeated hits', () {
+    final processor = build();
+    final down = processor.process(
+      raw(1, 1000, 500, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    final hit = processor.processMove(
+      const RawPointerMove(pointerId: 1, timestampMs: 1100, x: 700, y: 400),
+      target: target,
+    );
+    expect(hit, isNotNull);
+    expect(hit!.raw, isA<RawPointerMove>());
+    expect(hit.logicalId, down.logicalId);
+    expect(hit.classification, TouchClassification.hit);
+    expect(hit.xNormalised, 0.5);
+    expect(hit.yNormalised, 0.5);
+    expect(hit.distanceFromTarget, 0);
+    expect(
+      processor.processMove(
+        const RawPointerMove(pointerId: 1, timestampMs: 1200, x: 500, y: 400),
+        target: target,
+      ),
+      isNull,
+    );
+  });
+
+  test('off-target moves emit no repeated misses', () {
+    final processor = build();
+    processor.process(
+      raw(1, 1000, 500, 200),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    for (var i = 0; i < 100; i++) {
+      expect(
+        processor.processMove(
+          RawPointerMove(
+            pointerId: 1,
+            timestampMs: 1010 + i,
+            x: 500 + i * 1.0,
+            y: 200,
+          ),
+          target: target,
+        ),
+        isNull,
+      );
+    }
+  });
+
+  test('stationary paw does not catch prey that moves underneath it', () {
+    final processor = build();
+    processor.process(
+      raw(1, 1000, 500, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    expect(
+      processor.processMove(
+        const RawPointerMove(pointerId: 1, timestampMs: 1100, x: 500, y: 400),
+        target: const TargetSnapshot(
+          centreX: 500,
+          centreY: 400,
+          hitboxRadius: 55,
+          active: true,
+        ),
+      ),
+      isNull,
+    );
+  });
+
+  test('subpixel resting jitter does not catch', () {
+    final processor = build();
+    processor.process(
+      raw(1, 1000, 500, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    expect(
+      processor.processMove(
+        const RawPointerMove(pointerId: 1, timestampMs: 1150, x: 500.1, y: 400),
+        target: const TargetSnapshot(
+          centreX: 500,
+          centreY: 400,
+          hitboxRadius: 55,
+          active: true,
+        ),
+      ),
+      isNull,
+    );
+  });
+
+  test('held paw cannot claim a later trial', () {
+    final processor = build();
+    processor.process(
+      raw(1, 1000, 500, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    expect(
+      processor.processMove(
+        const RawPointerMove(pointerId: 1, timestampMs: 15000, x: 700, y: 400),
+        target: const TargetSnapshot(
+          centreX: 600,
+          centreY: 400,
+          hitboxRadius: 55,
+          active: true,
+          targetId: 1,
+        ),
+      ),
+      isNull,
+    );
+  });
+
+  test('owner corner contacts create neither sweep catches nor hold flags', () {
+    final processor = build();
+    processor.process(
+      raw(1, 1000, 40, 40),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    expect(
+      processor.processMove(
+        const RawPointerMove(pointerId: 1, timestampMs: 1100, x: 600, y: 400),
+        target: target,
+      ),
+      isNull,
+    );
+    expect(processor.longestActiveHoldMs(4000), 0);
+    expect(processor.registerPointerUp(1, 4000), 0);
+  });
+
+  test('released and cancelled contacts cannot catch on later movement', () {
+    final processor = build();
+    processor.process(
+      raw(1, 1000, 500, 400),
+      target: target,
+      inPostCaptureWindow: false,
+    );
+    processor.registerPointerUp(1, 1100);
+    expect(
+      processor.processMove(
+        const RawPointerMove(pointerId: 1, timestampMs: 1200, x: 700, y: 400),
+        target: target,
+      ),
+      isNull,
+    );
+    expect(processor.activePointerCount, 0);
+  });
 }

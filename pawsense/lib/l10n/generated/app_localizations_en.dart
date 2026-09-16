@@ -459,14 +459,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsSoundSubtitle =>
-      'Soft prey and capture sounds during play. Individual cats marked as easily startled always start silent.';
+      'Default for prey sounds and recorded voice cues. Easily startled cats always play silently.';
 
   @override
   String get settingsRewardSection => 'Real-world treat reminders';
 
   @override
   String get settingsRewardDisclaimer =>
-      'Treats are optional. Keep the total within your cat\'s normal daily diet. PawSense is enrichment, not veterinary advice.';
+      'A dim paw reminder gives you a five-second pause before the next hunt to offer a reward. Treats are optional; keep them within your cat\'s normal daily diet. PawSense is enrichment, not veterinary advice.';
 
   @override
   String get rewardNone => 'No treat reminders';
@@ -566,7 +566,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupCalibrationInfo =>
-      'A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat\'s starting preferences. You can stop at any time and continue later.';
+      'A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat\'s starting preferences. You can stop at any time; the observations are saved, and you can start a fresh calibration later.';
 
   @override
   String get setupDuration => 'Session length';
@@ -575,7 +575,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupSound => 'Sound for this session';
 
   @override
-  String get setupSoundBody => 'Soft prey and capture sounds.';
+  String get setupSoundBody =>
+      'Soft prey sounds and any recorded voice cues or praise.';
 
   @override
   String get setupSoundLocked => 'Off: this cat is marked as easily startled.';
@@ -702,7 +703,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voiceIntro =>
-      'Record short, calm cues in your own voice. PawSense plays them during Touch Training: the Touch cue before each target, praise after a catch, and All done at the end. Keep each one under a couple of seconds.';
+      'Record short, calm cues in your own voice. PawSense plays Touch before the prey appears, praise after a catch, and All done at the end. Aim for one or two seconds; recordings stop automatically after five seconds.';
 
   @override
   String cueCatName(String name) {
@@ -1139,10 +1140,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusOwnerStopped => 'Ended by you';
 
   @override
-  String get statusDisengaged => 'Ended early: lost interest';
+  String get statusDisengaged => 'Ended: no recent screen touches';
 
   @override
-  String get statusFrustrated => 'Ended gently: repeated frustration';
+  String get statusFrustrated => 'Ended gently: repeated difficult catches';
 
   @override
   String get statusBackgrounded => 'Ended: app went to background';
@@ -1159,4 +1160,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get setupSkipCalibrationNote =>
       'You can run it any time from the cat\'s home screen. Adaptive play works without it, starting from your questionnaire answers only.';
+
+  @override
+  String get setupExitTitle => 'How to leave the play surface';
+
+  @override
+  String get setupExitBody =>
+      'Hold both top corners for two seconds, then complete the owner check. Keep the tablet stable and stay nearby.';
+
+  @override
+  String get setupTrainingTitle => 'Your voice starts the hunt';
+
+  @override
+  String get setupTrainingLoop =>
+      'Touch cue → a short pause → prey appears → a paw catch → your recorded praise. Offer a real toy or an optional small reward yourself.';
+
+  @override
+  String get setupTrainingSilent =>
+      'Sound is off. This will be a silent play session; recorded cues and praise will not play.';
+
+  @override
+  String get setupTrainingNeedsTouch =>
+      'No Touch recording yet. Record your cue to start voice training; without it, targets appear silently.';
+
+  @override
+  String get setupTrainingNeedsPraise =>
+      'Your Touch cue is ready. Add Good or Good job for praise in your own voice; until then, PawSense uses a soft success sound.';
+
+  @override
+  String get setupTrainingReady =>
+      'Touch and praise recordings are ready. PawSense waits for each recording to finish before starting the next hunt.';
+
+  @override
+  String get setupRecordCues => 'Record voice cues';
 }

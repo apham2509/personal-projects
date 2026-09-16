@@ -269,6 +269,124 @@ void main() {
     );
   });
 
+  test(
+    'a retried finish cannot double-count learning or replace the summary',
+    () async {
+      final (id, startedAt) = await repo.createSession(
+        plan: plan(mode: SessionMode.touchTraining, cat: catId),
+        screenWidthLogical: 1024,
+        screenHeightLogical: 768,
+        appVersion: '0.1.0',
+        platform: 'test',
+        algorithmVersion: algorithmVersion,
+      );
+      final recorded = trial(cue: CueType.touch);
+      await repo.insertTrialWithTouches(
+        sessionId: id,
+        sessionStartUtc: startedAt,
+        trial: recorded,
+        touches: [touch()],
+        algorithmVersion: algorithmVersion,
+      );
+      await repo.finaliseSession(
+        sessionId: id,
+        summary: const SessionSummary(
+          status: SessionStatus.ownerStopped,
+          actualDurationMs: 5000,
+          catches: 1,
+          misses: 0,
+          timeouts: 0,
+          medianReactionMs: 800,
+          frustrationCount: 0,
+          endDifficulty: 2,
+        ),
+        trials: [recorded],
+      );
+      final first = (await repo.getSession(id))!;
+      clock.advance(const Duration(minutes: 1));
+      await repo.finaliseSession(
+        sessionId: id,
+        summary: const SessionSummary(
+          status: SessionStatus.completed,
+          actualDurationMs: 60000,
+          catches: 9,
+          misses: 2,
+          timeouts: 1,
+          medianReactionMs: 200,
+          frustrationCount: 0,
+          endDifficulty: 5,
+        ),
+        trials: [recorded],
+      );
+
+      expect(await repo.getSession(id), first);
+      final snapshot = await preferences.loadSnapshot(catId);
+      expect(snapshot.statsFor(FactorType.targetType, 'moth').impressions, 1);
+      expect(snapshot.statsFor(FactorType.targetType, 'moth').successes, 1);
+      final progress = (await db.select(db.cueProgress).get()).single;
+      expect(progress.exposures, 1);
+      expect(progress.successfulResponses, 1);
+      expect((await profiles.getById(catId))!.currentDifficulty, 2);
+      expect(await repo.trialsForSession(id), hasLength(1));
+      expect(await db.select(db.touchEvents).get(), hasLength(1));
+    },
+  );
+
+  test(
+    'historical-version finish retains raw history without changing current learning',
+    () async {
+      const historicalVersion = '$algorithmVersion-historical-test';
+      final difficultyBefore = (await profiles.getById(
+        catId,
+      ))!.currentDifficulty;
+      final (id, startedAt) = await repo.createSession(
+        plan: plan(mode: SessionMode.touchTraining, cat: catId),
+        screenWidthLogical: 1024,
+        screenHeightLogical: 768,
+        appVersion: '0.0.1',
+        platform: 'test',
+        algorithmVersion: historicalVersion,
+      );
+      final recorded = trial(cue: CueType.touch);
+      await repo.insertTrialWithTouches(
+        sessionId: id,
+        sessionStartUtc: startedAt,
+        trial: recorded,
+        touches: [touch()],
+        algorithmVersion: historicalVersion,
+      );
+      await repo.finaliseSession(
+        sessionId: id,
+        summary: const SessionSummary(
+          status: SessionStatus.completed,
+          actualDurationMs: 60000,
+          catches: 1,
+          misses: 0,
+          timeouts: 0,
+          medianReactionMs: 800,
+          frustrationCount: 0,
+          endDifficulty: 5,
+        ),
+        trials: [recorded],
+      );
+
+      final session = (await repo.getSession(id))!;
+      expect(session.status, SessionStatus.completed);
+      expect(session.catches, 1);
+      expect(session.algorithmVersion, historicalVersion);
+      final rows = await repo.trialsForSession(id);
+      expect(rows.single.algorithmVersion, historicalVersion);
+      expect(rows.single.success, isTrue);
+      expect(await db.select(db.touchEvents).get(), hasLength(1));
+      expect(await db.select(db.preferenceStats).get(), isEmpty);
+      expect(await db.select(db.cueProgress).get(), isEmpty);
+      expect(
+        (await profiles.getById(catId))!.currentDifficulty,
+        difficultyBefore,
+      );
+    },
+  );
+
   test('crash recovery finalises stale sessions as interrupted', () async {
     final (id, startedAt) = await repo.createSession(
       plan: plan(cat: catId),

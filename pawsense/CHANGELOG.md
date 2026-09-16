@@ -2,6 +2,23 @@
 
 All notable changes to PawSense. Dates are UTC.
 
+## 0.2.0 beta - 2026-09-16
+
+- Reworked mouse, moth and fish anatomy and motion with deterministic Canvas
+  animation, no flashing, and visible bodies contained within the catch area.
+- Count moving paws and clustered pad catches without premature miss penalties;
+  preserve one catch per target and prevent held paws catching later targets.
+- Wait for recorded greetings and praise, enforce silent mode, and cap voice
+  recordings at five seconds with background/navigation cleanup.
+- Keep active tablet play awake, pause behind the owner gate, block accidental
+  system Back, and save interrupted sessions on background, exit or resize.
+- Explain the recorded cue → hunt → catch → praise loop before training.
+- Improve owner-screen contrast, responsive actions and reduced-motion support.
+- Start version-scoped v1.1 evidence, make session finalisation idempotent and
+  require eight valid calibration trials before marking calibration complete.
+- Add native Android hunt/voice/persistence integration checks, downloadable
+  Android beta artifacts, and an unsigned native iOS build in CI.
+
 ## 0.1.0 (unreleased) - 2026-08-01
 
 First complete V1 build, developed on `feature/pawsense-v1`.

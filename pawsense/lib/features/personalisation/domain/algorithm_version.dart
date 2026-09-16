@@ -4,4 +4,4 @@
 /// changes, and document the change in docs/PERSONALISATION.md. Rows written
 /// under different versions are never merged (the PreferenceStats unique key
 /// includes the version).
-const String algorithmVersion = 'pawsense-personalisation-v1';
+const String algorithmVersion = 'pawsense-personalisation-v1.1';

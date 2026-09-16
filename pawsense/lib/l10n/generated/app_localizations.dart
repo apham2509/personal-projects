@@ -937,7 +937,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsSoundSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Soft prey and capture sounds during play. Individual cats marked as easily startled always start silent.'**
+  /// **'Default for prey sounds and recorded voice cues. Easily startled cats always play silently.'**
   String get settingsSoundSubtitle;
 
   /// No description provided for @settingsRewardSection.
@@ -949,7 +949,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsRewardDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Treats are optional. Keep the total within your cat\'s normal daily diet. PawSense is enrichment, not veterinary advice.'**
+  /// **'A dim paw reminder gives you a five-second pause before the next hunt to offer a reward. Treats are optional; keep them within your cat\'s normal daily diet. PawSense is enrichment, not veterinary advice.'**
   String get settingsRewardDisclaimer;
 
   /// No description provided for @rewardNone.
@@ -1135,7 +1135,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupCalibrationInfo.
   ///
   /// In en, this message translates to:
-  /// **'A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat\'s starting preferences. You can stop at any time and continue later.'**
+  /// **'A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat\'s starting preferences. You can stop at any time; the observations are saved, and you can start a fresh calibration later.'**
   String get setupCalibrationInfo;
 
   /// No description provided for @setupDuration.
@@ -1153,7 +1153,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupSoundBody.
   ///
   /// In en, this message translates to:
-  /// **'Soft prey and capture sounds.'**
+  /// **'Soft prey sounds and any recorded voice cues or praise.'**
   String get setupSoundBody;
 
   /// No description provided for @setupSoundLocked.
@@ -1381,7 +1381,7 @@ abstract class AppLocalizations {
   /// No description provided for @voiceIntro.
   ///
   /// In en, this message translates to:
-  /// **'Record short, calm cues in your own voice. PawSense plays them during Touch Training: the Touch cue before each target, praise after a catch, and All done at the end. Keep each one under a couple of seconds.'**
+  /// **'Record short, calm cues in your own voice. PawSense plays Touch before the prey appears, praise after a catch, and All done at the end. Aim for one or two seconds; recordings stop automatically after five seconds.'**
   String get voiceIntro;
 
   /// No description provided for @cueCatName.
@@ -2118,13 +2118,13 @@ abstract class AppLocalizations {
   /// No description provided for @statusDisengaged.
   ///
   /// In en, this message translates to:
-  /// **'Ended early: lost interest'**
+  /// **'Ended: no recent screen touches'**
   String get statusDisengaged;
 
   /// No description provided for @statusFrustrated.
   ///
   /// In en, this message translates to:
-  /// **'Ended gently: repeated frustration'**
+  /// **'Ended gently: repeated difficult catches'**
   String get statusFrustrated;
 
   /// No description provided for @statusBackgrounded.
@@ -2156,6 +2156,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can run it any time from the cat\'s home screen. Adaptive play works without it, starting from your questionnaire answers only.'**
   String get setupSkipCalibrationNote;
+
+  /// No description provided for @setupExitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to leave the play surface'**
+  String get setupExitTitle;
+
+  /// No description provided for @setupExitBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold both top corners for two seconds, then complete the owner check. Keep the tablet stable and stay nearby.'**
+  String get setupExitBody;
+
+  /// No description provided for @setupTrainingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your voice starts the hunt'**
+  String get setupTrainingTitle;
+
+  /// No description provided for @setupTrainingLoop.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch cue → a short pause → prey appears → a paw catch → your recorded praise. Offer a real toy or an optional small reward yourself.'**
+  String get setupTrainingLoop;
+
+  /// No description provided for @setupTrainingSilent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound is off. This will be a silent play session; recorded cues and praise will not play.'**
+  String get setupTrainingSilent;
+
+  /// No description provided for @setupTrainingNeedsTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'No Touch recording yet. Record your cue to start voice training; without it, targets appear silently.'**
+  String get setupTrainingNeedsTouch;
+
+  /// No description provided for @setupTrainingNeedsPraise.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Touch cue is ready. Add Good or Good job for praise in your own voice; until then, PawSense uses a soft success sound.'**
+  String get setupTrainingNeedsPraise;
+
+  /// No description provided for @setupTrainingReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch and praise recordings are ready. PawSense waits for each recording to finish before starting the next hunt.'**
+  String get setupTrainingReady;
+
+  /// No description provided for @setupRecordCues.
+  ///
+  /// In en, this message translates to:
+  /// **'Record voice cues'**
+  String get setupRecordCues;
 }
 
 class _AppLocalizationsDelegate

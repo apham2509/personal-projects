@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/audio/audio_service.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/utils/l10n_ext.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -10,7 +12,7 @@ import '../../../shared/models/enums.dart';
 import '../../../shared/providers/core_providers.dart';
 import '../domain/cue_recorder.dart';
 
-final cueRecorderProvider = Provider<CueRecorder>((ref) {
+final cueRecorderProvider = Provider.autoDispose<CueRecorder>((ref) {
   final recorder = RecordPackageCueRecorder();
   ref.onDispose(recorder.dispose);
   return recorder;
@@ -28,32 +30,108 @@ class VoiceCuesScreen extends ConsumerStatefulWidget {
   ConsumerState<VoiceCuesScreen> createState() => _VoiceCuesScreenState();
 }
 
-class _VoiceCuesScreenState extends ConsumerState<VoiceCuesScreen> {
+class _VoiceCuesScreenState extends ConsumerState<VoiceCuesScreen>
+    with WidgetsBindingObserver {
+  late final CueRecorder _recorder;
+  late final AudioService _audio;
   CueType? _recording;
   bool _permissionDenied = false;
   bool _busy = false;
+  bool _disposed = false;
+  int _operation = 0;
+  String? _temporaryPath;
+  Timer? _recordingLimit;
+
+  @override
+  void initState() {
+    super.initState();
+    _recorder = ref.read(cueRecorderProvider);
+    _audio = ref.read(audioServiceProvider);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    WidgetsBinding.instance.removeObserver(this);
+    _cancelRecording();
+    _audio.stopCue().ignore();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.paused) {
+      _cancelRecording();
+      _audio.stopCue().ignore();
+    }
+  }
+
+  void _cancelRecording() {
+    _operation++;
+    _recordingLimit?.cancel();
+    _recording = null;
+    // A pending start/stop owns its cleanup and checks the operation token.
+    if (!_busy) {
+      _busy = true;
+      _discardRecording().whenComplete(() {
+        _busy = false;
+        if (!_disposed && mounted) setState(() {});
+      }).ignore();
+    }
+    if (!_disposed && mounted) setState(() {});
+  }
+
+  Future<void> _discardRecording() async {
+    try {
+      await _recorder.cancel();
+    } on Exception {
+      // The plugin may already have stopped or disposed after navigation.
+    } finally {
+      final path = _temporaryPath;
+      _temporaryPath = null;
+      if (path != null) {
+        final file = File(path);
+        if (file.existsSync()) file.deleteSync();
+      }
+    }
+  }
+
+  void _showRecordingError() {
+    if (_disposed || !mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.errorGenericBody)));
+  }
 
   Future<void> _toggleRecording(CueType cueType) async {
     if (_busy) return;
-    final recorder = ref.read(cueRecorderProvider);
+    if (_recording != null && _recording != cueType) return;
+    final operation = ++_operation;
+    bool current() => !_disposed && mounted && operation == _operation;
+    setState(() => _busy = true);
 
     if (_recording == cueType) {
       // Stop and save.
-      setState(() => _busy = true);
+      _recordingLimit?.cancel();
+      final repository = ref.read(voiceCueRepositoryProvider);
       try {
-        final result = await recorder.stop();
-        if (result != null) {
-          await ref
-              .read(voiceCueRepositoryProvider)
-              .saveRecording(
-                catId: widget.catId,
-                cueType: cueType,
-                temporaryRecording: File(result.path),
-                durationMs: result.durationMs,
-              );
+        final result = await _recorder.stop();
+        if (current() && result != null) {
+          await repository.saveRecording(
+            catId: widget.catId,
+            cueType: cueType,
+            temporaryRecording: File(result.path),
+            durationMs: result.durationMs,
+          );
+          _temporaryPath = null;
         }
+      } on Exception {
+        _showRecordingError();
       } finally {
-        if (mounted) {
+        await _discardRecording();
+        if (!_disposed && mounted) {
           setState(() {
             _recording = null;
             _busy = false;
@@ -63,20 +141,32 @@ class _VoiceCuesScreenState extends ConsumerState<VoiceCuesScreen> {
       return;
     }
 
-    if (_recording != null) return; // one recording at a time
-
-    if (!await recorder.hasPermission()) {
-      if (mounted) setState(() => _permissionDenied = true);
-      return;
+    try {
+      if (!await _recorder.hasPermission()) {
+        if (current()) setState(() => _permissionDenied = true);
+        return;
+      }
+      if (!current()) return;
+      setState(() => _permissionDenied = false);
+      final files = ref.read(fileServiceProvider);
+      final tempPath =
+          '${files.documentsDir.path}/recording_${widget.catId}_${cueType.name}.m4a.tmp';
+      _temporaryPath = tempPath;
+      await _recorder.start(tempPath);
+      if (!current()) return;
+      setState(() => _recording = cueType);
+      // Short cues fit the session playback window and avoid an open-ended mic.
+      _recordingLimit = Timer(const Duration(seconds: 5), () {
+        if (current()) _toggleRecording(cueType);
+      });
+    } on Exception {
+      await _discardRecording();
+      _showRecordingError();
+    } finally {
+      if (!current()) await _discardRecording();
+      _busy = false;
+      if (!_disposed && mounted) setState(() {});
     }
-    if (!mounted) return;
-    setState(() => _permissionDenied = false);
-
-    final files = ref.read(fileServiceProvider);
-    final tempPath =
-        '${files.documentsDir.path}/recording_${cueType.name}.m4a.tmp';
-    await recorder.start(tempPath);
-    if (mounted) setState(() => _recording = cueType);
   }
 
   Future<void> _preview(VoiceCue cue) async {
@@ -107,6 +197,8 @@ class _VoiceCuesScreenState extends ConsumerState<VoiceCuesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Keep the recorder alive only while this screen is present.
+    ref.watch(cueRecorderProvider);
     final l10n = context.l10n;
     final catAsync = ref.watch(catProfileProvider(widget.catId));
     final cuesAsync = ref.watch(_cuesProvider(widget.catId));
@@ -159,7 +251,7 @@ class _VoiceCuesScreenState extends ConsumerState<VoiceCuesScreen> {
                   cue: cues[cueType],
                   isRecording: _recording == cueType,
                   recordingElsewhere:
-                      _recording != null && _recording != cueType,
+                      _busy || (_recording != null && _recording != cueType),
                   onRecordToggle: () => _toggleRecording(cueType),
                   onPreview: cues[cueType] == null
                       ? null

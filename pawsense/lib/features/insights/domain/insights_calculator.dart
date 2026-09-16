@@ -1,5 +1,6 @@
 import '../../../core/utils/stats.dart';
 import '../../../shared/models/enums.dart';
+import '../../personalisation/domain/algorithm_version.dart' as algo;
 import '../../personalisation/domain/preference_scoring.dart';
 import 'insight_models.dart';
 
@@ -7,6 +8,7 @@ import 'insight_models.dart';
 ///
 /// Honesty rules (product spec sections 11.G and 14):
 /// - sample sizes are raw comparable-trial counts, never decayed;
+/// - preference claims use only trials from the current algorithm version;
 /// - below 8 comparable impressions a dimension shows no conclusion;
 /// - a "favourite" needs a utility lead of >= 0.08 over the runner-up;
 /// - median (not mean) reaction times;
@@ -36,6 +38,11 @@ class InsightsCalculator {
         sessions.where((s) => s.status != SessionStatus.inProgress).toList()
           ..sort((a, b) => a.startedAtUtc.compareTo(b.startedAtUtc));
     final comparable = trials.where((t) => t.isComparable).toList();
+    // A model reset after an algorithm update needs fresh evidence before
+    // making preference claims. Descriptive lifetime history remains intact.
+    final currentEvidence = comparable
+        .where((t) => t.algorithmVersion == algo.algorithmVersion)
+        .toList();
 
     final favourites = <FavouriteInsight>[
       for (final factor in const [
@@ -44,7 +51,7 @@ class InsightsCalculator {
         FactorType.speedLevel,
         FactorType.sizeLevel,
       ])
-        _favouriteFor(factor, comparable),
+        _favouriteFor(factor, currentEvidence),
     ];
 
     final preyFavourite = favourites.firstWhere(

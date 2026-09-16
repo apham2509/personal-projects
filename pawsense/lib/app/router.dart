@@ -23,7 +23,7 @@ import '../features/voice_cues/presentation/voice_cues_screen.dart';
 import '../shared/models/enums.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: '/',
     routes: [
       GoRoute(path: '/', builder: (_, _) => const BootstrapScreen()),
@@ -109,4 +109,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
+  ref.onDispose(router.dispose);
+  return router;
 });

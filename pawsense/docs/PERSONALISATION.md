@@ -1,4 +1,4 @@
-# PawSense Personalisation — pawsense-personalisation-v1
+# PawSense Personalisation — pawsense-personalisation-v1.1
 
 The complete specification of how PawSense adapts to a cat. Everything here
 is implemented in pure Dart under `lib/features/personalisation/domain/` and
@@ -12,7 +12,7 @@ a named constant in code.
 
 ## Versioning
 
-Current version: `pawsense-personalisation-v1`
+Current version: `pawsense-personalisation-v1.1`
 (`lib/features/personalisation/domain/algorithm_version.dart`).
 
 Every session, trial, and preference row stores this string. Any change to a
@@ -22,6 +22,30 @@ formula, weight, threshold, prior, or decay in this document requires:
 3. noting that `PreferenceStats` rows are version-scoped (the unique key
    includes the version), so a new version starts learning fresh while old
    rows remain for audit.
+
+### v1.1: paw input attribution (2026-09-16)
+
+Scoring weights, priors, decay, exploration and difficulty thresholds are
+unchanged. Input evidence is corrected: a moving paw can catch prey anywhere
+along its observed movement segment, and a later pad in the same 180 ms
+cluster can complete the catch. Miss attribution waits for that cluster
+window; a successful pad cancels the pending miss. Movement does not create
+extra misses. A held contact cannot catch a later target, and touches before
+the target becomes catchable do not count as misses or difficult-catch
+signals. Sweep hit timestamps remain the actual movement sample time.
+
+Because this changes the evidence entering rewards, v1.1 starts fresh
+version-scoped preference statistics and questionnaire priors. Historical
+sessions and raw events remain available. Finalisation is idempotent, and
+historical-version sessions cannot update current-version learning.
+
+Calibration needs at least eight concluded trials (catch or full timeout)
+before it is marked complete; reaching a short session's duration alone is
+insufficient. Owner cue completion gates the next target/cue, and all voice
+playback obeys the session sound choice and each cat's sound constraints.
+An optional physical reward reminder gives a five-second pause before the
+next hunt, and still waits for praise to finish. Intentional reward pauses
+do not advance inactivity decisions; session caps and exit still apply.
 
 ## A. Initial priors from the questionnaire
 

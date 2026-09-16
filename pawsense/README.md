@@ -2,7 +2,7 @@
 
 Play smarter. Learn your cat.
 
-**Status: in development.** V1 is feature-complete with 181 passing tests and a green Android build; physical-device QA (real cats included) and store preparation are still outstanding — see [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+**Status: 0.2.0 beta preparation.** Designed for real cats hunting on a tablet, with phone support for owner setup and testing. Automated build and play-flow checks are described in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md); supervised physical-device and real-cat checks remain part of beta testing.
 
 PawSense is a personalised digital enrichment and positive-reinforcement training app for cats, built with Flutter and Flame. Each cat gets its own profile. The app observes how that cat plays on screen, learns which prey types, movement styles, speeds, and sizes work best for that individual, adapts future sessions, and helps owners pair spoken cues such as "Touch", "Good", and "All done" with successful play.
 
@@ -10,11 +10,14 @@ Everything is local. There is no account, no cloud, no advertising, and no analy
 
 ## Screenshots
 
-*Screenshots pending a physical-device capture pass.*
+Actual Flutter/Canvas renderer previews; physical-device captures are still
+part of beta QA.
 
-| Profile picker | Play session | Insights |
-|----------------|--------------|----------|
-| *placeholder* | *placeholder* | *placeholder* |
+| Owner setup | Tablet hunt |
+|-------------|-------------|
+| ![Owner home](docs/screenshots/owner-home-phone.png) | ![Mouse hunt](docs/screenshots/tablet-hunt-mouse.png) |
+
+![Mouse, moth and fish motion phases](docs/screenshots/prey-regular.png)
 
 ## Why this exists
 
@@ -30,7 +33,7 @@ Most cat games show every cat the same laser dot. Cats are individuals: one stal
 - Mixed Session mode for multi-cat households (never updates individual models)
 - Transparent, interpretable personalisation (documented formulas, no black box)
 - Difficulty controller (0-10) with cooldowns and immediate safety reductions
-- Frustration and disengagement detection that makes sessions easier, then ends them gently
+- Touch-pattern heuristics that make repeated difficult catches easier, then end sessions gently (these do not diagnose a cat's emotional state)
 - Owner dashboard: catch rates, median reaction times, preference insights with confidence labels and sample sizes, paw-touch heatmap
 - Local JSON and CSV export via the system share sheet
 - Fine-grained deletion: one session, one cat's history, one profile, or everything
@@ -94,10 +97,10 @@ flutter run -d <device-id>
 
 ### Run on iOS/iPadOS
 
-Requires a Mac with full Xcode and CocoaPods.
+Requires a Mac with full Xcode 15 or later. Flutter 3.44 uses Swift Package
+Manager for this project's native plugins and generates the package wiring.
 
 ```bash
-cd ios && pod install && cd ..
 flutter run -d <device-id>
 ```
 
@@ -114,17 +117,17 @@ flutter test integration_test        # requires a connected device/emulator
 
 ```bash
 flutter build apk --debug            # Android debug
-flutter build apk --release          # unsigned release (documented in RELEASE_GUIDE)
+flutter build apk --release          # local release; configure signing before distribution
 flutter build ios --no-codesign      # iOS compile check (requires Xcode)
 ```
 
 ## Known limitations
 
 - V1 exports exclude photos and voice recordings (documented decision; keeps exports small and reliable)
-- Cue-response insights are informal single-household observations, not controlled experiments (an optional balanced cued/silent comparison mode is included, still informal)
+- Cue-response insights are informal single-household observations, not controlled experiments; there is no balanced cued/silent experiment mode
 - No automatic multi-cat identification: Mixed Session exists precisely because the app cannot know which cat touched the screen
 - Time-of-day patterns require enough sessions before they appear
-- iOS build verification and physical-device performance checks are documented but require hardware/Xcode (see IMPLEMENTATION_STATUS.md)
+- CI compiles native iOS without signing; installing on an iPhone/iPad still needs Apple signing. Microphone quality, OS lockdown, physical paw detection and real-cat responses need device testing (see IMPLEMENTATION_STATUS.md)
 
 ## Roadmap
 

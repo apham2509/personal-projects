@@ -43,6 +43,12 @@ class AudioService {
 
   Future<void> playPreyVoice(PreyType prey) => _play('prey_${prey.name}');
 
+  /// Stop a voice preview or cue when its screen loses focus.
+  Future<void> stopCue() async {
+    if (_disposed) return;
+    await _cuePlayer?.stop();
+  }
+
   Future<void> _play(String key) async {
     if (_disposed) return;
     final pool = _pools[key];
