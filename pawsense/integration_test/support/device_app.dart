@@ -29,9 +29,8 @@ class DeviceApp {
 
   static Future<DeviceApp> create() async {
     final parent = await getTemporaryDirectory();
-    final directory = await Directory(
-      '${parent.path}/pawsense-integration-',
-    ).createTemp();
+    await parent.create(recursive: true);
+    final directory = await parent.createTemp('pawsense-integration-');
     final databaseFile = File('${directory.path}/pawsense.sqlite');
     final db = AppDatabase(NativeDatabase.createInBackground(databaseFile));
     final audio = ObservedDeviceAudio();

@@ -41,7 +41,11 @@ factor scores and exploration; it is not a language-understanding claim.
 
 Local quality gates pass: **262 tests**, clean `flutter analyze`, clean
 format check, regenerated Drift/localisations and clean workflow validation.
-Native Android/iOS CI verification is in progress; results follow below.
+Native Android APK and unsigned iOS builds passed in
+[CI run 35148702543](https://github.com/apham2509/personal-projects/actions/runs/35148702543).
+The Android integration app compiled and installed, then exposed a temporary
+directory error in the test harness before any app flow ran. That harness
+setup is corrected; the device-flow rerun is pending.
 Visual previews render the actual Canvas prey and owner widgets using
 `tool/capture_visual_previews_test.dart`; these are renderer captures, not
 physical-device screenshots.
