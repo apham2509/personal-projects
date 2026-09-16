@@ -39,8 +39,8 @@ class ProfilePickerScreen extends ConsumerWidget {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 720),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
                 child: Column(
                   children: [
                     const SizedBox(height: 8),
@@ -50,28 +50,46 @@ class ProfilePickerScreen extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
-                    Expanded(
-                      child: cats.isEmpty
-                          ? _EmptyState(
-                              onAdd: () => context.push('/profiles/new'),
-                            )
-                          : GridView.extent(
-                              maxCrossAxisExtent: 180,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              children: [
-                                for (final cat in cats)
-                                  _ProfileCard(
+                    if (cats.isEmpty)
+                      _EmptyState(onAdd: () => context.push('/profiles/new'))
+                    else
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final minimumWidth =
+                              MediaQuery.textScalerOf(context).scale(16) > 24
+                              ? 240.0
+                              : 150.0;
+                          final columns = (constraints.maxWidth / minimumWidth)
+                              .floor()
+                              .clamp(1, 4);
+                          final width =
+                              (constraints.maxWidth - 16 * (columns - 1)) /
+                              columns;
+                          return Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            alignment: WrapAlignment.center,
+                            children: [
+                              for (final cat in cats)
+                                SizedBox(
+                                  width: width,
+                                  child: _ProfileCard(
                                     cat: cat,
                                     onTap: () =>
                                         context.push('/cats/${cat.id}'),
                                   ),
-                                _AddCard(
+                                ),
+                              SizedBox(
+                                width: width,
+                                child: _AddCard(
                                   onTap: () => context.push('/profiles/new'),
                                 ),
-                              ],
-                            ),
-                    ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    const SizedBox(height: 24),
                     _MixedSessionCard(onTap: () => context.push('/mixed')),
                     const SizedBox(height: 16),
                   ],
@@ -99,18 +117,20 @@ class _ProfileCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CatAvatar(name: cat.name, photoPath: cat.photoPath),
-            const SizedBox(height: 12),
-            Text(
-              cat.name,
-              style: Theme.of(context).textTheme.titleMedium,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CatAvatar(name: cat.name, photoPath: cat.photoPath),
+              const SizedBox(height: 12),
+              Text(
+                cat.name,
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -131,21 +151,28 @@ class _AddCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 44,
-              backgroundColor: theme.colorScheme.surfaceContainerHighest,
-              child: Icon(
-                Icons.add,
-                size: 40,
-                color: theme.colorScheme.onSurfaceVariant,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 44,
+                backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                child: Icon(
+                  Icons.add,
+                  size: 40,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(context.l10n.pickerAddCat, style: theme.textTheme.titleMedium),
-          ],
+              const SizedBox(height: 12),
+              Text(
+                context.l10n.pickerAddCat,
+                style: theme.textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

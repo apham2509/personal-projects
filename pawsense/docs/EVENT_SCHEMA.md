@@ -21,16 +21,18 @@ A prey target becomes visible (`spawnedAtUtc`) and then touchable
 configuration, the spawn point (normalised), and `targetPathSeed` — the
 exact movement path can be replayed from the seed.
 
-### Touch (pointer-down)
+### Touch (pointer contact)
 
-Only pointer-down derived events are stored — never pointer moves (V1 spec).
-Each raw pointer-down becomes one `TouchEvents` row with:
+Pointer-down events and successful swipe-contact samples are stored.
+Ordinary movement samples are not persisted. Each classified contact becomes
+one `TouchEvents` row with:
 
 - `pointerId` — platform pointer id
 - `logicalInteractionId` — cluster id: contacts within 180 ms AND within
   0.04 x shortest-dimension of the cluster anchor share one id (a paw
   landing is several contacts but one interaction)
-- `deduplicated` — true for every contact after the first in its cluster
+- `deduplicated` — true for contacts that do not contribute a new outcome;
+  a later successful pad may promote the interaction and is not deduplicated
 - normalised x/y (fractions of screen width/height)
 - `distanceFromTarget` — from the active target centre, in
   shortest-dimension units; null with no target
@@ -38,7 +40,7 @@ Each raw pointer-down becomes one `TouchEvents` row with:
 
 | Classification | Definition |
 |----------------|------------|
-| hit | new logical interaction inside the active target's inflated hitbox, at or after becameTouchable |
+| hit | first successful contact in the active target's inflated hitbox, including a swept movement segment or later pad, at or after becameTouchable |
 | ignoredDuplicate | merged into a recent logical interaction |
 | ownerGesture | inside a top-corner exit zone (18% x 18% of each dimension); excluded from every cat metric |
 | postCapture | between a capture and the next spawn |
@@ -46,6 +48,12 @@ Each raw pointer-down becomes one `TouchEvents` row with:
 | miss | anything else |
 
 `hit` outranks `ownerGesture` so prey roaming near a corner still counts.
+Misses/edge signals wait 180 ms so a later pad in the same cluster can catch
+without an incorrect penalty. Promoted pending contacts are retained as
+`ignoredDuplicate`; swipe hit coordinates use the closest observed segment
+point and its actual sample timestamp. Held contacts cannot catch later
+targets; movement adds no additional misses. Contacts during cue, delay and
+spawn-in are excluded from miss/frustration scoring.
 
 ## Derived per-trial fields
 
@@ -81,7 +89,7 @@ learning-valid trials — median, not mean, by design), `frustrationCount`
 | disengaged | 30 s without meaningful interaction |
 | frustrated | two consecutive high-frustration trials |
 | backgrounded | app left the foreground |
-| interrupted | crash-recovered on a later launch |
+| interrupted | interrupted by navigation/board resize, or crash-recovered on a later launch |
 
 `ownerSubjectiveFeedback` (engaged/neutral/frustrated) is the owner's
 impression, stored on the session but deliberately separate from observed
@@ -101,6 +109,8 @@ Touches and the current trial buffer in memory (bounded at 512 events) and
 flush at trial boundaries on a chained write queue — never inside the frame
 loop. Finalisation is one transaction: session aggregates + preference
 stats + cue progress + profile difficulty.
+Finalisation is idempotent. Historical algorithm-version sessions retain raw
+summaries but cannot be replayed into current learning.
 
 ## Crash recovery
 

@@ -139,7 +139,9 @@ class SessionRunnerFactory {
         30,
         tuning.maxSessionSeconds,
       ),
-      soundEnabled: launch.soundEnabled && settings.soundEnabled,
+      // Setup applies the saved default; an explicit session choice may
+      // override it. The controller still enforces each cat's safety limits.
+      soundEnabled: launch.soundEnabled,
       seed: seed,
       initialDifficulty: initialDifficulty,
       rewardSchedule: settings.rewardSchedule,
@@ -339,8 +341,7 @@ class _LiveSession implements SessionDelegate {
       final validTrials = controller.trials
           .where((t) => t.isValidForLearning)
           .length;
-      final finished =
-          summary.status == SessionStatus.completed || validTrials >= 8;
+      final finished = validTrials >= 8;
       await ref
           .read(catProfileRepositoryProvider)
           .setCalibrationState(

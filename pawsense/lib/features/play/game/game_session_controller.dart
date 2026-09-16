@@ -132,6 +132,8 @@ class GameSessionController {
   double _phaseMs = 0;
   int _countdownShown = -1;
   bool _endRequested = false;
+  bool _greetingPending = false;
+  bool _praisePending = false;
 
   int _trialIndex = -1;
   TrialConfiguration? _currentConfig;
@@ -153,6 +155,9 @@ class GameSessionController {
 
   final List<TrialConfiguration> _history = [];
   final List<TouchRecord> _trialTouches = [];
+  // A paw's first pad may miss while another lands on the prey. Allow the
+  // existing clustering window to finish before attributing a miss/edge flag.
+  final Map<int, ClassifiedTouch> _pendingContacts = {};
   final List<TrialRecord> _trials = [];
   int _difficulty = 0;
   int _consecutiveHighFrustrationTrials = 0;
@@ -176,6 +181,7 @@ class GameSessionController {
       centreX: _currentUnitPos.x * _unitPx,
       centreY: _currentUnitPos.y * _unitPx,
       hitboxRadius: _hitboxRadiusPx(config),
+      targetId: _trialIndex,
       active:
           _phase == _Phase.targetActive &&
           !_targetHit &&
@@ -189,10 +195,14 @@ class GameSessionController {
     _difficulty = plan.initialDifficulty;
     _nextVariableThreshold = 2 + rng.nextInt(4); // 2..5
     disengagement.start(0);
-    if (plan.mode == SessionMode.touchTraining &&
+    if (_recordedSoundAllowed &&
+        plan.mode == SessionMode.touchTraining &&
         audio.hasCue(CueType.catName)) {
       // Greeting by name primes attention before the first cue trial.
-      audio.playCue(CueType.catName).ignore();
+      _greetingPending = true;
+      audio.playCue(CueType.catName).whenComplete(() {
+        _greetingPending = false;
+      }).ignore();
     }
   }
 
@@ -202,6 +212,7 @@ class GameSessionController {
     final dtMs = dt * 1000;
     _sessionMs += dtMs;
     _phaseMs += dtMs;
+    _flushPendingContacts();
 
     // Session duration cap applies in every phase.
     if (_sessionMs >= plan.plannedDurationSeconds * 1000 && !_endRequested) {
@@ -216,7 +227,7 @@ class GameSessionController {
           _countdownShown = remaining;
           delegate.onCountdownTick(remaining);
         }
-        if (_sessionMs >= tuning.countdownSeconds * 1000) {
+        if (_sessionMs >= tuning.countdownSeconds * 1000 && !_greetingPending) {
           disengagement.start(_sessionMs.round());
           _beginTrial();
         }
@@ -233,9 +244,18 @@ class GameSessionController {
           _pollDisengagement();
         }
       case _Phase.interTrial:
-        _pollDisengagement();
+        // Reward delivery is an intentional break, not lost engagement.
+        // The session's duration cap still applies above in every phase.
+        if (!_trialRewardReminderShown) _pollDisengagement();
+        final delayMs = _trialRewardReminderShown
+            ? math.max(tuning.interTrialDelayMs, tuning.rewardPauseMs)
+            : tuning.interTrialDelayMs;
         if (_phase == _Phase.interTrial &&
-            _phaseMs >= tuning.interTrialDelayMs) {
+            _phaseMs >= delayMs &&
+            !_praisePending) {
+          if (_trialRewardReminderShown) {
+            disengagement.start(_sessionMs.round());
+          }
           _beginTrial();
         }
       case _Phase.ended:
@@ -245,30 +265,51 @@ class GameSessionController {
 
   /// Raw pointer-down from the play screen's Listener.
   void handlePointerDown(int pointerId, double x, double y) {
-    if (_phase == _Phase.ended || _phase == _Phase.countdown) return;
+    final postCapture = _phase == _Phase.interTrial && _lastTrialEndedInCapture;
+    // A paw cannot miss prey that has not appeared or become catchable. Cue
+    // playback, anticipation delay, spawn-in and blank gaps are not trials of
+    // the cat's accuracy. Keep only the deliberate post-capture classification.
+    if (!postCapture &&
+        (_phase != _Phase.targetActive || _sessionMs < _becameTouchableMs)) {
+      return;
+    }
     final nowMs = _sessionMs.round();
+    _flushPendingContacts();
     final classified = processor.process(
       RawPointerDown(pointerId: pointerId, timestampMs: nowMs, x: x, y: y),
       target: currentTargetSnapshot,
-      inPostCaptureWindow:
-          _phase == _Phase.interTrial && _lastTrialEndedInCapture,
+      inPostCaptureWindow: postCapture,
     );
+    _handleClassifiedTouch(classified, nowMs);
+  }
+
+  /// A held paw can sweep through this trial's prey. Movement never creates
+  /// new misses; the processor emits only the first catch for an interaction.
+  void handlePointerMove(int pointerId, double x, double y) {
+    if (_phase == _Phase.ended) return;
+    final nowMs = _sessionMs.round();
+    _flushPendingContacts();
+    final classified = processor.processMove(
+      RawPointerMove(pointerId: pointerId, timestampMs: nowMs, x: x, y: y),
+      target: currentTargetSnapshot,
+    );
+    if (classified != null) _handleClassifiedTouch(classified, nowMs);
+  }
+
+  void _handleClassifiedTouch(ClassifiedTouch classified, int nowMs) {
     _recordTouch(classified, nowMs);
 
     switch (classified.classification) {
       case TouchClassification.hit:
+        _promotePendingContact(classified.logicalId);
+        _flushPendingContacts(all: true);
         _onCatch(nowMs);
       case TouchClassification.miss:
-        _trialMissCount++;
-        final config = _currentConfig;
-        final distance = classified.distanceFromTarget;
-        final distanceFromEdge = (distance == null || config == null)
-            ? null
-            : distance - _hitboxRadiusPx(config) / _unitPx;
-        frustration.onMiss(nowMs, distanceFromTargetEdge: distanceFromEdge);
-        disengagement.onMeaningfulInteraction(nowMs);
       case TouchClassification.edge:
-        frustration.onEdgeTouch(nowMs);
+        if (_pendingContacts.length >= _maxBufferedTouches) {
+          _flushPendingContacts(all: true);
+        }
+        _pendingContacts[classified.logicalId] = classified;
         disengagement.onMeaningfulInteraction(nowMs);
       case TouchClassification.postCapture:
         frustration.onPostCaptureTouch(nowMs);
@@ -280,12 +321,70 @@ class GameSessionController {
     }
   }
 
+  void _flushPendingContacts({bool all = false}) {
+    final nowMs = _sessionMs.round();
+    final due = _pendingContacts.entries
+        .where(
+          (entry) =>
+              all ||
+              nowMs - entry.value.raw.timestampMs > tuning.clusterWindowMs,
+        )
+        .toList();
+    for (final entry in due) {
+      _pendingContacts.remove(entry.key);
+      final contact = entry.value;
+      final timestamp = contact.raw.timestampMs;
+      if (contact.classification == TouchClassification.edge) {
+        frustration.onEdgeTouch(timestamp);
+      } else {
+        _trialMissCount++;
+        final config = _currentConfig;
+        final distance = contact.distanceFromTarget;
+        final fromEdge = distance == null || config == null
+            ? null
+            : distance - _hitboxRadiusPx(config) / _unitPx;
+        frustration.onMiss(timestamp, distanceFromTargetEdge: fromEdge);
+      }
+    }
+  }
+
+  void _promotePendingContact(int logicalId) {
+    if (_pendingContacts.remove(logicalId) == null) return;
+    // Preserve the first raw observation, but mark it as superseded by the
+    // catch from the same paw so heatmaps and accuracy agree with clustering.
+    for (var i = 0; i < _trialTouches.length; i++) {
+      final touch = _trialTouches[i];
+      if (touch.logicalInteractionId != logicalId ||
+          (touch.classification != TouchClassification.miss &&
+              touch.classification != TouchClassification.edge)) {
+        continue;
+      }
+      _trialTouches[i] = TouchRecord(
+        trialIndex: touch.trialIndex,
+        pointerId: touch.pointerId,
+        logicalInteractionId: touch.logicalInteractionId,
+        occurredAtMs: touch.occurredAtMs,
+        xNormalised: touch.xNormalised,
+        yNormalised: touch.yNormalised,
+        classification: TouchClassification.ignoredDuplicate,
+        deduplicated: true,
+        distanceFromTarget: touch.distanceFromTarget,
+      );
+    }
+  }
+
   void handlePointerUp(int pointerId) {
     final nowMs = _sessionMs.round();
     final heldMs = processor.registerPointerUp(pointerId, nowMs);
-    if (heldMs >= tuning.longHoldMs) {
+    if (_phase != _Phase.ended && heldMs >= tuning.longHoldMs) {
       frustration.onHold(nowMs, heldMs);
     }
+  }
+
+  /// System cancellation releases tracking without inventing a paw lift or
+  /// attributing a hold signal to an interrupted touch stream.
+  void handlePointerCancel(int pointerId) {
+    processor.registerPointerUp(pointerId, _sessionMs.round());
   }
 
   /// Owner exit gesture confirmed through the owner gate.
@@ -295,6 +394,9 @@ class GameSessionController {
   void appBackgrounded() {
     if (_phase != _Phase.ended) _end(SessionStatus.backgrounded);
   }
+
+  /// The play surface was removed or resized before the session completed.
+  void interrupt() => _end(SessionStatus.interrupted);
 
   /// Game loop reports the target's live position (unit space) each frame
   /// so hit-testing tracks the moving prey.
@@ -346,7 +448,9 @@ class GameSessionController {
     _trialRewardReminderShown = false;
     _trialCue = null;
 
-    if (plan.mode == SessionMode.touchTraining && audio.hasCue(CueType.touch)) {
+    if (_recordedSoundAllowed &&
+        plan.mode == SessionMode.touchTraining &&
+        audio.hasCue(CueType.touch)) {
       _trialCue = CueType.touch;
       _setPhase(_Phase.cuePlaying);
       audio.playCue(CueType.touch).whenComplete(() {
@@ -399,12 +503,16 @@ class GameSessionController {
     }
     // Praise: owner recording when available, subtle chime otherwise.
     final praiseOptions = [
-      if (audio.hasCue(CueType.good)) CueType.good,
-      if (audio.hasCue(CueType.goodJob)) CueType.goodJob,
+      if (_recordedSoundAllowed && audio.hasCue(CueType.good)) CueType.good,
+      if (_recordedSoundAllowed && audio.hasCue(CueType.goodJob))
+        CueType.goodJob,
     ];
     if (praiseOptions.isNotEmpty) {
       _trialPraise = praiseOptions[rng.nextInt(praiseOptions.length)];
-      audio.playCue(_trialPraise!).ignore();
+      _praisePending = true;
+      audio.playCue(_trialPraise!).whenComplete(() {
+        _praisePending = false;
+      }).ignore();
     } else if (_soundAllowedForTrial(config)) {
       audio.playEffect(SessionEffect.successChime);
     }
@@ -428,6 +536,7 @@ class GameSessionController {
   void _finaliseTrial({required bool success, required bool timedOut}) {
     final config = _currentConfig;
     if (config == null) return;
+    _flushPendingContacts(all: true);
     final nowMs = _sessionMs.round();
     final (flags, severity) = frustration.collectTrialFlags(nowMs);
 
@@ -543,7 +652,10 @@ class GameSessionController {
       _finaliseTrial(success: false, timedOut: false);
     }
     _setPhase(_Phase.ended);
-    if (audio.hasCue(CueType.allDone)) {
+    if (_recordedSoundAllowed &&
+        status != SessionStatus.backgrounded &&
+        status != SessionStatus.interrupted &&
+        audio.hasCue(CueType.allDone)) {
       audio.playCue(CueType.allDone).ignore();
     }
     delegate.onSessionEnded(_summary(status));
@@ -597,9 +709,12 @@ class GameSessionController {
   }
 
   bool _soundAllowedForTrial(TrialConfiguration config) =>
-      plan.soundEnabled &&
-      constraints.soundAllowed &&
-      config.soundMode == SoundMode.sound;
+      _recordedSoundAllowed && config.soundMode == SoundMode.sound;
+
+  // Recorded cues are independent of the trial's prey-effect condition, but
+  // must obey the owner's master switch and the cat's hard safety limit.
+  bool get _recordedSoundAllowed =>
+      plan.soundEnabled && constraints.soundAllowed;
 
   /// Uniform point inside the requested zone of the safe area (unit space).
   Vec2 _spawnPointFor(TrialConfiguration config) {

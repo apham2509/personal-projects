@@ -3,7 +3,7 @@ library;
 
 /// Human-readable version stored on every session row. Keep in sync with
 /// pubspec.yaml `version`.
-const String appVersion = '0.1.0';
+const String appVersion = '0.2.0';
 
 /// Version of the privacy explanation the owner accepted during intro.
 /// Bump when docs/PRIVACY.md changes materially; the app then re-shows the

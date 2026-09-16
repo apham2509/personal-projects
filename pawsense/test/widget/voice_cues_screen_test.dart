@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pawsense/app/app.dart';
@@ -14,13 +16,19 @@ class FakeCueRecorder implements CueRecorder {
 
   bool permitted;
   String? activePath;
+  Completer<void>? pendingStart;
+  int startCount = 0;
+  int cancelCount = 0;
 
   @override
   Future<bool> hasPermission() async => permitted;
 
   @override
   Future<void> start(String path) async {
+    startCount++;
+    await pendingStart?.future;
     activePath = path;
+    File(path).writeAsBytesSync([1, 2, 3]);
   }
 
   @override
@@ -34,6 +42,7 @@ class FakeCueRecorder implements CueRecorder {
 
   @override
   Future<void> cancel() async {
+    cancelCount++;
     activePath = null;
   }
 
@@ -42,6 +51,111 @@ class FakeCueRecorder implements CueRecorder {
 }
 
 void main() {
+  Future<TestApp> openVoiceScreen(
+    WidgetTester tester,
+    FakeCueRecorder recorder,
+  ) async {
+    final app = TestApp.create();
+    addTearDown(app.dispose);
+    await dbCall(tester, () async {
+      await app.completeOnboarding();
+      await app.seedCat('Tiger');
+    });
+    final catId = (await dbCall(
+      tester,
+      () => app.db.select(app.db.catProfiles).get(),
+    )).single.id;
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          databaseProvider.overrideWithValue(app.db),
+          fileServiceProvider.overrideWithValue(app.files),
+          clockProvider.overrideWithValue(app.clock),
+          cueRecorderProvider.overrideWithValue(recorder),
+        ],
+        child: const PawSenseApp(),
+      ),
+    );
+    await pumpUntilFound(tester, find.text("Who's playing?"));
+    await goTo(tester, '/cats/$catId/voice');
+    await pumpUntilFound(tester, find.text("Tiger's voice cues"));
+    return app;
+  }
+
+  testWidgets('leaving a recording cancels the mic and deletes its temp file', (
+    tester,
+  ) async {
+    final recorder = FakeCueRecorder(permitted: true);
+    final app = await openVoiceScreen(tester, recorder);
+    await tester.tap(find.text('Record').first);
+    await tester.pump(const Duration(milliseconds: 100));
+    final path = recorder.activePath!;
+    expect(File(path).existsSync(), isTrue);
+    await goTo(tester, '/profiles');
+    expect(recorder.activePath, isNull);
+    expect(recorder.cancelCount, greaterThan(0));
+    expect(File(path).existsSync(), isFalse);
+    expect(
+      await dbCall(tester, () => app.db.select(app.db.voiceCues).get()),
+      isEmpty,
+    );
+    await tearDownApp(tester);
+  });
+
+  testWidgets('backgrounding cancels recording without saving a partial cue', (
+    tester,
+  ) async {
+    final recorder = FakeCueRecorder(permitted: true);
+    final app = await openVoiceScreen(tester, recorder);
+    await tester.tap(find.text('Record').first);
+    await tester.pump(const Duration(milliseconds: 100));
+    final path = recorder.activePath!;
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    expect(recorder.activePath, isNull);
+    expect(File(path).existsSync(), isFalse);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(find.text('Stop'), findsNothing);
+    expect(
+      await dbCall(tester, () => app.db.select(app.db.voiceCues).get()),
+      isEmpty,
+    );
+    await tearDownApp(tester);
+  });
+
+  testWidgets('a delayed mic start is cancelled if its screen was removed', (
+    tester,
+  ) async {
+    final recorder = FakeCueRecorder(permitted: true)
+      ..pendingStart = Completer<void>();
+    final app = await openVoiceScreen(tester, recorder);
+    await tester.tap(find.text('Record').first);
+    await tester.pump();
+    expect(recorder.startCount, 1);
+    await goTo(tester, '/profiles');
+    recorder.pendingStart!.complete();
+    await tester.pump();
+    expect(recorder.activePath, isNull);
+    expect(app.files.documentsDir.listSync().whereType<File>(), isEmpty);
+    expect(tester.takeException(), isNull);
+    await tearDownApp(tester);
+  });
+
+  testWidgets('recordings stop and save automatically after five seconds', (
+    tester,
+  ) async {
+    final recorder = FakeCueRecorder(permitted: true);
+    await openVoiceScreen(tester, recorder);
+    await tester.tap(find.text('Record').first);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 5));
+    await pumpUntilFound(tester, find.text('1.2 s recorded'));
+    expect(recorder.activePath, isNull);
+    expect(find.text('Stop'), findsNothing);
+    await tearDownApp(tester);
+  });
+
   testWidgets('record -> stop saves the cue; preview and delete appear', (
     tester,
   ) async {

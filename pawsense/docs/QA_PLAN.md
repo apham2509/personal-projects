@@ -1,11 +1,18 @@
 # PawSense QA Plan
 
-## Automated (run on every change; CI runs them all)
+## Automated checks
+
+`PawSense CI` runs for PawSense changes on pull requests, `main`, and
+`feature/**`, and can be started manually with **Run workflow**. It has three
+independent jobs: host analysis/tests plus a downloadable Android debug APK;
+Android tablet emulator integration; and an unsigned iOS device build that
+compiles the native plugins. An iOS compile pass does not prove behaviour on
+an iPhone or iPad.
 
 ```bash
-dart format --set-exit-if-changed .
+dart format --output=none --set-exit-if-changed .
 flutter analyze
-flutter test                       # 180+ tests, all suites below
+flutter test                       # all fast suites below
 flutter build apk --debug
 ```
 
@@ -41,16 +48,38 @@ flutter build apk --debug
 
 ## Integration tests (`integration_test/`, need a device or emulator)
 
-Authored flows: first launch -> create cat -> calibration setup; free play
--> stored session -> insights; export share; delete cascade; interrupted
-session recovery. Run with:
+The Android CI job runs these on an API 35 Pixel C tablet emulator. Each
+test uses its own real SQLite file and private temporary media directory,
+initialises before app mount, and unmounts the app before awaiting database
+closure. Tests never delete a tester's own profiles.
+
+- First launch, profile wizard, and calibration setup.
+- Stored sessions, insights, and history.
+- Export files and deletion of dependent records/media.
+- App-bootstrap recovery of an interrupted stored session, plus idempotence.
+- Voice recording screen Record/Stop and preview; actual native AAC decode
+  and playback; a live Flame hunt with the real session runner and pointer
+  input; one successful Touch trial and recorded praise; system Back
+  protection; the two-corner gesture and owner hold; saved session, touch,
+  and cue-response progress; and reopening SQLite to verify durability.
+
+The voice test replaces only microphone capture with an original synthetic
+AAC fixture embedded in the integration bundle. It makes no runtime network
+request and still exercises production file saving, audio playback, and
+training. It does **not** validate actual human voice capture, OS microphone
+permission dialogs, audible quality, or what a cat learns. The audio engine
+also has a direct decode/completion assertion so a playback fail-open guard
+cannot conceal a broken fixture. Those remaining checks belong below.
+
+Run on a connected device or emulator with:
 
 ```bash
-flutter test integration_test -d <device-id>
+flutter test integration_test/app_flows_test.dart -d <device-id>
 ```
 
-Not runnable on the development machine used for V1 (no emulator/Xcode);
-must be part of the physical-device pass below.
+The development machine has no Android SDK or full Xcode. Local Dart
+analysis/bundle compilation cannot replace the CI emulator run or the
+physical-device pass.
 
 ## Physical-device pass (required before any release)
 
@@ -62,16 +91,23 @@ a phone form-factor sanity check of owner screens.
 2. Real paw testing with a cat: cluster window sanity (no double catches
    from one pounce), hitbox feel for small targets, exit gesture cannot be
    triggered by play, screen-pinning workflows.
-3. Audio: cue recording/playback latency, praise timing after catch, no
-   clipping, silent mode honoured, volume comfortable at arm's length.
+3. Audio: record the owner's real voice for all five slots; stop, preview,
+   re-record, delete, and relaunch. Confirm Touch finishes before prey appears,
+   recorded praise follows a catch, and All done plays on owner exit.
+   Check playback latency, no clipping, app sound settings honoured, and
+   comfortable volume at arm's length. Confirm easily startled profiles
+   remain silent even when sound is enabled in session setup.
 4. Lifecycle: background mid-session (status `backgrounded`), force-kill
    mid-session then relaunch (crash recovery to `interrupted`), rotation
    on owner screens, immersive-mode restore after exit.
-5. Permissions: deny microphone, verify guidance; revoke mid-app.
+5. Permissions: deny microphone, verify guidance; revoke mid-app. Background
+   or navigate away while recording; confirm capture stops and no abandoned
+   temporary recording remains.
 6. Accessibility: VoiceOver/TalkBack across owner screens, 200% font
    scale, contrast in light/dark themes.
 7. Battery/thermals: one full 5-minute session should not warm the device
-   noticeably.
+   noticeably. The screen stays awake throughout the hunt, then returns to
+   normal sleep behaviour on results, owner exit, and backgrounding.
 8. Export: share JSON to Files/Drive-like target and re-import into the
    validator (`dart run tool/validate_exports.dart`).
 

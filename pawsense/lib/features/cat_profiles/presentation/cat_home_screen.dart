@@ -117,15 +117,24 @@ class _CatHomeBody extends StatelessWidget {
                       children: [
                         Text(cat.name, style: theme.textTheme.headlineMedium),
                         const SizedBox(height: 6),
-                        Chip(
-                          avatar: Icon(
-                            cat.calibrationState == CalibrationState.completed
-                                ? Icons.check_circle_outline
-                                : Icons.pending_outlined,
-                            size: 18,
-                          ),
-                          label: Text(cat.calibrationState.label(l10n)),
-                          visualDensity: VisualDensity.compact,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              cat.calibrationState == CalibrationState.completed
+                                  ? Icons.check_circle_outline
+                                  : Icons.pending_outlined,
+                              size: 18,
+                              color: theme.colorScheme.primary,
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                cat.calibrationState.label(l10n),
+                                style: theme.textTheme.bodySmall,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -133,16 +142,26 @@ class _CatHomeBody extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              GridView.extent(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                maxCrossAxisExtent: 280,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 1.9,
-                children: [
-                  for (final action in actions) _ActionCard(action: action),
-                ],
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final twoColumns =
+                      constraints.maxWidth >= 600 &&
+                      MediaQuery.textScalerOf(context).scale(16) <= 24;
+                  final width = twoColumns
+                      ? (constraints.maxWidth - 12) / 2
+                      : constraints.maxWidth;
+                  return Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      for (final action in actions)
+                        SizedBox(
+                          width: width,
+                          child: _ActionCard(action: action),
+                        ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
@@ -196,12 +215,7 @@ class _ActionCard extends StatelessWidget {
                   children: [
                     Text(action.title, style: theme.textTheme.titleMedium),
                     const SizedBox(height: 2),
-                    Text(
-                      action.subtitle,
-                      style: theme.textTheme.bodySmall,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(action.subtitle, style: theme.textTheme.bodySmall),
                   ],
                 ),
               ),

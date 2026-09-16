@@ -192,9 +192,9 @@
     }
   },
   "settingsSound": "Game sounds",
-  "settingsSoundSubtitle": "Soft prey and capture sounds during play. Individual cats marked as easily startled always start silent.",
+  "settingsSoundSubtitle": "Default for prey sounds and recorded voice cues. Easily startled cats always play silently.",
   "settingsRewardSection": "Real-world treat reminders",
-  "settingsRewardDisclaimer": "Treats are optional. Keep the total within your cat's normal daily diet. PawSense is enrichment, not veterinary advice.",
+  "settingsRewardDisclaimer": "A dim paw reminder gives you a five-second pause before the next hunt to offer a reward. Treats are optional; keep them within your cat's normal daily diet. PawSense is enrichment, not veterinary advice.",
   "rewardNone": "No treat reminders",
   "rewardManual": "Manual rewards only",
   "rewardEveryThree": "Every 3 successful catches",
@@ -232,10 +232,10 @@
   "setupTitlePlay": "Play session",
   "setupTitleTrain": "Touch training",
   "setupTitleCalibration": "Calibration",
-  "setupCalibrationInfo": "A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat's starting preferences. You can stop at any time and continue later.",
+  "setupCalibrationInfo": "A short, balanced session of 12 small trials. PawSense shows a fair mix of prey, movement, speed, and size to learn your cat's starting preferences. You can stop at any time; the observations are saved, and you can start a fresh calibration later.",
   "setupDuration": "Session length",
   "setupSound": "Sound for this session",
-  "setupSoundBody": "Soft prey and capture sounds.",
+  "setupSoundBody": "Soft prey sounds and any recorded voice cues or praise.",
   "setupSoundLocked": "Off: this cat is marked as easily startled.",
   "setupManualToggle": "Choose the target myself",
   "setupManualBody": "Fix the prey, movement, speed, and size instead of letting PawSense adapt.",
@@ -294,7 +294,7 @@
       }
     }
   },
-  "voiceIntro": "Record short, calm cues in your own voice. PawSense plays them during Touch Training: the Touch cue before each target, praise after a catch, and All done at the end. Keep each one under a couple of seconds.",
+  "voiceIntro": "Record short, calm cues in your own voice. PawSense plays Touch before the prey appears, praise after a catch, and All done at the end. Aim for one or two seconds; recordings stop automatically after five seconds.",
   "cueCatName": "{name}'s name",
   "@cueCatName": {
     "placeholders": {
@@ -562,11 +562,20 @@
   "dataDeleteAllConfirm": "This permanently removes every cat profile, photo, voice recording, play session, learned preference, and setting, and returns PawSense to its first-launch state. This cannot be undone.",
   "statusCompleted": "Completed",
   "statusOwnerStopped": "Ended by you",
-  "statusDisengaged": "Ended early: lost interest",
-  "statusFrustrated": "Ended gently: repeated frustration",
+  "statusDisengaged": "Ended: no recent screen touches",
+  "statusFrustrated": "Ended gently: repeated difficult catches",
   "statusBackgrounded": "Ended: app went to background",
   "statusInterrupted": "Interrupted",
   "statusInProgress": "In progress",
   "setupSkipCalibration": "Skip calibration for now",
-  "setupSkipCalibrationNote": "You can run it any time from the cat's home screen. Adaptive play works without it, starting from your questionnaire answers only."
+  "setupSkipCalibrationNote": "You can run it any time from the cat's home screen. Adaptive play works without it, starting from your questionnaire answers only.",
+  "setupExitTitle": "How to leave the play surface",
+  "setupExitBody": "Hold both top corners for two seconds, then complete the owner check. Keep the tablet stable and stay nearby.",
+  "setupTrainingTitle": "Your voice starts the hunt",
+  "setupTrainingLoop": "Touch cue → a short pause → prey appears → a paw catch → your recorded praise. Offer a real toy or an optional small reward yourself.",
+  "setupTrainingSilent": "Sound is off. This will be a silent play session; recorded cues and praise will not play.",
+  "setupTrainingNeedsTouch": "No Touch recording yet. Record your cue to start voice training; without it, targets appear silently.",
+  "setupTrainingNeedsPraise": "Your Touch cue is ready. Add Good or Good job for praise in your own voice; until then, PawSense uses a soft success sound.",
+  "setupTrainingReady": "Touch and praise recordings are ready. PawSense waits for each recording to finish before starting the next hunt.",
+  "setupRecordCues": "Record voice cues"
 }

@@ -17,6 +17,7 @@ class TrialFact {
     required this.cueType,
     required this.difficultyAtTrial,
     required this.endedAtUtc,
+    required this.algorithmVersion,
   });
 
   final PreyType preyType;
@@ -32,6 +33,7 @@ class TrialFact {
   final CueType? cueType;
   final int difficultyAtTrial;
   final DateTime? endedAtUtc;
+  final String algorithmVersion;
 
   /// Concluded trials only (catch or full timeout) count as evidence.
   bool get isComparable => success || timedOut;

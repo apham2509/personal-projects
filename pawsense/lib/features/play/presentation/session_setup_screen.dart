@@ -7,6 +7,20 @@ import '../../../shared/models/enums.dart';
 import '../../../shared/providers/core_providers.dart';
 import 'session_launch.dart';
 
+final _trainingRecordingsProvider = StreamProvider.autoDispose
+    .family<Set<CueType>, String>((ref, catId) {
+      final files = ref.watch(fileServiceProvider);
+      return ref
+          .watch(voiceCueRepositoryProvider)
+          .watchForCat(catId)
+          .map(
+            (rows) => {
+              for (final cue in rows)
+                if (files.resolve(cue.filePath).existsSync()) cue.cueType,
+            },
+          );
+    });
+
 /// Owner-facing pre-session configuration: duration, sound, adaptive vs
 /// manual factors, and a safety reminder. Mode comes from the entry point.
 class SessionSetupScreen extends ConsumerStatefulWidget {
@@ -68,6 +82,11 @@ class _SetupState extends ConsumerState<SessionSetupScreen> {
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
+              if (widget.mode == SessionMode.touchTraining &&
+                  widget.catId != null) ...[
+                _TrainingGuide(catId: widget.catId!, soundEnabled: sound),
+                const SizedBox(height: 24),
+              ],
               if (widget.mode == SessionMode.mixed) ...[
                 Card(
                   child: Padding(
@@ -107,17 +126,18 @@ class _SetupState extends ConsumerState<SessionSetupScreen> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
-              SegmentedButton<int>(
-                segments: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
                   for (final seconds in const [60, 120, 180, 300])
-                    ButtonSegment(
-                      value: seconds,
+                    ChoiceChip(
+                      selected: duration == seconds,
                       label: Text(l10n.durationMinutes(seconds ~/ 60)),
+                      onSelected: (_) =>
+                          setState(() => _durationSeconds = seconds),
                     ),
                 ],
-                selected: {duration},
-                onSelectionChanged: (selection) =>
-                    setState(() => _durationSeconds = selection.first),
               ),
               const SizedBox(height: 24),
               SwitchListTile(
@@ -200,6 +220,13 @@ class _SetupState extends ConsumerState<SessionSetupScreen> {
                 ),
               ),
               const SizedBox(height: 24),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.touch_app_outlined),
+                title: Text(l10n.setupExitTitle),
+                subtitle: Text(l10n.setupExitBody),
+              ),
+              const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () {
                   final launch = SessionLaunch(
@@ -242,15 +269,75 @@ class _SetupState extends ConsumerState<SessionSetupScreen> {
         children: [
           Text(label, style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: 6),
-          SegmentedButton<T>(
-            segments: [
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
               for (final value in values)
-                ButtonSegment(value: value, label: Text(labelOf(value))),
+                ChoiceChip(
+                  selected: value == selected,
+                  label: Text(labelOf(value)),
+                  onSelected: (_) => onChanged(value),
+                ),
             ],
-            selected: {selected},
-            onSelectionChanged: (selection) => onChanged(selection.first),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _TrainingGuide extends ConsumerWidget {
+  const _TrainingGuide({required this.catId, required this.soundEnabled});
+
+  final String catId;
+  final bool soundEnabled;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final cues = ref.watch(_trainingRecordingsProvider(catId));
+    return Card(
+      color: theme.colorScheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.record_voice_over_outlined,
+              color: theme.colorScheme.onPrimaryContainer,
+              size: 28,
+            ),
+            const SizedBox(height: 12),
+            Text(l10n.setupTrainingTitle, style: theme.textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text(l10n.setupTrainingLoop),
+            const SizedBox(height: 16),
+            if (!soundEnabled)
+              Text(l10n.setupTrainingSilent)
+            else
+              cues.when(
+                loading: () => const LinearProgressIndicator(),
+                error: (_, _) => Text(l10n.errorGenericBody),
+                data: (available) => Text(
+                  !available.contains(CueType.touch)
+                      ? l10n.setupTrainingNeedsTouch
+                      : !available.contains(CueType.good) &&
+                            !available.contains(CueType.goodJob)
+                      ? l10n.setupTrainingNeedsPraise
+                      : l10n.setupTrainingReady,
+                ),
+              ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () => context.push('/cats/$catId/voice'),
+              icon: const Icon(Icons.mic_none_rounded),
+              label: Text(l10n.setupRecordCues),
+            ),
+          ],
+        ),
       ),
     );
   }

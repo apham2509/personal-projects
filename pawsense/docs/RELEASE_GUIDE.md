@@ -10,12 +10,32 @@
 
 ## App icons and launch screens
 
-V1 ships the Flutter template icons; before store submission generate a
-proper icon set (e.g. with `flutter_launcher_icons`) from an original
-design. No copyrighted or AI-ambiguous artwork; keep the procedural-art
-spirit of the app.
+The app ships an original Canvas-drawn PawSense mark, matching platform
+icons, and warm-paper launch screens. Their source and preview generation
+live in `tool/capture_visual_previews_test.dart`; regenerate from that
+original artwork when changing the identity.
 
 ## Android
+
+### Install a beta from CI
+
+1. Open the repository's **Actions → PawSense CI** and select a successful
+   run for the commit being tested (or use **Run workflow**).
+2. Download `pawsense-android-debug-<commit>` from the run's artifacts,
+   extract `app-debug.apk`, and transfer it to the Android phone/tablet.
+3. Open the APK and allow installation from that browser/file manager when
+   Android prompts. Alternatively, use `adb install -r app-debug.apk` from
+   a computer with an attached device.
+4. Run the physical QA checklist, especially the hunt, owner exit, and real
+   voice recording. The APK is a debug beta, not a Play Store release.
+
+Artifacts expire after 14 days. CI-generated debug signing keys can change
+between runs; Android may reject an update with a signature mismatch. Export
+any play data you want to retain before uninstalling the earlier beta; an
+uninstall removes local profiles and audio, and exports do not include audio
+files. Use a stable private signing key when distributing ongoing betas.
+
+### Prepare a store build
 
 1. Create an upload keystore (never commit it):
    ```bash
@@ -33,16 +53,41 @@ spirit of the app.
 
 ## iOS/iPadOS
 
-1. Requires a Mac with full Xcode and CocoaPods
-   (`brew install cocoapods`), plus an Apple Developer Programme
-   membership.
-2. `cd ios && pod install`, open `Runner.xcworkspace`, select your team;
-   automatic signing is fine for TestFlight.
-3. Compile check without signing: `flutter build ios --no-codesign`.
-4. Archive via Xcode Organizer -> TestFlight internal testing.
-5. Info.plist already contains the microphone usage description; verify
-   orientations (owner screens all, play forces landscape at runtime).
-6. Do not commit certificates, profiles, or ExportOptions with team IDs.
+CI runs `flutter build ios --release --no-codesign` on macOS to check the
+app and its native plugins compile. That produces no installable iPhone/iPad
+beta and does not sign or publish anything. Installing on a physical Apple
+device requires Xcode signing; distributing via TestFlight requires the
+Apple Developer Programme setup below. CI uses no Apple account, certificate,
+or provisioning-profile secrets.
+
+### Test on your own iPhone or iPad
+
+1. Use a Mac with full Xcode 15 or newer. Run `flutter pub get` and
+   `flutter build ios --debug --no-codesign` once to prepare the project.
+2. Flutter 3.44.8 uses Swift Package Manager by default. The Xcode project
+   references `FlutterGeneratedPluginSwiftPackage`; Flutter generates this
+   package and the current native plugins all support it. No manual
+   `pod install` is needed for this dependency set.
+3. Open `ios/Runner.xcworkspace`, add your Apple Account in Xcode settings,
+   and choose your team under Runner → Signing & Capabilities. Automatic
+   signing with a free Personal Team supports testing on your own device.
+4. Connect the device, enable Developer Mode when prompted, select it in
+   Xcode, and run. Personal Team provisioning is temporary; rebuild when it
+   expires. Run the physical-device QA checklist on both phone and tablet.
+
+### Distribute through TestFlight
+
+1. Use a paid Apple Developer Programme membership and its signing team.
+2. Archive a release build through Xcode Organizer and upload to TestFlight
+   internal testing before broader distribution.
+3. Info.plist contains microphone and selected-photo usage descriptions;
+   verify permissions and orientations on a physical iPhone and iPad.
+4. Do not commit certificates, profiles, or ExportOptions with team IDs.
+
+See Apple's [membership comparison](https://developer.apple.com/support/compare-memberships/)
+for Personal Team and distribution capabilities, and Flutter's
+[Swift Package Manager guide](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
+for native dependency setup.
 
 ## Store privacy disclosures (accurate for V1)
 

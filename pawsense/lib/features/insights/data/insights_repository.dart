@@ -64,6 +64,7 @@ class InsightsRepository {
             cueType: row.cueType,
             difficultyAtTrial: row.difficultyAtTrial,
             endedAtUtc: row.endedAtUtc,
+            algorithmVersion: row.algorithmVersion,
           ),
       ],
       touches: [

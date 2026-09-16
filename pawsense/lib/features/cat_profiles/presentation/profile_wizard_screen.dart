@@ -94,6 +94,7 @@ class _WizardState extends ConsumerState<ProfileWizardScreen> {
       maxWidth: 1024,
       maxHeight: 1024,
       imageQuality: 85,
+      requestFullMetadata: false,
     );
     if (picked == null || !mounted) return;
     setState(() {
@@ -150,7 +151,8 @@ class _WizardState extends ConsumerState<ProfileWizardScreen> {
 
   Duration get _pageTurn {
     final reduceMotion =
-        ref.read(settingsProvider).value?.reduceMotion ?? false;
+        MediaQuery.disableAnimationsOf(context) ||
+        (ref.read(settingsProvider).value?.reduceMotion ?? false);
     return reduceMotion
         ? const Duration(milliseconds: 1)
         : const Duration(milliseconds: 250);
@@ -487,10 +489,13 @@ class _WizardState extends ConsumerState<ProfileWizardScreen> {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                      Text(
-                        value,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Text(
+                          value,
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],

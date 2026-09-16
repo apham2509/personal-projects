@@ -6,6 +6,7 @@ import '../../../core/time/clock.dart';
 import '../../../core/utils/stats.dart';
 import '../../../shared/models/enums.dart';
 import '../../personalisation/data/preference_repository.dart';
+import '../../personalisation/domain/algorithm_version.dart' as algo;
 import '../../training/data/cue_progress_repository.dart';
 import '../domain/session_models.dart';
 
@@ -144,7 +145,9 @@ class SessionRepository {
 
   /// Finalises the session transactionally: summary onto the session row,
   /// preference/cue-progress updates (individual cats only), and the cat's
-  /// new difficulty.
+  /// new difficulty. Already-ended sessions are immutable here, making a
+  /// retried finish harmless. Historical-version sessions retain their raw
+  /// summary but cannot alter current preferences, cue progress, or difficulty.
   Future<void> finaliseSession({
     required String sessionId,
     required SessionSummary summary,
@@ -155,6 +158,7 @@ class SessionRepository {
       final sessionQuery = _db.select(_db.sessions)
         ..where((s) => s.id.equals(sessionId));
       final session = await sessionQuery.getSingle();
+      if (session.status != SessionStatus.inProgress) return;
 
       final update = _db.update(_db.sessions)
         ..where((s) => s.id.equals(sessionId));
@@ -173,7 +177,9 @@ class SessionRepository {
       );
 
       final catId = session.catId;
-      if (catId != null && session.mode != SessionMode.mixed) {
+      if (catId != null &&
+          session.mode != SessionMode.mixed &&
+          session.algorithmVersion == algo.algorithmVersion) {
         await _preferences.applyTrialUpdates(catId, trials);
         await _cueProgress.applyTrialUpdates(catId, trials);
         final profileUpdate = _db.update(_db.catProfiles)

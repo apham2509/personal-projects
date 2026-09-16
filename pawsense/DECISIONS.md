@@ -118,3 +118,19 @@ complicate the audio budget. V1 plays the short synthesised prey voice at
 spawn (sound mode permitting) and the capture pop + praise on catch. All
 sounds are quiet, soft-attack, synthesised originals
 (`tool/generate_placeholder_audio.dart`).
+
+## D-013: Tablet hunting is the primary experience
+
+The player is a real cat. Cat-facing polish focuses on readable prey motion,
+accurate paw input, quiet reinforcement and a clean board. Owner-only
+illustration, typography and transitions support setup and interpretation.
+Recorded cues and praise support positive reinforcement; adaptation is an
+explicit factor-scoring/exploration policy, not a claim about language
+understanding. Physical rewards remain supervised owner actions.
+
+## D-014: Beta input evidence is versioned separately
+
+v1.1 corrects swipe and clustered-pad attribution. Its preference rows start
+fresh, while history stays intact. See docs/PERSONALISATION.md. Recording is
+limited to five seconds so cue sequencing has a bounded playback window.
+Active play takes a scoped wake lock, released on background or exit.

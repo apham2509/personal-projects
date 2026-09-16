@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pawsense/features/insights/domain/insight_models.dart';
 import 'package:pawsense/features/insights/domain/insights_calculator.dart';
+import 'package:pawsense/features/personalisation/domain/algorithm_version.dart';
 import 'package:pawsense/shared/models/enums.dart';
 
 void main() {
@@ -14,6 +15,7 @@ void main() {
     int? reactionMs = 1000,
     int severity = 0,
     int difficulty = 2,
+    String version = algorithmVersion,
   }) => TrialFact(
     preyType: prey,
     movementStyle: movement,
@@ -28,6 +30,7 @@ void main() {
     cueType: null,
     difficultyAtTrial: difficulty,
     endedAtUtc: DateTime.utc(2026, 8, 1),
+    algorithmVersion: version,
   );
 
   SessionFact session({
@@ -174,6 +177,76 @@ void main() {
     );
     expect(insights.medianReactionMs, 600);
   });
+
+  test(
+    'historical samples remain in totals but cannot unlock current confidence',
+    () {
+      const oldVersion = '$algorithmVersion-historical-test';
+      final insights = compute(
+        sessions: [session(index: 0), session(index: 1)],
+        trials: [
+          for (var i = 0; i < 40; i++)
+            trial(
+              prey: PreyType.moth,
+              movement: MovementStyle.unpredictable,
+              version: oldVersion,
+            ),
+          for (var i = 0; i < 40; i++)
+            trial(
+              prey: PreyType.mouse,
+              success: false,
+              timedOut: true,
+              version: oldVersion,
+            ),
+          trial(prey: PreyType.moth, movement: MovementStyle.unpredictable),
+          trial(prey: PreyType.mouse, success: false, timedOut: true),
+        ],
+      );
+      final prey = insights.favourites.firstWhere(
+        (f) => f.factorType == FactorType.targetType,
+      );
+      expect(prey.topComparable, 1);
+      expect(prey.tier, ConfidenceTier.insufficient);
+      expect(prey.showable, isFalse);
+      expect(insights.personalityTitleKey, isNull);
+      expect(insights.lifetimeComparableTrials, 82);
+      expect(insights.lifetimeCatches, 41);
+      expect(insights.lifetimeSessions, 2);
+      expect(insights.catchRateTrend, hasLength(2));
+    },
+  );
+
+  test(
+    'current favourite ranking ignores contradictory historical evidence',
+    () {
+      const oldVersion = '$algorithmVersion-historical-test';
+      final insights = compute(
+        trials: [
+          for (var i = 0; i < 100; i++)
+            trial(prey: PreyType.mouse, reactionMs: 500, version: oldVersion),
+          for (var i = 0; i < 100; i++)
+            trial(
+              prey: PreyType.moth,
+              success: false,
+              timedOut: true,
+              version: oldVersion,
+            ),
+          for (var i = 0; i < 20; i++)
+            trial(prey: PreyType.moth, reactionMs: 800),
+          for (var i = 0; i < 20; i++)
+            trial(prey: PreyType.mouse, success: false, timedOut: true),
+        ],
+      );
+      final prey = insights.favourites.firstWhere(
+        (f) => f.factorType == FactorType.targetType,
+      );
+      expect(prey.topValue, 'moth');
+      expect(prey.topComparable, 20);
+      expect(prey.showable, isTrue);
+      expect(insights.lifetimeComparableTrials, 240);
+      expect(insights.lifetimeCatches, 120);
+    },
+  );
 
   test('heatmap bins normalised touches into a 12x8 grid', () {
     final insights = compute(

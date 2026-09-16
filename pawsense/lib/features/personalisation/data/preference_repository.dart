@@ -48,13 +48,18 @@ class PreferenceRepository {
     return PreferenceSnapshot(stats: stats, totalTrials: totalTrials);
   }
 
-  /// Seeds questionnaire priors once (no-op when any stats already exist).
+  /// Seeds questionnaire priors once per algorithm version. Older models
+  /// remain available as history and must not suppress the new model's priors.
   Future<void> seedPriorsIfEmpty(
     String catId,
     List<PreferenceSeed> seeds,
   ) async {
     final existing = _db.select(_db.preferenceStats)
-      ..where((s) => s.catId.equals(catId))
+      ..where(
+        (s) =>
+            s.catId.equals(catId) &
+            s.algorithmVersion.equals(algo.algorithmVersion),
+      )
       ..limit(1);
     if ((await existing.get()).isNotEmpty) return;
     final now = _clock.nowUtc();

@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart' show Value;
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pawsense/core/database/app_database.dart';
+import 'package:pawsense/features/personalisation/domain/algorithm_version.dart';
 import 'package:pawsense/shared/models/enums.dart';
 
 import 'harness.dart';
@@ -22,7 +24,7 @@ Future<String> seedCompletedSession(TestApp app, String catId) async {
           status: SessionStatus.completed,
           calibrationSession: false,
           randomSeed: 7,
-          algorithmVersion: 'pawsense-personalisation-v1',
+          algorithmVersion: algorithmVersion,
           appVersion: 'test',
           platform: 'test',
           screenWidthLogical: 800,
@@ -40,6 +42,42 @@ Future<String> seedCompletedSession(TestApp app, String catId) async {
 }
 
 void main() {
+  testWidgets('phone training setup stays usable with large text', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    final app = TestApp.create();
+    addTearDown(app.dispose);
+    late String catId;
+    await dbCall(tester, () async {
+      await app.completeOnboarding();
+      await app.seedCat('Miso');
+      catId = (await app.db.select(app.db.catProfiles).getSingle()).id;
+    });
+    await tester.pumpWidget(app.build());
+    await pumpUntilFound(tester, find.text("Who's playing?"));
+    await tester.tap(find.text('Miso'));
+    await pumpUntilFound(tester, find.text('Play'));
+    expect(tester.takeException(), isNull);
+    await goTo(tester, '/cats/$catId/setup?mode=touchTraining');
+    await pumpUntilFound(tester, find.text('Your voice starts the hunt'));
+    await tester.scrollUntilVisible(
+      find.text('Start session'),
+      180,
+      maxScrolls: 30,
+    );
+    await tester.ensureVisible(find.text('Start session'));
+    await tester.pumpAndSettle();
+    expect(find.text('Start session').hitTestable(), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tearDownApp(tester);
+  });
+
   testWidgets('session setup shows durations, sound, and manual factors', (
     tester,
   ) async {
@@ -55,7 +93,7 @@ void main() {
     await tester.tap(find.text('Tiger'));
     await pumpUntilFound(tester, find.text('Insights'));
     await tester.tap(find.text('Play'));
-    await pumpUntilFound(tester, find.text('Start session'));
+    await pumpUntilFound(tester, find.text('Play session'));
 
     expect(find.text('Play session'), findsOneWidget);
     expect(find.text('3 minutes'), findsOneWidget);
@@ -67,6 +105,10 @@ void main() {
     expect(find.text('Prey'), findsOneWidget);
     expect(find.text('Stop and go'), findsOneWidget);
     expect(find.text('Unpredictable'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Start session'), 180);
+    await tester.ensureVisible(find.text('Start session'));
+    expect(find.text('Start session').hitTestable(), findsOneWidget);
 
     await tearDownApp(tester);
   });
@@ -119,6 +161,8 @@ void main() {
     );
 
     await tester.scrollUntilVisible(find.text('Engaged'), 150);
+    await tester.ensureVisible(find.text('Engaged'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Engaged'));
     await tester.pump(const Duration(milliseconds: 400));
     final session = await dbCall(
