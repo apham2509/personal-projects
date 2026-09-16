@@ -30,17 +30,38 @@ class FirmsError(RuntimeError):
     """Raised when the FIRMS API rejects a request."""
 
 
-def _get(url: str, tries: int = 7, **kwargs) -> requests.Response:
-    """GET with retry on transient network failures (CI runners hiccup)."""
+class FirmsUnavailable(FirmsError):
+    """A temporary network or upstream failure, safe to retry elsewhere."""
+
+
+def _get(url: str, tries: int = 3, **kwargs) -> requests.Response:
+    """Retry temporary failures without exposing the MAP_KEY in exceptions."""
+    if tries < 1:
+        raise ValueError("tries must be at least 1")
+    kwargs.setdefault("timeout", (10, 60))
     for attempt in range(tries):
         try:
-            return requests.get(url, **kwargs)
+            response = requests.get(url, **kwargs)
         except (requests.ConnectionError, requests.Timeout) as error:
-            if attempt == tries - 1:
-                raise
-            wait = min(120, 20 * (attempt + 1))
-            print(f"Network error ({error.__class__.__name__}), retrying in {wait}s...")
-            time.sleep(wait)
+            reason = error.__class__.__name__
+        else:
+            if response.status_code not in {429, 500, 502, 503, 504}:
+                return response
+            reason = f"HTTP {response.status_code}"
+            response.close()
+        if attempt == tries - 1:
+            raise FirmsUnavailable(
+                f"FIRMS unavailable after {tries} attempts ({reason})"
+            ) from None
+        wait = 5 * 2 ** attempt
+        print(f"FIRMS {reason}, retrying in {wait}s...", flush=True)
+        time.sleep(wait)
+
+
+def _check_status(response: requests.Response) -> None:
+    # requests' HTTPError includes the URL, which contains the MAP_KEY.
+    if response.status_code >= 400:
+        raise FirmsError(f"FIRMS rejected the request (HTTP {response.status_code})")
 
 
 def map_key() -> str:
@@ -61,12 +82,12 @@ def map_key() -> str:
 
 def key_status() -> dict:
     """Current transaction usage for the MAP_KEY."""
-    response = requests.get(
+    response = _get(
         f"{API_BASE}/mapserver/mapkey_status/",
         params={"MAP_KEY": map_key()},
-        timeout=30,
+        timeout=(10, 30),
     )
-    response.raise_for_status()
+    _check_status(response)
     return response.json()
 
 
@@ -106,13 +127,13 @@ def area_fires(
     # Large (e.g. world-scale) responses cost many transactions, so the
     # rolling quota can empty mid-run: wait for the window to clear and retry.
     for _ in range(40):
-        response = _get(f"{API_BASE}{path}", timeout=300)
+        response = _get(f"{API_BASE}{path}", timeout=(10, 300))
         if response.status_code == 400 and "transaction limit" in response.text.lower():
             print("Transaction quota exhausted, waiting 60s...")
             time.sleep(60)
             continue
         break
-    response.raise_for_status()
+    _check_status(response)
     text = response.text
     if text.startswith("Invalid"):
         raise FirmsError(f"FIRMS rejected the request: {text.strip()!r}")
@@ -128,6 +149,6 @@ def area_fires(
 
 def data_availability() -> pd.DataFrame:
     """Available date range per dataset."""
-    response = _get(f"{API_BASE}/api/data_availability/csv/{map_key()}/ALL", timeout=60)
-    response.raise_for_status()
+    response = _get(f"{API_BASE}/api/data_availability/csv/{map_key()}/ALL", timeout=(10, 60))
+    _check_status(response)
     return pd.read_csv(io.StringIO(response.text))

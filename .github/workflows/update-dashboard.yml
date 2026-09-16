@@ -15,32 +15,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
+    uses: ./.github/workflows/build-wildfire.yml
+    with:
+      runner: ubuntu-latest
+      allow-unavailable: true
+
+  retry-build:
+    needs: build
+    if: needs.build.outputs.ready == 'false'
+    uses: ./.github/workflows/build-wildfire.yml
+    with:
+      # macOS uses a different hosting network from the Azure Linux runners.
+      runner: macos-15-intel
+
+  deploy:
+    needs: [build, retry-build]
+    if: >-
+      ${{ !cancelled() && needs.build.result == 'success' &&
+          (needs.build.outputs.ready == 'true' ||
+           (needs.retry-build.result == 'success' && needs.retry-build.outputs.ready == 'true')) }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-
-      - name: Install dependencies
-        run: pip install -r wildfire-infrastructure-risk/requirements.txt
-
-      - name: Render dashboard from latest FIRMS data
-        working-directory: wildfire-infrastructure-risk
-        run: python render_static.py --out ../site/wildfire-infrastructure-risk/index.html
-
-      - name: Add landing page
-        run: cp pages/index.html site/index.html
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
       - id: deployment
         uses: actions/deploy-pages@v4

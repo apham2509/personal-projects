@@ -1,0 +1,68 @@
+name: Build wildfire dashboard
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        required: true
+        type: string
+      allow-unavailable:
+        default: false
+        type: boolean
+    outputs:
+      ready:
+        description: Whether a complete live dashboard artifact was uploaded
+        value: ${{ jobs.build.outputs.ready }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 30
+    outputs:
+      ready: ${{ steps.render.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: wildfire-infrastructure-risk/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r wildfire-infrastructure-risk/requirements.txt
+
+      - name: Test source failure handling
+        working-directory: wildfire-infrastructure-risk
+        run: python -m unittest discover -s tests -v
+
+      - name: Render dashboard from latest FIRMS data
+        id: render
+        working-directory: wildfire-infrastructure-risk
+        env:
+          ALLOW_UNAVAILABLE: ${{ inputs.allow-unavailable }}
+        shell: bash
+        run: |
+          status=0
+          python -u render_static.py --out ../site/wildfire-infrastructure-risk/index.html || status=$?
+          if [ "$status" -eq 75 ] && [ "$ALLOW_UNAVAILABLE" = "true" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::NASA FIRMS is unreachable from this runner; retrying on the fallback runner."
+            exit 0
+          fi
+          if [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Add landing page
+        if: steps.render.outputs.ready == 'true'
+        run: cp pages/index.html site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.render.outputs.ready == 'true'
+        with:
+          path: site
