@@ -10,10 +10,10 @@
 
 ## App icons and launch screens
 
-V1 ships the Flutter template icons; before store submission generate a
-proper icon set (e.g. with `flutter_launcher_icons`) from an original
-design. No copyrighted or AI-ambiguous artwork; keep the procedural-art
-spirit of the app.
+The app ships an original Canvas-drawn PawSense mark, matching platform
+icons, and warm-paper launch screens. Their source and preview generation
+live in `tool/capture_visual_previews_test.dart`; regenerate from that
+original artwork when changing the identity.
 
 ## Android
 
@@ -60,16 +60,34 @@ device requires Xcode signing; distributing via TestFlight requires the
 Apple Developer Programme setup below. CI uses no Apple account, certificate,
 or provisioning-profile secrets.
 
-1. Requires a Mac with full Xcode and CocoaPods
-   (`brew install cocoapods`), plus an Apple Developer Programme
-   membership.
-2. `cd ios && pod install`, open `Runner.xcworkspace`, select your team;
-   automatic signing is fine for TestFlight.
-3. Compile check without signing: `flutter build ios --no-codesign`.
-4. Archive via Xcode Organizer -> TestFlight internal testing.
-5. Info.plist already contains the microphone usage description; verify
-   orientations (owner screens all, play forces landscape at runtime).
-6. Do not commit certificates, profiles, or ExportOptions with team IDs.
+### Test on your own iPhone or iPad
+
+1. Use a Mac with full Xcode 15 or newer. Run `flutter pub get` and
+   `flutter build ios --debug --no-codesign` once to prepare the project.
+2. Flutter 3.44.8 uses Swift Package Manager by default. The Xcode project
+   references `FlutterGeneratedPluginSwiftPackage`; Flutter generates this
+   package and the current native plugins all support it. No manual
+   `pod install` is needed for this dependency set.
+3. Open `ios/Runner.xcworkspace`, add your Apple Account in Xcode settings,
+   and choose your team under Runner → Signing & Capabilities. Automatic
+   signing with a free Personal Team supports testing on your own device.
+4. Connect the device, enable Developer Mode when prompted, select it in
+   Xcode, and run. Personal Team provisioning is temporary; rebuild when it
+   expires. Run the physical-device QA checklist on both phone and tablet.
+
+### Distribute through TestFlight
+
+1. Use a paid Apple Developer Programme membership and its signing team.
+2. Archive a release build through Xcode Organizer and upload to TestFlight
+   internal testing before broader distribution.
+3. Info.plist contains microphone and selected-photo usage descriptions;
+   verify permissions and orientations on a physical iPhone and iPad.
+4. Do not commit certificates, profiles, or ExportOptions with team IDs.
+
+See Apple's [membership comparison](https://developer.apple.com/support/compare-memberships/)
+for Personal Team and distribution capabilities, and Flutter's
+[Swift Package Manager guide](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
+for native dependency setup.
 
 ## Store privacy disclosures (accurate for V1)
 

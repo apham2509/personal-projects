@@ -39,7 +39,7 @@ factor scores and exploration; it is not a language-understanding claim.
 
 ## Verification
 
-Local quality gates pass: **255 tests**, clean `flutter analyze`, clean
+Local quality gates pass: **262 tests**, clean `flutter analyze`, clean
 format check, regenerated Drift/localisations and clean workflow validation.
 Native Android/iOS CI verification is in progress; results follow below.
 Visual previews render the actual Canvas prey and owner widgets using
