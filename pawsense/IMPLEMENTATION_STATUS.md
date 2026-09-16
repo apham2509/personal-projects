@@ -41,11 +41,14 @@ factor scores and exploration; it is not a language-understanding claim.
 
 Local quality gates pass: **262 tests**, clean `flutter analyze`, clean
 format check, regenerated Drift/localisations and clean workflow validation.
-Native Android APK and unsigned iOS builds passed in
-[CI run 35148702543](https://github.com/apham2509/personal-projects/actions/runs/35148702543).
-The Android integration app compiled and installed, then exposed a temporary
-directory error in the test harness before any app flow ran. That harness
-setup is corrected; the device-flow rerun is pending.
+All native gates passed at `5d9bd99` in
+[CI run 35149734748](https://github.com/apham2509/personal-projects/actions/runs/35149734748):
+Android APK build, unsigned iOS compile, and all six Android tablet emulator
+flows. The flows exercise onboarding, insights/history, export, deletion,
+crash recovery and native cue playback → live prey catch → owner exit →
+durable training progress. Microphone capture uses a local AAC fixture;
+real microphone permission/quality and physical cat responses still need
+the device pass below.
 Visual previews render the actual Canvas prey and owner widgets using
 `tool/capture_visual_previews_test.dart`; these are renderer captures, not
 physical-device screenshots.
